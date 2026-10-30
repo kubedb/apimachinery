@@ -49,7 +49,7 @@ import (
 // SetupElasticsearchWebhookWithManager registers the webhook for Elasticsearch in the manager.
 func SetupElasticsearchWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Elasticsearch{}).
-		WithValidator(&ElasticsearchCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ElasticsearchCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ElasticsearchCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -64,6 +64,9 @@ var eslog = logf.Log.WithName("elasticsearch-resource")
 var _ webhook.CustomDefaulter = &ElasticsearchCustomWebhook{}
 
 func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.Elasticsearch)
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
@@ -179,6 +182,11 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 	}
 
 	err = w.validateSecureConfig(db, &esVersion)
+	if err != nil {
+		return err
+	}
+
+	err = w.validateLicense(db, &esVersion)
 	if err != nil {
 		return err
 	}
@@ -310,6 +318,12 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	es := obj.(*dbapi.Elasticsearch)
 	err := w.ValidateElasticsearch(es)
 	mysqlLog.Info("validating", "name", es.Name)
@@ -317,6 +331,9 @@ func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj run
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldElasticsearch, ok := oldObj.(*dbapi.Elasticsearch)
 	if !ok {
 		return nil, fmt.Errorf("expected a Elasticsearch but got a %T", oldElasticsearch)
@@ -523,6 +540,40 @@ func (w *ElasticsearchCustomWebhook) validateSecureConfig(db *dbapi.Elasticsearc
 		// KEYSTORE_PASSWORD is supported since ES version 7.9
 		if dbVersion.Major() < 7 || (dbVersion.Major() == 7 && dbVersion.Minor() < 9) {
 			return errors.Errorf("secureConfigSecret is not supported for ElasticsearchVersion %s, try with latest versions", esVersion.Name)
+		}
+	}
+	return nil
+}
+
+func (w *ElasticsearchCustomWebhook) validateLicense(db *dbapi.Elasticsearch, esVersion *catalogapi.ElasticsearchVersion) error {
+	license := db.Spec.License
+	if license == nil {
+		return nil
+	}
+	if esVersion.Spec.Distribution != catalogapi.ElasticsearchDistroElasticStack {
+		return fmt.Errorf("'spec.license' is only supported for ElasticsearchVersion with distribution %s, ElasticsearchVersion %s uses %s",
+			catalogapi.ElasticsearchDistroElasticStack, esVersion.Name, esVersion.Spec.Distribution)
+	}
+	if license.SecretRef == nil && !license.Trial {
+		return errors.New(`'spec.license' must set either 'secretRef' or 'trial'`)
+	}
+	if license.SecretRef != nil && license.Trial {
+		return errors.New(`'spec.license' cannot set both 'secretRef' and 'trial'`)
+	}
+	if license.SecretRef != nil {
+		if license.SecretRef.Name == "" {
+			return errors.New(`'spec.license.secretRef.name' is missing`)
+		}
+		var secret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      license.SecretRef.Name,
+			Namespace: db.Namespace,
+		}, &secret)
+		if err != nil {
+			return errors.Wrapf(err, "failed to get license secret: %s/%s", db.Namespace, license.SecretRef.Name)
+		}
+		if _, ok := secret.Data[kubedb.ElasticsearchLicenseSecretKey]; !ok {
+			return fmt.Errorf(`license secret "%s/%s" must have key %q`, db.Namespace, license.SecretRef.Name, kubedb.ElasticsearchLicenseSecretKey)
 		}
 	}
 	return nil

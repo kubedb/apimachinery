@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisVersionLister helps list RedisVersions.
@@ -31,39 +31,19 @@ import (
 type RedisVersionLister interface {
 	// List lists all RedisVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.RedisVersion, err error)
 	// Get retrieves the RedisVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RedisVersion, error)
+	Get(name string) (*catalogv1alpha1.RedisVersion, error)
 	RedisVersionListerExpansion
 }
 
 // redisVersionLister implements the RedisVersionLister interface.
 type redisVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.RedisVersion]
 }
 
 // NewRedisVersionLister returns a new RedisVersionLister.
 func NewRedisVersionLister(indexer cache.Indexer) RedisVersionLister {
-	return &redisVersionLister{indexer: indexer}
-}
-
-// List lists all RedisVersions in the indexer.
-func (s *redisVersionLister) List(selector labels.Selector) (ret []*v1alpha1.RedisVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisVersion from the index for a given name.
-func (s *redisVersionLister) Get(name string) (*v1alpha1.RedisVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redisversion"), name)
-	}
-	return obj.(*v1alpha1.RedisVersion), nil
+	return &redisVersionLister{listers.New[*catalogv1alpha1.RedisVersion](indexer, catalogv1alpha1.Resource("redisversion"))}
 }

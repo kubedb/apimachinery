@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Solrs.
 type SolrInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.SolrLister
+	Lister() gitopsv1alpha1.SolrLister
 }
 
 type solrInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredSolrInformer(client versioned.Interface, namespace string, resyn
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Solrs(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Solrs(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Solrs(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Solrs(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Solrs(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Solrs(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Solr{},
+		&apisgitopsv1alpha1.Solr{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *solrInformer) defaultInformer(client versioned.Interface, resyncPeriod 
 }
 
 func (f *solrInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Solr{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Solr{}, f.defaultInformer)
 }
 
-func (f *solrInformer) Lister() v1alpha1.SolrLister {
-	return v1alpha1.NewSolrLister(f.Informer().GetIndexer())
+func (f *solrInformer) Lister() gitopsv1alpha1.SolrLister {
+	return gitopsv1alpha1.NewSolrLister(f.Informer().GetIndexer())
 }

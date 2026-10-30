@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -104,6 +105,29 @@ func (w *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 }
 
 func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	ops, ok := obj.(*opsapi.PostgresOpsRequest)
+	if !ok {
+		return nil, fmt.Errorf("expected an PostgresOpsRequest object but got %T", obj)
+	}
+	postgresLog.Info("validate delete", "name", ops.Name)
+
+	// If an in-flight (not yet completed) ops is deleted, the database is still
+	// Paused and nothing else resumes it, so it stays Paused forever. Resume it
+	// here. Guard on !completed: ops are serialized per database, so an in-flight
+	// ops is the one holding the pause; a completed ops has already resumed via
+	// ValidateUpdate, and un-pausing then could clobber a different in-flight ops.
+	if !isOpsReqCompleted(ops.Status.Phase) {
+		var db dbapi.Postgres
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				// The database is gone (for example a concurrent WipeOut); nothing to resume.
+				return nil, nil
+			}
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
 	return nil, nil
 }
 
@@ -174,12 +198,59 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	case opsapi.PostgresOpsRequestTypeReconnectStandby:
 	case opsapi.PostgresOpsRequestTypeForceFailOver:
 	case opsapi.PostgresOpsRequestTypeSetRaftKeyPair:
+	case opsapi.PostgresOpsRequestTypeRotatePrincipalKey:
+		if err := w.validatePostgresRotatePrincipalKeyOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("rotatePrincipalKey"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.PostgresOpsRequestTypeEnableWALEncryption:
+		if err := w.validatePostgresEnableWALEncryptionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableWALEncryption"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Postgresopsrequests.kubedb.com", Kind: "PostgresOpsRequest"}, req.Name, allErr)
+}
+
+// tdeKeyNameRegex mirrors the +kubebuilder:validation:Pattern on the ops
+// KeyName fields. The key name is interpolated into pg_tde SQL executed as the
+// Postgres superuser, so it must stay within a safe identifier charset; this is
+// the admission-time backstop for that CRD pattern (and for older CRDs that
+// predate the marker).
+var tdeKeyNameRegex = regexp.MustCompile(`^[A-Za-z0-9_-]{1,128}$`)
+
+// validatePostgresRotatePrincipalKeyOpsRequest checks that the referenced
+// database actually has TDE configured and that any supplied key name is safe.
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresRotatePrincipalKeyOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
+	if db.Spec.TDE == nil {
+		return fmt.Errorf("RotatePrincipalKey requires spec.tde to be configured on the referenced Postgres %s/%s", db.Namespace, db.Name)
+	}
+	if s := req.Spec.RotatePrincipalKey; s != nil && s.KeyName != "" && !tdeKeyNameRegex.MatchString(s.KeyName) {
+		return fmt.Errorf("spec.rotatePrincipalKey.keyName %q is invalid, it must match %s", s.KeyName, tdeKeyNameRegex.String())
+	}
+	return nil
+}
+
+// validatePostgresEnableWALEncryptionOpsRequest checks that the referenced
+// database has TDE with a global (vault or kmip) provider, which WAL encryption
+// requires, and that any supplied key name is safe.
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresEnableWALEncryptionOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
+	if db.Spec.TDE == nil {
+		return fmt.Errorf("EnableWALEncryption requires spec.tde to be configured on the referenced Postgres %s/%s", db.Namespace, db.Name)
+	}
+	if db.Spec.TDE.KeyProvider.Vault == nil && db.Spec.TDE.KeyProvider.KMIP == nil {
+		return fmt.Errorf("EnableWALEncryption requires a global (vault or kmip) key provider on the referenced Postgres %s/%s; the file keyring cannot back WAL encryption", db.Namespace, db.Name)
+	}
+	if s := req.Spec.EnableWALEncryption; s != nil && s.KeyName != "" && !tdeKeyNameRegex.MatchString(s.KeyName) {
+		return fmt.Errorf("spec.enableWALEncryption.keyName %q is invalid, it must match %s", s.KeyName, tdeKeyNameRegex.String())
+	}
+	return nil
 }
 
 func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) (*dbapi.Postgres, error) {
@@ -217,11 +288,31 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil {
-		return errors.New("`spec.horizontalScaling.Replicas or `spec.readReplica` has to be mentioned")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil && len(horizontalScalingSpec.DataCenters) == 0 {
+		return errors.New("one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.readReplicas`, or `spec.horizontalScaling.dataCenters` has to be mentioned")
 	}
 	if horizontalScalingSpec.Replicas != nil && len(horizontalScalingSpec.ReadReplicas) > 0 {
 		return errors.New("either `spec.horizontalScaling.Replicas` or `spec.horizontalScaling.readReplicas` can be provided at a time")
+	}
+	if len(horizontalScalingSpec.DataCenters) > 0 {
+		// A distributed DC-DR Postgres is scaled per data center; a single global
+		// replica count is meaningless across independent per-DC rafts.
+		if horizontalScalingSpec.Replicas != nil || len(horizontalScalingSpec.ReadReplicas) > 0 {
+			return errors.New("`spec.horizontalScaling.dataCenters` cannot be combined with `replicas` or `readReplicas`")
+		}
+		seen := map[string]bool{}
+		for _, dc := range horizontalScalingSpec.DataCenters {
+			if dc.ClusterName == "" {
+				return errors.New("`spec.horizontalScaling.dataCenters[].clusterName` is required")
+			}
+			if seen[dc.ClusterName] {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters` lists data center %q more than once", dc.ClusterName)
+			}
+			seen[dc.ClusterName] = true
+			if dc.Replicas < 1 {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters[%s].replicas` must be >= 1 (removing a data center is a topology change, not horizontal scaling)", dc.ClusterName)
+			}
+		}
 	}
 	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.Replicas` can't be less than or equal 0")
@@ -243,15 +334,25 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `Tuning` or `ApplyConfig` must be specified")
+	// Validate the applyConfig keys before the "at least one of ..." precondition below. An
+	// unknown key makes applyConfigExistsForPostgres false, so checking the precondition first
+	// would tell the user nothing was specified when they clearly specified applyConfig.
+	for key, val := range req.Spec.Configuration.ApplyConfig {
+		switch key {
+		case kubedb.PostgresCustomConfigFile:
+			// postgresql.conf settings; PostgreSQL reports bad entries itself on reload.
+		case kubedb.PostgresCustomHBAFile:
+			if err := dbapi.ValidateHBAConfig(val); err != nil {
+				return fmt.Errorf("invalid %q in `spec.configuration.applyConfig`: %w", kubedb.PostgresCustomHBAFile, err)
+			}
+		default:
+			return fmt.Errorf("invalid configuration source %q in `spec.configuration.applyConfig`; only %q and %q are allowed",
+				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
 	}
 
-	if applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PostgresCustomConfigFile]
-		if !ok {
-			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PostgresCustomConfigFile)
-		}
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `Tuning` or `ApplyConfig` must be specified")
 	}
 
 	if req.Spec.Configuration.Restart == opsapi.ReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
@@ -283,6 +384,32 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	if err != nil {
 		return err
 	}
+
+	sourceVersion := &catalog.PostgresVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, sourceVersion); err != nil {
+		return err
+	}
+
+	if sourceVersion.Spec.DB.BaseOS != "" && postgresTargetVersion.Spec.DB.BaseOS != "" &&
+		sourceVersion.Spec.DB.BaseOS != postgresTargetVersion.Spec.DB.BaseOS {
+		return fmt.Errorf(
+			"upgrading between different base OS variants is not allowed: "+
+				"current version %q uses baseOS %q but target version %q uses baseOS %q",
+			db.Spec.Version, sourceVersion.Spec.DB.BaseOS,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.DB.BaseOS,
+		)
+	}
+	if sourceVersion.Spec.Distribution != "" && postgresTargetVersion.Spec.Distribution != "" &&
+		sourceVersion.Spec.Distribution != postgresTargetVersion.Spec.Distribution {
+		return fmt.Errorf(
+			"upgrading between different distributions is not allowed: "+
+				"current version %q uses distribution %q but target version %q uses distribution %q",
+			db.Spec.Version, sourceVersion.Spec.Distribution,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.Distribution,
+		)
+	}
 	return nil
 }
 
@@ -304,33 +431,9 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresRotateAuthenticationOp
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		var newAuthSecret, oldAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
-			}
+		if err := validateRotateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef, db.GetAuthSecretName(), dbapi.IsVirtualAuthSecretReferred(db.Spec.AuthSecret)); err != nil {
 			return err
 		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
-			return err
-		}
-
-		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
-			return errors.New("database username cannot be changed")
-		}
-
 	}
 
 	return nil
@@ -415,11 +518,18 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 	return nil
 }
 
+// applyConfigExistsForPostgres reports whether the request carries any recognised config key.
+// Either key counts on its own: a Reconfigure may touch only postgresql.conf settings, only
+// pg_hba.conf rules, or both. Checking user.conf alone made an hba-only request look empty and
+// fail the "at least one of ..." precondition.
 func applyConfigExistsForPostgres(applyConfig map[string]string) bool {
 	if applyConfig == nil {
 		return false
 	}
-	_, exists := applyConfig[kubedb.PostgresCustomConfigFile]
+	if _, exists := applyConfig[kubedb.PostgresCustomConfigFile]; exists {
+		return true
+	}
+	_, exists := applyConfig[kubedb.PostgresCustomHBAFile]
 	return exists
 }
 

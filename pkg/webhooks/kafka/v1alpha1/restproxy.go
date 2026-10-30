@@ -23,6 +23,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -41,7 +42,7 @@ import (
 // SetupRestProxyWebhookWithManager registers the webhook for Kafka RestProxy in the manager.
 func SetupRestProxyWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.RestProxy{}).
-		WithValidator(&RestProxyCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RestProxyCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&RestProxyCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

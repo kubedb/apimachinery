@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
+	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SubscriberLister helps list Subscribers.
@@ -31,7 +31,7 @@ import (
 type SubscriberLister interface {
 	// List lists all Subscribers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Subscriber, err error)
+	List(selector labels.Selector) (ret []*postgresv1alpha1.Subscriber, err error)
 	// Subscribers returns an object that can list and get Subscribers.
 	Subscribers(namespace string) SubscriberNamespaceLister
 	SubscriberListerExpansion
@@ -39,25 +39,17 @@ type SubscriberLister interface {
 
 // subscriberLister implements the SubscriberLister interface.
 type subscriberLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*postgresv1alpha1.Subscriber]
 }
 
 // NewSubscriberLister returns a new SubscriberLister.
 func NewSubscriberLister(indexer cache.Indexer) SubscriberLister {
-	return &subscriberLister{indexer: indexer}
-}
-
-// List lists all Subscribers in the indexer.
-func (s *subscriberLister) List(selector labels.Selector) (ret []*v1alpha1.Subscriber, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Subscriber))
-	})
-	return ret, err
+	return &subscriberLister{listers.New[*postgresv1alpha1.Subscriber](indexer, postgresv1alpha1.Resource("subscriber"))}
 }
 
 // Subscribers returns an object that can list and get Subscribers.
 func (s *subscriberLister) Subscribers(namespace string) SubscriberNamespaceLister {
-	return subscriberNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return subscriberNamespaceLister{listers.NewNamespaced[*postgresv1alpha1.Subscriber](s.ResourceIndexer, namespace)}
 }
 
 // SubscriberNamespaceLister helps list and get Subscribers.
@@ -65,36 +57,15 @@ func (s *subscriberLister) Subscribers(namespace string) SubscriberNamespaceList
 type SubscriberNamespaceLister interface {
 	// List lists all Subscribers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Subscriber, err error)
+	List(selector labels.Selector) (ret []*postgresv1alpha1.Subscriber, err error)
 	// Get retrieves the Subscriber from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Subscriber, error)
+	Get(name string) (*postgresv1alpha1.Subscriber, error)
 	SubscriberNamespaceListerExpansion
 }
 
 // subscriberNamespaceLister implements the SubscriberNamespaceLister
 // interface.
 type subscriberNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Subscribers in the indexer for a given namespace.
-func (s subscriberNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Subscriber, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Subscriber))
-	})
-	return ret, err
-}
-
-// Get retrieves the Subscriber from the indexer for a given namespace and name.
-func (s subscriberNamespaceLister) Get(name string) (*v1alpha1.Subscriber, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("subscriber"), name)
-	}
-	return obj.(*v1alpha1.Subscriber), nil
+	listers.ResourceIndexer[*postgresv1alpha1.Subscriber]
 }

@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBSchemaOverviews implements MariaDBSchemaOverviewInterface
-type FakeMariaDBSchemaOverviews struct {
+// fakeMariaDBSchemaOverviews implements MariaDBSchemaOverviewInterface
+type fakeMariaDBSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBSchemaOverview, *v1alpha1.MariaDBSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var mariadbschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbschemaoverviews")
-
-var mariadbschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBSchemaOverview")
-
-// Get takes name of the mariaDBSchemaOverview, and returns the corresponding mariaDBSchemaOverview object, and an error if there is any.
-func (c *FakeMariaDBSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbschemaoverviewsResource, c.ns, name), &v1alpha1.MariaDBSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.MariaDBSchemaOverviewInterface {
+	return &fakeMariaDBSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBSchemaOverview, *v1alpha1.MariaDBSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBSchemaOverview"),
+			func() *v1alpha1.MariaDBSchemaOverview { return &v1alpha1.MariaDBSchemaOverview{} },
+			func() *v1alpha1.MariaDBSchemaOverviewList { return &v1alpha1.MariaDBSchemaOverviewList{} },
+			func(dst, src *v1alpha1.MariaDBSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBSchemaOverviewList) []*v1alpha1.MariaDBSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBSchemaOverviewList, items []*v1alpha1.MariaDBSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBSchemaOverviews that match those selectors.
-func (c *FakeMariaDBSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbschemaoverviewsResource, mariadbschemaoverviewsKind, c.ns, opts), &v1alpha1.MariaDBSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBSchemaOverviewList{ListMeta: obj.(*v1alpha1.MariaDBSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBSchemaOverviews.
-func (c *FakeMariaDBSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBSchemaOverview and creates it.  Returns the server's representation of the mariaDBSchemaOverview, and an error, if there is any.
-func (c *FakeMariaDBSchemaOverviews) Create(ctx context.Context, mariaDBSchemaOverview *v1alpha1.MariaDBSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.MariaDBSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbschemaoverviewsResource, c.ns, mariaDBSchemaOverview), &v1alpha1.MariaDBSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBSchemaOverview), err
-}
-
-// Update takes the representation of a mariaDBSchemaOverview and updates it. Returns the server's representation of the mariaDBSchemaOverview, and an error, if there is any.
-func (c *FakeMariaDBSchemaOverviews) Update(ctx context.Context, mariaDBSchemaOverview *v1alpha1.MariaDBSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.MariaDBSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbschemaoverviewsResource, c.ns, mariaDBSchemaOverview), &v1alpha1.MariaDBSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBSchemaOverview), err
-}
-
-// Delete takes name of the mariaDBSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbschemaoverviewsResource, c.ns, name, opts), &v1alpha1.MariaDBSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBSchemaOverview.
-func (c *FakeMariaDBSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBSchemaOverview), err
 }

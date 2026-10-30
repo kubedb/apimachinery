@@ -112,7 +112,7 @@ const (
 	DeletionPolicyDoNotTerminate DeletionPolicy = "DoNotTerminate"
 )
 
-// +kubebuilder:validation:Enum=primary;standby;stats;dashboard;secondary
+// +kubebuilder:validation:Enum=primary;standby;stats;dashboard;readreplica
 type ServiceAlias string
 
 const (
@@ -120,7 +120,6 @@ const (
 	StandbyServiceAlias   ServiceAlias = "standby"
 	StatsServiceAlias     ServiceAlias = "stats"
 	DashboardServiceAlias ServiceAlias = "dashboard"
-	SecondaryServiceAlias ServiceAlias = "secondary"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none
@@ -308,6 +307,15 @@ type ArbiterSpec struct {
 	// If specified, the pod's tolerations.
 	// +optional
 	Tolerations []core.Toleration `json:"tolerations,omitempty"`
+}
+
+type BackupSpec struct {
+	// S3Secrets holding their S3 credentials.
+	// +optional
+	S3Secrets []core.LocalObjectReference `json:"s3Secrets,omitempty"`
+	// GCSSecrets holding their GCS service account keys.
+	// +optional
+	GCSSecrets []core.LocalObjectReference `json:"gcsSecrets,omitempty"`
 }
 
 type DBBindInterface interface {

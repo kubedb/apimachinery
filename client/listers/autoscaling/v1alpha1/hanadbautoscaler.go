@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HanaDBAutoscalerLister helps list HanaDBAutoscalers.
@@ -31,7 +31,7 @@ import (
 type HanaDBAutoscalerLister interface {
 	// List lists all HanaDBAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HanaDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.HanaDBAutoscaler, err error)
 	// HanaDBAutoscalers returns an object that can list and get HanaDBAutoscalers.
 	HanaDBAutoscalers(namespace string) HanaDBAutoscalerNamespaceLister
 	HanaDBAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type HanaDBAutoscalerLister interface {
 
 // hanaDBAutoscalerLister implements the HanaDBAutoscalerLister interface.
 type hanaDBAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.HanaDBAutoscaler]
 }
 
 // NewHanaDBAutoscalerLister returns a new HanaDBAutoscalerLister.
 func NewHanaDBAutoscalerLister(indexer cache.Indexer) HanaDBAutoscalerLister {
-	return &hanaDBAutoscalerLister{indexer: indexer}
-}
-
-// List lists all HanaDBAutoscalers in the indexer.
-func (s *hanaDBAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.HanaDBAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HanaDBAutoscaler))
-	})
-	return ret, err
+	return &hanaDBAutoscalerLister{listers.New[*autoscalingv1alpha1.HanaDBAutoscaler](indexer, autoscalingv1alpha1.Resource("hanadbautoscaler"))}
 }
 
 // HanaDBAutoscalers returns an object that can list and get HanaDBAutoscalers.
 func (s *hanaDBAutoscalerLister) HanaDBAutoscalers(namespace string) HanaDBAutoscalerNamespaceLister {
-	return hanaDBAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return hanaDBAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.HanaDBAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // HanaDBAutoscalerNamespaceLister helps list and get HanaDBAutoscalers.
@@ -65,36 +57,15 @@ func (s *hanaDBAutoscalerLister) HanaDBAutoscalers(namespace string) HanaDBAutos
 type HanaDBAutoscalerNamespaceLister interface {
 	// List lists all HanaDBAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HanaDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.HanaDBAutoscaler, err error)
 	// Get retrieves the HanaDBAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.HanaDBAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.HanaDBAutoscaler, error)
 	HanaDBAutoscalerNamespaceListerExpansion
 }
 
 // hanaDBAutoscalerNamespaceLister implements the HanaDBAutoscalerNamespaceLister
 // interface.
 type hanaDBAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all HanaDBAutoscalers in the indexer for a given namespace.
-func (s hanaDBAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.HanaDBAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HanaDBAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the HanaDBAutoscaler from the indexer for a given namespace and name.
-func (s hanaDBAutoscalerNamespaceLister) Get(name string) (*v1alpha1.HanaDBAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hanadbautoscaler"), name)
-	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.HanaDBAutoscaler]
 }

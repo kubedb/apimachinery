@@ -29,7 +29,6 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -281,7 +280,11 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *
 		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.SentinelRef.Name, Namespace: redis.Spec.SentinelRef.Namespace}, currentSentinel); err != nil {
 			return err
 		}
-		if currentSentinel.Spec.Version != updatedVersion.Spec.Version {
+		currentSentinelVersion := &catalog.RedisVersion{}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: currentSentinel.Spec.Version}, currentSentinelVersion); err != nil {
+			return err
+		}
+		if currentSentinelVersion.Spec.Version != updatedVersion.Spec.Version {
 			return fmt.Errorf("RedisOpsRequest %s/%s: can't upgrade to a different version of sentinel", req.Namespace, req.Name)
 		}
 	}
@@ -415,17 +418,7 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsReque
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return fmt.Errorf("spec.authentication.secretRef.name can not be empty")
-		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

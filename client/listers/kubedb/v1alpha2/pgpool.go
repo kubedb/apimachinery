@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgpoolLister helps list Pgpools.
@@ -31,7 +31,7 @@ import (
 type PgpoolLister interface {
 	// List lists all Pgpools in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Pgpool, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Pgpool, err error)
 	// Pgpools returns an object that can list and get Pgpools.
 	Pgpools(namespace string) PgpoolNamespaceLister
 	PgpoolListerExpansion
@@ -39,25 +39,17 @@ type PgpoolLister interface {
 
 // pgpoolLister implements the PgpoolLister interface.
 type pgpoolLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Pgpool]
 }
 
 // NewPgpoolLister returns a new PgpoolLister.
 func NewPgpoolLister(indexer cache.Indexer) PgpoolLister {
-	return &pgpoolLister{indexer: indexer}
-}
-
-// List lists all Pgpools in the indexer.
-func (s *pgpoolLister) List(selector labels.Selector) (ret []*v1alpha2.Pgpool, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Pgpool))
-	})
-	return ret, err
+	return &pgpoolLister{listers.New[*kubedbv1alpha2.Pgpool](indexer, kubedbv1alpha2.Resource("pgpool"))}
 }
 
 // Pgpools returns an object that can list and get Pgpools.
 func (s *pgpoolLister) Pgpools(namespace string) PgpoolNamespaceLister {
-	return pgpoolNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgpoolNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Pgpool](s.ResourceIndexer, namespace)}
 }
 
 // PgpoolNamespaceLister helps list and get Pgpools.
@@ -65,36 +57,15 @@ func (s *pgpoolLister) Pgpools(namespace string) PgpoolNamespaceLister {
 type PgpoolNamespaceLister interface {
 	// List lists all Pgpools in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Pgpool, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Pgpool, err error)
 	// Get retrieves the Pgpool from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Pgpool, error)
+	Get(name string) (*kubedbv1alpha2.Pgpool, error)
 	PgpoolNamespaceListerExpansion
 }
 
 // pgpoolNamespaceLister implements the PgpoolNamespaceLister
 // interface.
 type pgpoolNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Pgpools in the indexer for a given namespace.
-func (s pgpoolNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Pgpool, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Pgpool))
-	})
-	return ret, err
-}
-
-// Get retrieves the Pgpool from the indexer for a given namespace and name.
-func (s pgpoolNamespaceLister) Get(name string) (*v1alpha2.Pgpool, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("pgpool"), name)
-	}
-	return obj.(*v1alpha2.Pgpool), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Pgpool]
 }

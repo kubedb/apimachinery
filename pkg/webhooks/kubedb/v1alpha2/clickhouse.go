@@ -44,7 +44,7 @@ import (
 // SetupClickHouseWebhookWithManager registers the webhook for ClickHouse in the manager.
 func SetupClickHouseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.ClickHouse{}).
-		WithValidator(&ClickHouseCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ClickHouseCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ClickHouseCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +60,9 @@ var clickhouselog = logf.Log.WithName("clickhouse-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *ClickHouseCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {
 		return fmt.Errorf("expected an ClickHouse object but got %T", obj)
@@ -73,6 +76,12 @@ var _ webhook.CustomValidator = &ClickHouseCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", obj)
@@ -83,6 +92,9 @@ func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *ClickHouseCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.ClickHouse)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", newObj)

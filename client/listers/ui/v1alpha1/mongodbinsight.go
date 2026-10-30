@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MongoDBInsightLister helps list MongoDBInsights.
@@ -31,7 +31,7 @@ import (
 type MongoDBInsightLister interface {
 	// List lists all MongoDBInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MongoDBInsight, err error)
 	// MongoDBInsights returns an object that can list and get MongoDBInsights.
 	MongoDBInsights(namespace string) MongoDBInsightNamespaceLister
 	MongoDBInsightListerExpansion
@@ -39,25 +39,17 @@ type MongoDBInsightLister interface {
 
 // mongoDBInsightLister implements the MongoDBInsightLister interface.
 type mongoDBInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.MongoDBInsight]
 }
 
 // NewMongoDBInsightLister returns a new MongoDBInsightLister.
 func NewMongoDBInsightLister(indexer cache.Indexer) MongoDBInsightLister {
-	return &mongoDBInsightLister{indexer: indexer}
-}
-
-// List lists all MongoDBInsights in the indexer.
-func (s *mongoDBInsightLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBInsight))
-	})
-	return ret, err
+	return &mongoDBInsightLister{listers.New[*uiv1alpha1.MongoDBInsight](indexer, uiv1alpha1.Resource("mongodbinsight"))}
 }
 
 // MongoDBInsights returns an object that can list and get MongoDBInsights.
 func (s *mongoDBInsightLister) MongoDBInsights(namespace string) MongoDBInsightNamespaceLister {
-	return mongoDBInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mongoDBInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.MongoDBInsight](s.ResourceIndexer, namespace)}
 }
 
 // MongoDBInsightNamespaceLister helps list and get MongoDBInsights.
@@ -65,36 +57,15 @@ func (s *mongoDBInsightLister) MongoDBInsights(namespace string) MongoDBInsightN
 type MongoDBInsightNamespaceLister interface {
 	// List lists all MongoDBInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MongoDBInsight, err error)
 	// Get retrieves the MongoDBInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MongoDBInsight, error)
+	Get(name string) (*uiv1alpha1.MongoDBInsight, error)
 	MongoDBInsightNamespaceListerExpansion
 }
 
 // mongoDBInsightNamespaceLister implements the MongoDBInsightNamespaceLister
 // interface.
 type mongoDBInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MongoDBInsights in the indexer for a given namespace.
-func (s mongoDBInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the MongoDBInsight from the indexer for a given namespace and name.
-func (s mongoDBInsightNamespaceLister) Get(name string) (*v1alpha1.MongoDBInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mongodbinsight"), name)
-	}
-	return obj.(*v1alpha1.MongoDBInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.MongoDBInsight]
 }

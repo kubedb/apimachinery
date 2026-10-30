@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchInsightLister helps list ElasticsearchInsights.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchInsightLister interface {
 	// List lists all ElasticsearchInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchInsight, err error)
 	// ElasticsearchInsights returns an object that can list and get ElasticsearchInsights.
 	ElasticsearchInsights(namespace string) ElasticsearchInsightNamespaceLister
 	ElasticsearchInsightListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchInsightLister interface {
 
 // elasticsearchInsightLister implements the ElasticsearchInsightLister interface.
 type elasticsearchInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchInsight]
 }
 
 // NewElasticsearchInsightLister returns a new ElasticsearchInsightLister.
 func NewElasticsearchInsightLister(indexer cache.Indexer) ElasticsearchInsightLister {
-	return &elasticsearchInsightLister{indexer: indexer}
-}
-
-// List lists all ElasticsearchInsights in the indexer.
-func (s *elasticsearchInsightLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchInsight))
-	})
-	return ret, err
+	return &elasticsearchInsightLister{listers.New[*uiv1alpha1.ElasticsearchInsight](indexer, uiv1alpha1.Resource("elasticsearchinsight"))}
 }
 
 // ElasticsearchInsights returns an object that can list and get ElasticsearchInsights.
 func (s *elasticsearchInsightLister) ElasticsearchInsights(namespace string) ElasticsearchInsightNamespaceLister {
-	return elasticsearchInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ElasticsearchInsight](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchInsightNamespaceLister helps list and get ElasticsearchInsights.
@@ -65,36 +57,15 @@ func (s *elasticsearchInsightLister) ElasticsearchInsights(namespace string) Ela
 type ElasticsearchInsightNamespaceLister interface {
 	// List lists all ElasticsearchInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchInsight, err error)
 	// Get retrieves the ElasticsearchInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ElasticsearchInsight, error)
+	Get(name string) (*uiv1alpha1.ElasticsearchInsight, error)
 	ElasticsearchInsightNamespaceListerExpansion
 }
 
 // elasticsearchInsightNamespaceLister implements the ElasticsearchInsightNamespaceLister
 // interface.
 type elasticsearchInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ElasticsearchInsights in the indexer for a given namespace.
-func (s elasticsearchInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the ElasticsearchInsight from the indexer for a given namespace and name.
-func (s elasticsearchInsightNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("elasticsearchinsight"), name)
-	}
-	return obj.(*v1alpha1.ElasticsearchInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchInsight]
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // HanaDBs.
 type HanaDBInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.HanaDBLister
+	Lister() gitopsv1alpha1.HanaDBLister
 }
 
 type hanaDBInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredHanaDBInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().HanaDBs(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().HanaDBs(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().HanaDBs(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().HanaDBs(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().HanaDBs(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().HanaDBs(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.HanaDB{},
+		&apisgitopsv1alpha1.HanaDB{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *hanaDBInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *hanaDBInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.HanaDB{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.HanaDB{}, f.defaultInformer)
 }
 
-func (f *hanaDBInformer) Lister() v1alpha1.HanaDBLister {
-	return v1alpha1.NewHanaDBLister(f.Informer().GetIndexer())
+func (f *hanaDBInformer) Lister() gitopsv1alpha1.HanaDBLister {
+	return gitopsv1alpha1.NewHanaDBLister(f.Informer().GetIndexer())
 }

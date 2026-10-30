@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSolrAutoscalers implements SolrAutoscalerInterface
-type FakeSolrAutoscalers struct {
+// fakeSolrAutoscalers implements SolrAutoscalerInterface
+type fakeSolrAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.SolrAutoscaler, *v1alpha1.SolrAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var solrautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("solrautoscalers")
-
-var solrautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("SolrAutoscaler")
-
-// Get takes name of the solrAutoscaler, and returns the corresponding solrAutoscaler object, and an error if there is any.
-func (c *FakeSolrAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SolrAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(solrautoscalersResource, c.ns, name), &v1alpha1.SolrAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSolrAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.SolrAutoscalerInterface {
+	return &fakeSolrAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.SolrAutoscaler, *v1alpha1.SolrAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("solrautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("SolrAutoscaler"),
+			func() *v1alpha1.SolrAutoscaler { return &v1alpha1.SolrAutoscaler{} },
+			func() *v1alpha1.SolrAutoscalerList { return &v1alpha1.SolrAutoscalerList{} },
+			func(dst, src *v1alpha1.SolrAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SolrAutoscalerList) []*v1alpha1.SolrAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SolrAutoscalerList, items []*v1alpha1.SolrAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SolrAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of SolrAutoscalers that match those selectors.
-func (c *FakeSolrAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SolrAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(solrautoscalersResource, solrautoscalersKind, c.ns, opts), &v1alpha1.SolrAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SolrAutoscalerList{ListMeta: obj.(*v1alpha1.SolrAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SolrAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested solrAutoscalers.
-func (c *FakeSolrAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(solrautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a solrAutoscaler and creates it.  Returns the server's representation of the solrAutoscaler, and an error, if there is any.
-func (c *FakeSolrAutoscalers) Create(ctx context.Context, solrAutoscaler *v1alpha1.SolrAutoscaler, opts v1.CreateOptions) (result *v1alpha1.SolrAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(solrautoscalersResource, c.ns, solrAutoscaler), &v1alpha1.SolrAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrAutoscaler), err
-}
-
-// Update takes the representation of a solrAutoscaler and updates it. Returns the server's representation of the solrAutoscaler, and an error, if there is any.
-func (c *FakeSolrAutoscalers) Update(ctx context.Context, solrAutoscaler *v1alpha1.SolrAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.SolrAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(solrautoscalersResource, c.ns, solrAutoscaler), &v1alpha1.SolrAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSolrAutoscalers) UpdateStatus(ctx context.Context, solrAutoscaler *v1alpha1.SolrAutoscaler, opts v1.UpdateOptions) (*v1alpha1.SolrAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(solrautoscalersResource, "status", c.ns, solrAutoscaler), &v1alpha1.SolrAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrAutoscaler), err
-}
-
-// Delete takes name of the solrAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeSolrAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(solrautoscalersResource, c.ns, name, opts), &v1alpha1.SolrAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSolrAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(solrautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SolrAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched solrAutoscaler.
-func (c *FakeSolrAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SolrAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(solrautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.SolrAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrAutoscaler), err
 }

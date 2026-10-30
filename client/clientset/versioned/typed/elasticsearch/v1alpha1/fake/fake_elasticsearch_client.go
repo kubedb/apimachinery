@@ -30,7 +30,7 @@ type FakeElasticsearchV1alpha1 struct {
 }
 
 func (c *FakeElasticsearchV1alpha1) ElasticsearchDashboards(namespace string) v1alpha1.ElasticsearchDashboardInterface {
-	return &FakeElasticsearchDashboards{c, namespace}
+	return newFakeElasticsearchDashboards(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

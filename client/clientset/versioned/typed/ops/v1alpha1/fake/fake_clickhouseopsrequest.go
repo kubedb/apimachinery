@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeClickHouseOpsRequests implements ClickHouseOpsRequestInterface
-type FakeClickHouseOpsRequests struct {
+// fakeClickHouseOpsRequests implements ClickHouseOpsRequestInterface
+type fakeClickHouseOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.ClickHouseOpsRequest, *v1alpha1.ClickHouseOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var clickhouseopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("clickhouseopsrequests")
-
-var clickhouseopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("ClickHouseOpsRequest")
-
-// Get takes name of the clickHouseOpsRequest, and returns the corresponding clickHouseOpsRequest object, and an error if there is any.
-func (c *FakeClickHouseOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ClickHouseOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(clickhouseopsrequestsResource, c.ns, name), &v1alpha1.ClickHouseOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeClickHouseOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.ClickHouseOpsRequestInterface {
+	return &fakeClickHouseOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.ClickHouseOpsRequest, *v1alpha1.ClickHouseOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("clickhouseopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("ClickHouseOpsRequest"),
+			func() *v1alpha1.ClickHouseOpsRequest { return &v1alpha1.ClickHouseOpsRequest{} },
+			func() *v1alpha1.ClickHouseOpsRequestList { return &v1alpha1.ClickHouseOpsRequestList{} },
+			func(dst, src *v1alpha1.ClickHouseOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ClickHouseOpsRequestList) []*v1alpha1.ClickHouseOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ClickHouseOpsRequestList, items []*v1alpha1.ClickHouseOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of ClickHouseOpsRequests that match those selectors.
-func (c *FakeClickHouseOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ClickHouseOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(clickhouseopsrequestsResource, clickhouseopsrequestsKind, c.ns, opts), &v1alpha1.ClickHouseOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ClickHouseOpsRequestList{ListMeta: obj.(*v1alpha1.ClickHouseOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ClickHouseOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested clickHouseOpsRequests.
-func (c *FakeClickHouseOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(clickhouseopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a clickHouseOpsRequest and creates it.  Returns the server's representation of the clickHouseOpsRequest, and an error, if there is any.
-func (c *FakeClickHouseOpsRequests) Create(ctx context.Context, clickHouseOpsRequest *v1alpha1.ClickHouseOpsRequest, opts v1.CreateOptions) (result *v1alpha1.ClickHouseOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(clickhouseopsrequestsResource, c.ns, clickHouseOpsRequest), &v1alpha1.ClickHouseOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), err
-}
-
-// Update takes the representation of a clickHouseOpsRequest and updates it. Returns the server's representation of the clickHouseOpsRequest, and an error, if there is any.
-func (c *FakeClickHouseOpsRequests) Update(ctx context.Context, clickHouseOpsRequest *v1alpha1.ClickHouseOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.ClickHouseOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(clickhouseopsrequestsResource, c.ns, clickHouseOpsRequest), &v1alpha1.ClickHouseOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeClickHouseOpsRequests) UpdateStatus(ctx context.Context, clickHouseOpsRequest *v1alpha1.ClickHouseOpsRequest, opts v1.UpdateOptions) (*v1alpha1.ClickHouseOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(clickhouseopsrequestsResource, "status", c.ns, clickHouseOpsRequest), &v1alpha1.ClickHouseOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), err
-}
-
-// Delete takes name of the clickHouseOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeClickHouseOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(clickhouseopsrequestsResource, c.ns, name, opts), &v1alpha1.ClickHouseOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeClickHouseOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(clickhouseopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ClickHouseOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched clickHouseOpsRequest.
-func (c *FakeClickHouseOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ClickHouseOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(clickhouseopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ClickHouseOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), err
 }

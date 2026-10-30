@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeIgnites implements IgniteInterface
-type FakeIgnites struct {
+// fakeIgnites implements IgniteInterface
+type fakeIgnites struct {
+	*gentype.FakeClientWithList[*v1alpha1.Ignite, *v1alpha1.IgniteList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var ignitesResource = v1alpha1.SchemeGroupVersion.WithResource("ignites")
-
-var ignitesKind = v1alpha1.SchemeGroupVersion.WithKind("Ignite")
-
-// Get takes name of the ignite, and returns the corresponding ignite object, and an error if there is any.
-func (c *FakeIgnites) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Ignite, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(ignitesResource, c.ns, name), &v1alpha1.Ignite{})
-
-	if obj == nil {
-		return nil, err
+func newFakeIgnites(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.IgniteInterface {
+	return &fakeIgnites{
+		gentype.NewFakeClientWithList[*v1alpha1.Ignite, *v1alpha1.IgniteList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("ignites"),
+			v1alpha1.SchemeGroupVersion.WithKind("Ignite"),
+			func() *v1alpha1.Ignite { return &v1alpha1.Ignite{} },
+			func() *v1alpha1.IgniteList { return &v1alpha1.IgniteList{} },
+			func(dst, src *v1alpha1.IgniteList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.IgniteList) []*v1alpha1.Ignite { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.IgniteList, items []*v1alpha1.Ignite) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Ignite), err
-}
-
-// List takes label and field selectors, and returns the list of Ignites that match those selectors.
-func (c *FakeIgnites) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.IgniteList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(ignitesResource, ignitesKind, c.ns, opts), &v1alpha1.IgniteList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.IgniteList{ListMeta: obj.(*v1alpha1.IgniteList).ListMeta}
-	for _, item := range obj.(*v1alpha1.IgniteList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested ignites.
-func (c *FakeIgnites) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(ignitesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a ignite and creates it.  Returns the server's representation of the ignite, and an error, if there is any.
-func (c *FakeIgnites) Create(ctx context.Context, ignite *v1alpha1.Ignite, opts v1.CreateOptions) (result *v1alpha1.Ignite, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(ignitesResource, c.ns, ignite), &v1alpha1.Ignite{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Ignite), err
-}
-
-// Update takes the representation of a ignite and updates it. Returns the server's representation of the ignite, and an error, if there is any.
-func (c *FakeIgnites) Update(ctx context.Context, ignite *v1alpha1.Ignite, opts v1.UpdateOptions) (result *v1alpha1.Ignite, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(ignitesResource, c.ns, ignite), &v1alpha1.Ignite{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Ignite), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeIgnites) UpdateStatus(ctx context.Context, ignite *v1alpha1.Ignite, opts v1.UpdateOptions) (*v1alpha1.Ignite, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(ignitesResource, "status", c.ns, ignite), &v1alpha1.Ignite{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Ignite), err
-}
-
-// Delete takes name of the ignite and deletes it. Returns an error if one occurs.
-func (c *FakeIgnites) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(ignitesResource, c.ns, name, opts), &v1alpha1.Ignite{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeIgnites) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(ignitesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.IgniteList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched ignite.
-func (c *FakeIgnites) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Ignite, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(ignitesResource, c.ns, name, pt, data, subresources...), &v1alpha1.Ignite{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Ignite), err
 }

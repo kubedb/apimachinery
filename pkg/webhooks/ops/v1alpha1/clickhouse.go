@@ -120,7 +120,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	case opsapi.ClickHouseOpsRequestTypeRestart:
 
 	case opsapi.ClickHouseOpsRequestTypeVerticalScaling:
-		if err := rv.validateClickHouseVerticalScalingOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseVerticalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -138,7 +138,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.ClickHouseOpsRequestTypeHorizontalScaling:
-		if err := rv.validateClickHouseHorizontalScalingOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseHorizontalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -244,13 +244,18 @@ func (rv *ClickHouseOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ClickHou
 	return clickhouse, nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Node == nil {
-		return errors.New("spec.verticalScaling.node nil not supported in VerticalScaling type")
+	if verticalScalingSpec.Node == nil && verticalScalingSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.verticalScaling.node` or `spec.verticalScaling.clickHouseKeeper` must be provided")
+	}
+	if verticalScalingSpec.ClickHouseKeeper != nil {
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
 	}
 
 	return nil
@@ -279,35 +284,89 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOp
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 
-	if volumeExpansionSpec.Node == nil {
-		return errors.New("spec.volumeExpansion.Node can't be empty")
+	if volumeExpansionSpec.Node == nil && volumeExpansionSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.volumeExpansion.node` or `spec.volumeExpansion.clickHouseKeeper` must be provided")
 	}
 
-	var storage *core.PersistentVolumeClaimSpec
-	if db.Spec.ClusterTopology != nil {
-		storage = db.Spec.ClusterTopology.Cluster.Storage
-	} else {
-		storage = db.Spec.Storage
+	if volumeExpansionSpec.Node != nil {
+		var storage *core.PersistentVolumeClaimSpec
+		if db.Spec.ClusterTopology != nil {
+			storage = db.Spec.ClusterTopology.Cluster.Storage
+		} else {
+			storage = db.Spec.Storage
+		}
+		if err := opsutil.ValidateStorageExpansion(storage, volumeExpansionSpec.Node, req.Status.Phase, "ClickHouse"); err != nil {
+			return err
+		}
 	}
-	if err := opsutil.ValidateStorageExpansion(storage, volumeExpansionSpec.Node, req.Status.Phase, "ClickHouse"); err != nil {
-		return err
+
+	if volumeExpansionSpec.ClickHouseKeeper != nil {
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
+		if db.Spec.ClusterTopology != nil && db.Spec.ClusterTopology.ClickHouseKeeper != nil && !db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged && db.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
+			if err := opsutil.ValidateStorageExpansion(db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, volumeExpansionSpec.ClickHouseKeeper, req.Status.Phase, "ClickHouseKeeper"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScalingOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
-		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
 
-	if horizontalScalingSpec.Replicas == nil {
-		return errors.New("spec.horizontalScaling.replicas can not be empty")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.Shards == nil && horizontalScalingSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.shards`, or `spec.horizontalScaling.clickHouseKeeper` must be provided")
+	}
+	if db.Spec.ClusterTopology == nil {
+		return errors.New("horizontal scaling is only supported for a sharded cluster (spec.clusterTopology)")
 	}
 
-	if *horizontalScalingSpec.Replicas <= 0 {
-		return errors.New("spec.horizontalScaling.replicas must be positive")
+	if horizontalScalingSpec.Replicas != nil {
+		target := *horizontalScalingSpec.Replicas
+		if target <= 0 {
+			return errors.New("`spec.horizontalScaling.replicas` must be greater than 0")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") &&
+			db.Spec.ClusterTopology.Cluster.Replicas != nil && target == *db.Spec.ClusterTopology.Cluster.Replicas {
+			return fmt.Errorf("cluster already has %d replicas", target)
+		}
+	}
+
+	if horizontalScalingSpec.ClickHouseKeeper != nil {
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
+		target := *horizontalScalingSpec.ClickHouseKeeper
+		if target <= 0 {
+			return errors.New("`spec.horizontalScaling.clickHouseKeeper` must be greater than 0")
+		}
+		// Only meaningful before the request starts: once it succeeds the database
+		// really does have the requested replica count, and re-validating would
+		// reject the operator's own closing status update.
+		current := db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") &&
+			current != nil && target == *current {
+			return fmt.Errorf("clickHouseKeeper already has %d replicas", target)
+		}
+	}
+
+	if horizontalScalingSpec.Shards != nil {
+		if *horizontalScalingSpec.Shards <= 0 {
+			return errors.New("`spec.horizontalScaling.shards` must be greater than 0")
+		}
+		// Scale-up only — validate at creation time to avoid re-validation failures
+		if req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "" {
+			currentShards := int(*db.Spec.ClusterTopology.Cluster.Shards)
+			if int(*horizontalScalingSpec.Shards) <= currentShards {
+				return fmt.Errorf("shard scale-up only: `spec.horizontalScaling.shards` (%d) must be greater than current shard count (%d)", *horizontalScalingSpec.Shards, currentShards)
+			}
+		}
 	}
 
 	return nil
@@ -367,19 +426,25 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticat
 	}
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), rv.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseKeeperOpsRequest(db *olddbapi.ClickHouse) error {
+	if db.Spec.ClusterTopology == nil {
+		return errors.New("clusterTopology is not set; clickHouseKeeper ops are only supported for topology mode")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper == nil {
+		return errors.New("clickHouseKeeper is not configured in spec.clusterTopology")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
+		return errors.New("clickHouseKeeper is externally managed; ops are not supported")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper.Spec == nil {
+		return errors.New("spec.clusterTopology.clickHouseKeeper.spec is not set")
 	}
 	return nil
 }

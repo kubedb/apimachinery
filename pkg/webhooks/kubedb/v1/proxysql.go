@@ -41,7 +41,7 @@ import (
 // SetupProxySQLWebhookWithManager registers the webhook for ProxySQL in the manager.
 func SetupProxySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.ProxySQL{}).
-		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -56,6 +56,9 @@ type ProxySQLCustomWebhook struct {
 var _ webhook.CustomDefaulter = &ProxySQLCustomWebhook{}
 
 func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.ProxySQL)
 	proxyLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
@@ -85,6 +88,12 @@ func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 var _ webhook.CustomValidator = &ProxySQLCustomWebhook{}
 
 func (w ProxySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	proxysql := obj.(*dbapi.ProxySQL)
 	proxyLog.Info("validating", "name", proxysql.Name)
 	err = w.ValidateProxySQL(proxysql)
@@ -92,6 +101,9 @@ func (w ProxySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.O
 }
 
 func (w ProxySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldProxy, ok := oldObj.(*dbapi.ProxySQL)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", oldProxy)

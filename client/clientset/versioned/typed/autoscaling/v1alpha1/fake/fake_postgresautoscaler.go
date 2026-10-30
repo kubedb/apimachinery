@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresAutoscalers implements PostgresAutoscalerInterface
-type FakePostgresAutoscalers struct {
+// fakePostgresAutoscalers implements PostgresAutoscalerInterface
+type fakePostgresAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresAutoscaler, *v1alpha1.PostgresAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var postgresautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers")
-
-var postgresautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresAutoscaler")
-
-// Get takes name of the postgresAutoscaler, and returns the corresponding postgresAutoscaler object, and an error if there is any.
-func (c *FakePostgresAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresautoscalersResource, c.ns, name), &v1alpha1.PostgresAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.PostgresAutoscalerInterface {
+	return &fakePostgresAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresAutoscaler, *v1alpha1.PostgresAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresAutoscaler"),
+			func() *v1alpha1.PostgresAutoscaler { return &v1alpha1.PostgresAutoscaler{} },
+			func() *v1alpha1.PostgresAutoscalerList { return &v1alpha1.PostgresAutoscalerList{} },
+			func(dst, src *v1alpha1.PostgresAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresAutoscalerList) []*v1alpha1.PostgresAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresAutoscalerList, items []*v1alpha1.PostgresAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresAutoscalers that match those selectors.
-func (c *FakePostgresAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresautoscalersResource, postgresautoscalersKind, c.ns, opts), &v1alpha1.PostgresAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresAutoscalerList{ListMeta: obj.(*v1alpha1.PostgresAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresAutoscalers.
-func (c *FakePostgresAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresAutoscaler and creates it.  Returns the server's representation of the postgresAutoscaler, and an error, if there is any.
-func (c *FakePostgresAutoscalers) Create(ctx context.Context, postgresAutoscaler *v1alpha1.PostgresAutoscaler, opts v1.CreateOptions) (result *v1alpha1.PostgresAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresautoscalersResource, c.ns, postgresAutoscaler), &v1alpha1.PostgresAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresAutoscaler), err
-}
-
-// Update takes the representation of a postgresAutoscaler and updates it. Returns the server's representation of the postgresAutoscaler, and an error, if there is any.
-func (c *FakePostgresAutoscalers) Update(ctx context.Context, postgresAutoscaler *v1alpha1.PostgresAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.PostgresAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresautoscalersResource, c.ns, postgresAutoscaler), &v1alpha1.PostgresAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePostgresAutoscalers) UpdateStatus(ctx context.Context, postgresAutoscaler *v1alpha1.PostgresAutoscaler, opts v1.UpdateOptions) (*v1alpha1.PostgresAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresautoscalersResource, "status", c.ns, postgresAutoscaler), &v1alpha1.PostgresAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresAutoscaler), err
-}
-
-// Delete takes name of the postgresAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakePostgresAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresautoscalersResource, c.ns, name, opts), &v1alpha1.PostgresAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresAutoscaler.
-func (c *FakePostgresAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresAutoscaler), err
 }

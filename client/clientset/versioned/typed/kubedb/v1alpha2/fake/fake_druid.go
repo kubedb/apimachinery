@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDruids implements DruidInterface
-type FakeDruids struct {
+// fakeDruids implements DruidInterface
+type fakeDruids struct {
+	*gentype.FakeClientWithList[*v1alpha2.Druid, *v1alpha2.DruidList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var druidsResource = v1alpha2.SchemeGroupVersion.WithResource("druids")
-
-var druidsKind = v1alpha2.SchemeGroupVersion.WithKind("Druid")
-
-// Get takes name of the druid, and returns the corresponding druid object, and an error if there is any.
-func (c *FakeDruids) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Druid, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(druidsResource, c.ns, name), &v1alpha2.Druid{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDruids(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.DruidInterface {
+	return &fakeDruids{
+		gentype.NewFakeClientWithList[*v1alpha2.Druid, *v1alpha2.DruidList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("druids"),
+			v1alpha2.SchemeGroupVersion.WithKind("Druid"),
+			func() *v1alpha2.Druid { return &v1alpha2.Druid{} },
+			func() *v1alpha2.DruidList { return &v1alpha2.DruidList{} },
+			func(dst, src *v1alpha2.DruidList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.DruidList) []*v1alpha2.Druid { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.DruidList, items []*v1alpha2.Druid) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Druid), err
-}
-
-// List takes label and field selectors, and returns the list of Druids that match those selectors.
-func (c *FakeDruids) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.DruidList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(druidsResource, druidsKind, c.ns, opts), &v1alpha2.DruidList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.DruidList{ListMeta: obj.(*v1alpha2.DruidList).ListMeta}
-	for _, item := range obj.(*v1alpha2.DruidList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested druids.
-func (c *FakeDruids) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(druidsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a druid and creates it.  Returns the server's representation of the druid, and an error, if there is any.
-func (c *FakeDruids) Create(ctx context.Context, druid *v1alpha2.Druid, opts v1.CreateOptions) (result *v1alpha2.Druid, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(druidsResource, c.ns, druid), &v1alpha2.Druid{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Druid), err
-}
-
-// Update takes the representation of a druid and updates it. Returns the server's representation of the druid, and an error, if there is any.
-func (c *FakeDruids) Update(ctx context.Context, druid *v1alpha2.Druid, opts v1.UpdateOptions) (result *v1alpha2.Druid, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(druidsResource, c.ns, druid), &v1alpha2.Druid{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Druid), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDruids) UpdateStatus(ctx context.Context, druid *v1alpha2.Druid, opts v1.UpdateOptions) (*v1alpha2.Druid, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(druidsResource, "status", c.ns, druid), &v1alpha2.Druid{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Druid), err
-}
-
-// Delete takes name of the druid and deletes it. Returns an error if one occurs.
-func (c *FakeDruids) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(druidsResource, c.ns, name, opts), &v1alpha2.Druid{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDruids) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(druidsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.DruidList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched druid.
-func (c *FakeDruids) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Druid, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(druidsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Druid{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Druid), err
 }

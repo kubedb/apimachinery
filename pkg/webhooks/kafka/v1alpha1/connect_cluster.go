@@ -24,6 +24,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -43,7 +44,7 @@ import (
 // SetupConnectClusterWebhookWithManager registers the webhook for Kafka ConnectCluster in the manager.
 func SetupConnectClusterWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.ConnectCluster{}).
-		WithValidator(&ConnectClusterCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ConnectClusterCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ConnectClusterCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

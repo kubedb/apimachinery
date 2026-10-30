@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLAutoscalers implements MySQLAutoscalerInterface
-type FakeMySQLAutoscalers struct {
+// fakeMySQLAutoscalers implements MySQLAutoscalerInterface
+type fakeMySQLAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MySQLAutoscaler, *v1alpha1.MySQLAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var mysqlautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers")
-
-var mysqlautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLAutoscaler")
-
-// Get takes name of the mySQLAutoscaler, and returns the corresponding mySQLAutoscaler object, and an error if there is any.
-func (c *FakeMySQLAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlautoscalersResource, c.ns, name), &v1alpha1.MySQLAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMySQLAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.MySQLAutoscalerInterface {
+	return &fakeMySQLAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.MySQLAutoscaler, *v1alpha1.MySQLAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MySQLAutoscaler"),
+			func() *v1alpha1.MySQLAutoscaler { return &v1alpha1.MySQLAutoscaler{} },
+			func() *v1alpha1.MySQLAutoscalerList { return &v1alpha1.MySQLAutoscalerList{} },
+			func(dst, src *v1alpha1.MySQLAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MySQLAutoscalerList) []*v1alpha1.MySQLAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MySQLAutoscalerList, items []*v1alpha1.MySQLAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MySQLAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLAutoscalers that match those selectors.
-func (c *FakeMySQLAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MySQLAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlautoscalersResource, mysqlautoscalersKind, c.ns, opts), &v1alpha1.MySQLAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MySQLAutoscalerList{ListMeta: obj.(*v1alpha1.MySQLAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MySQLAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLAutoscalers.
-func (c *FakeMySQLAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mysqlautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mySQLAutoscaler and creates it.  Returns the server's representation of the mySQLAutoscaler, and an error, if there is any.
-func (c *FakeMySQLAutoscalers) Create(ctx context.Context, mySQLAutoscaler *v1alpha1.MySQLAutoscaler, opts v1.CreateOptions) (result *v1alpha1.MySQLAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlautoscalersResource, c.ns, mySQLAutoscaler), &v1alpha1.MySQLAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLAutoscaler), err
-}
-
-// Update takes the representation of a mySQLAutoscaler and updates it. Returns the server's representation of the mySQLAutoscaler, and an error, if there is any.
-func (c *FakeMySQLAutoscalers) Update(ctx context.Context, mySQLAutoscaler *v1alpha1.MySQLAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.MySQLAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlautoscalersResource, c.ns, mySQLAutoscaler), &v1alpha1.MySQLAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMySQLAutoscalers) UpdateStatus(ctx context.Context, mySQLAutoscaler *v1alpha1.MySQLAutoscaler, opts v1.UpdateOptions) (*v1alpha1.MySQLAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mysqlautoscalersResource, "status", c.ns, mySQLAutoscaler), &v1alpha1.MySQLAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLAutoscaler), err
-}
-
-// Delete takes name of the mySQLAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mysqlautoscalersResource, c.ns, name, opts), &v1alpha1.MySQLAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQLAutoscaler.
-func (c *FakeMySQLAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MySQLAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.MySQLAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLAutoscaler), err
 }

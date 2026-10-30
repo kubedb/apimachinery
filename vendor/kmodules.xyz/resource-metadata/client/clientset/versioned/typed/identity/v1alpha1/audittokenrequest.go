@@ -19,12 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
+
+	identityv1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rest "k8s.io/client-go/rest"
-	v1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
-	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
+	gentype "kmodules.xyz/client-go/gentype"
 )
 
 // AuditTokenRequestsGetter has a method to return a AuditTokenRequestInterface.
@@ -35,30 +36,24 @@ type AuditTokenRequestsGetter interface {
 
 // AuditTokenRequestInterface has methods to work with AuditTokenRequest resources.
 type AuditTokenRequestInterface interface {
-	Create(ctx context.Context, auditTokenRequest *v1alpha1.AuditTokenRequest, opts v1.CreateOptions) (*v1alpha1.AuditTokenRequest, error)
+	Create(ctx context.Context, auditTokenRequest *identityv1alpha1.AuditTokenRequest, opts v1.CreateOptions) (*identityv1alpha1.AuditTokenRequest, error)
 	AuditTokenRequestExpansion
 }
 
 // auditTokenRequests implements AuditTokenRequestInterface
 type auditTokenRequests struct {
-	client rest.Interface
+	*gentype.Client[*identityv1alpha1.AuditTokenRequest]
 }
 
 // newAuditTokenRequests returns a AuditTokenRequests
 func newAuditTokenRequests(c *IdentityV1alpha1Client) *auditTokenRequests {
 	return &auditTokenRequests{
-		client: c.RESTClient(),
+		gentype.NewClient[*identityv1alpha1.AuditTokenRequest](
+			"audittokenrequests",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *identityv1alpha1.AuditTokenRequest { return &identityv1alpha1.AuditTokenRequest{} },
+		),
 	}
-}
-
-// Create takes the representation of a auditTokenRequest and creates it.  Returns the server's representation of the auditTokenRequest, and an error, if there is any.
-func (c *auditTokenRequests) Create(ctx context.Context, auditTokenRequest *v1alpha1.AuditTokenRequest, opts v1.CreateOptions) (result *v1alpha1.AuditTokenRequest, err error) {
-	result = &v1alpha1.AuditTokenRequest{}
-	err = c.client.Post().
-		Resource("audittokenrequests").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(auditTokenRequest).
-		Do(ctx).
-		Into(result)
-	return
 }

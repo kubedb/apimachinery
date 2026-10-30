@@ -135,6 +135,12 @@ func (w *OracleOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Oracl
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.OracleOpsRequestTypeReconfigureTLS:
+		if err := w.validateOracleReconfigureTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.OracleOpsRequestTypeStorageMigration:
 		if err := w.validateOracleStorageMigrationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
@@ -162,11 +168,20 @@ func (w *OracleOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.OracleOpsRequ
 	return oracle, nil
 }
 
+func (w *OracleOpsRequestCustomWebhook) validateOracleReconfigureTLSOpsRequest(req *opsapi.OracleOpsRequest) error {
+	tls := req.Spec.TLS
+	if tls == nil {
+		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
+	}
+
+	return nil
+}
+
 func (w *OracleOpsRequestCustomWebhook) validateOracleStorageMigrationOpsRequest(req *opsapi.OracleOpsRequest) error {
 	db := &dbapi.Oracle{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+		return errors.Wrap(err, fmt.Sprintf("failed to get oracle: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
 	if req.Spec.Migration.StorageClassName == nil {
@@ -211,8 +226,9 @@ func (w *OracleOpsRequestCustomWebhook) validateOracleReconfigurationOpsRequest(
 		return errors.New("spec configuration nil not supported in Reconfigure type")
 	}
 
-	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil &&
+		len(reconfigureSpec.ApplyConfig) == 0 && reconfigureSpec.WalletConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `ApplyConfig`, or `WalletConfigSecret` must be specified")
 	}
 
 	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {

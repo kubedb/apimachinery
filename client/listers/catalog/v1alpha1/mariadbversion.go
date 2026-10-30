@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MariaDBVersionLister helps list MariaDBVersions.
@@ -31,39 +31,19 @@ import (
 type MariaDBVersionLister interface {
 	// List lists all MariaDBVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.MariaDBVersion, err error)
 	// Get retrieves the MariaDBVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MariaDBVersion, error)
+	Get(name string) (*catalogv1alpha1.MariaDBVersion, error)
 	MariaDBVersionListerExpansion
 }
 
 // mariaDBVersionLister implements the MariaDBVersionLister interface.
 type mariaDBVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.MariaDBVersion]
 }
 
 // NewMariaDBVersionLister returns a new MariaDBVersionLister.
 func NewMariaDBVersionLister(indexer cache.Indexer) MariaDBVersionLister {
-	return &mariaDBVersionLister{indexer: indexer}
-}
-
-// List lists all MariaDBVersions in the indexer.
-func (s *mariaDBVersionLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the MariaDBVersion from the index for a given name.
-func (s *mariaDBVersionLister) Get(name string) (*v1alpha1.MariaDBVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mariadbversion"), name)
-	}
-	return obj.(*v1alpha1.MariaDBVersion), nil
+	return &mariaDBVersionLister{listers.New[*catalogv1alpha1.MariaDBVersion](indexer, catalogv1alpha1.Resource("mariadbversion"))}
 }

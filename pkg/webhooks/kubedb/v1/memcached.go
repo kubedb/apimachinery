@@ -48,7 +48,7 @@ import (
 // SetupMemcachedWebhookWithManager registers the webhook for Memcached in the manager.
 func SetupMemcachedWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Memcached{}).
-		WithValidator(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -78,6 +78,9 @@ var _ webhook.CustomDefaulter = &MemcachedCustomWebhook{}
 var memLog = logf.Log.WithName("memcached-resource")
 
 func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*dbapi.Memcached)
 	if !ok {
 		return fmt.Errorf("expected a Memcached but got a %T", obj)
@@ -281,12 +284,21 @@ func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Objec
 }
 
 func (mv MemcachedCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, mv.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	memcached := obj.(*dbapi.Memcached)
 	memLog.Info("validating", "name", memcached.Name)
 	return mv.validate(ctx, obj)
 }
 
 func (mv MemcachedCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldMemcached, ok := oldObj.(*dbapi.Memcached)
 	if !ok {
 		return nil, fmt.Errorf("expected a Memcached but got a %T", oldObj)

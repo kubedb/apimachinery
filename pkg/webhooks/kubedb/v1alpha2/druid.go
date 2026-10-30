@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,7 +43,7 @@ import (
 // SetupDruidWebhookWithManager registers the webhook for Druid in the manager.
 func SetupDruidWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Druid{}).
-		WithValidator(&DruidCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&DruidCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&DruidCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +62,9 @@ var druidlog = logf.Log.WithName("druid-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *DruidCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Druid)
 	if !ok {
 		return fmt.Errorf("expected an Druid object but got %T", obj)
@@ -77,6 +82,12 @@ var _ webhook.CustomValidator = &DruidCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *DruidCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Druid)
 	if !ok {
 		return nil, fmt.Errorf("expected an Druid object but got %T", obj)
@@ -91,6 +102,9 @@ func (w *DruidCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *DruidCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Druid)
 	if !ok {
 		return nil, fmt.Errorf("expected an Druid object but got %T", newObj)

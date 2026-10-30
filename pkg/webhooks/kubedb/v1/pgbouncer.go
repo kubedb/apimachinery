@@ -47,7 +47,7 @@ import (
 // SetupPgBouncerWebhookWithManager registers the webhook for PgBouncer in the manager.
 func SetupPgBouncerWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.PgBouncer{}).
-		WithValidator(&PgBouncerCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PgBouncerCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PgBouncerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -62,6 +62,9 @@ var _ webhook.CustomDefaulter = &PgBouncerCustomWebhook{}
 var pgBouncerLog = logf.Log.WithName("pqbouncer-resource")
 
 func (pw PgBouncerCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*dbapi.PgBouncer)
 	if !ok {
 		return fmt.Errorf("expected an PgBouncer object but got %T", obj)
@@ -118,6 +121,12 @@ var pbReservedMountPaths = []string{
 }
 
 func (pw PgBouncerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, pw.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	pgBouncer, ok := obj.(*dbapi.PgBouncer)
 	if !ok {
 		return nil, fmt.Errorf("expected a PgBouncer but got a %T", pgBouncer)
@@ -132,6 +141,9 @@ func (pw PgBouncerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 }
 
 func (pw PgBouncerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	// TODO : user can't update anything related to config
 	pgBouncer, ok := newObj.(*dbapi.PgBouncer)
 	if !ok {

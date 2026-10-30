@@ -19,12 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
+
+	identityv1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rest "k8s.io/client-go/rest"
-	v1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
-	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // SelfSubjectNamespaceAccessReviewsGetter has a method to return a SelfSubjectNamespaceAccessReviewInterface.
@@ -35,30 +36,26 @@ type SelfSubjectNamespaceAccessReviewsGetter interface {
 
 // SelfSubjectNamespaceAccessReviewInterface has methods to work with SelfSubjectNamespaceAccessReview resources.
 type SelfSubjectNamespaceAccessReviewInterface interface {
-	Create(ctx context.Context, selfSubjectNamespaceAccessReview *v1alpha1.SelfSubjectNamespaceAccessReview, opts v1.CreateOptions) (*v1alpha1.SelfSubjectNamespaceAccessReview, error)
+	Create(ctx context.Context, selfSubjectNamespaceAccessReview *identityv1alpha1.SelfSubjectNamespaceAccessReview, opts v1.CreateOptions) (*identityv1alpha1.SelfSubjectNamespaceAccessReview, error)
 	SelfSubjectNamespaceAccessReviewExpansion
 }
 
 // selfSubjectNamespaceAccessReviews implements SelfSubjectNamespaceAccessReviewInterface
 type selfSubjectNamespaceAccessReviews struct {
-	client rest.Interface
+	*gentype.Client[*identityv1alpha1.SelfSubjectNamespaceAccessReview]
 }
 
 // newSelfSubjectNamespaceAccessReviews returns a SelfSubjectNamespaceAccessReviews
 func newSelfSubjectNamespaceAccessReviews(c *IdentityV1alpha1Client) *selfSubjectNamespaceAccessReviews {
 	return &selfSubjectNamespaceAccessReviews{
-		client: c.RESTClient(),
+		gentype.NewClient[*identityv1alpha1.SelfSubjectNamespaceAccessReview](
+			"selfsubjectnamespaceaccessreviews",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *identityv1alpha1.SelfSubjectNamespaceAccessReview {
+				return &identityv1alpha1.SelfSubjectNamespaceAccessReview{}
+			},
+		),
 	}
-}
-
-// Create takes the representation of a selfSubjectNamespaceAccessReview and creates it.  Returns the server's representation of the selfSubjectNamespaceAccessReview, and an error, if there is any.
-func (c *selfSubjectNamespaceAccessReviews) Create(ctx context.Context, selfSubjectNamespaceAccessReview *v1alpha1.SelfSubjectNamespaceAccessReview, opts v1.CreateOptions) (result *v1alpha1.SelfSubjectNamespaceAccessReview, err error) {
-	result = &v1alpha1.SelfSubjectNamespaceAccessReview{}
-	err = c.client.Post().
-		Resource("selfsubjectnamespaceaccessreviews").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(selfSubjectNamespaceAccessReview).
-		Do(ctx).
-		Into(result)
-	return
 }

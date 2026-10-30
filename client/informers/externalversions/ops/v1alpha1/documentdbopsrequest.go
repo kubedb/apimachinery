@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	apisopsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DocumentDBOpsRequests.
 type DocumentDBOpsRequestInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DocumentDBOpsRequestLister
+	Lister() opsv1alpha1.DocumentDBOpsRequestLister
 }
 
 type documentDBOpsRequestInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredDocumentDBOpsRequestInformer(client versioned.Interface, namespa
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).List(context.TODO(), options)
+				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).Watch(context.TODO(), options)
+				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().DocumentDBOpsRequests(namespace).Watch(ctx, options)
 			},
 		},
-		&opsv1alpha1.DocumentDBOpsRequest{},
+		&apisopsv1alpha1.DocumentDBOpsRequest{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *documentDBOpsRequestInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *documentDBOpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.DocumentDBOpsRequest{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisopsv1alpha1.DocumentDBOpsRequest{}, f.defaultInformer)
 }
 
-func (f *documentDBOpsRequestInformer) Lister() v1alpha1.DocumentDBOpsRequestLister {
-	return v1alpha1.NewDocumentDBOpsRequestLister(f.Informer().GetIndexer())
+func (f *documentDBOpsRequestInformer) Lister() opsv1alpha1.DocumentDBOpsRequestLister {
+	return opsv1alpha1.NewDocumentDBOpsRequestLister(f.Informer().GetIndexer())
 }

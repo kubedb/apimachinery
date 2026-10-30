@@ -322,10 +322,8 @@ func BackupOrRestoreRunningForDB(KBClient client.Client, stashClient scs.StashV1
 }
 
 func PauseBackupConfiguration(KBClient client.Client, stashClient scs.StashV1beta1Interface, dbMeta metav1.ObjectMeta, pausedBackups []kmapi.TypedObjectReference, kind string, opsGeneration int64) ([]kmapi.TypedObjectReference, []kmapi.Condition, error) {
-	stashBackups := make([]kmapi.TypedObjectReference, 0)
-	stashConditions := make([]kmapi.Condition, 0)
-	kubeStashBackups := make([]kmapi.TypedObjectReference, 0)
-	kubeStashConditions := make([]kmapi.Condition, 0)
+	var stashBackups, kubeStashBackups []kmapi.TypedObjectReference
+	var stashConditions, kubeStashConditions []kmapi.Condition
 	var err error
 
 	if stashOperatorExist(KBClient) {
@@ -341,12 +339,15 @@ func PauseBackupConfiguration(KBClient client.Client, stashClient scs.StashV1bet
 		}
 	}
 
-	return append(stashBackups, kubeStashBackups...), append(stashConditions, kubeStashConditions...), nil
+	backups := make([]kmapi.TypedObjectReference, 0, len(stashBackups)+len(kubeStashBackups))
+	backups = append(append(backups, stashBackups...), kubeStashBackups...)
+	conditions := make([]kmapi.Condition, 0, len(stashConditions)+len(kubeStashConditions))
+	conditions = append(append(conditions, stashConditions...), kubeStashConditions...)
+	return backups, conditions, nil
 }
 
 func ResumeBackupConfiguration(KBClient client.Client, stashClient scs.StashV1beta1Interface, pausedBackups []kmapi.TypedObjectReference, opsGeneration int64) ([]kmapi.Condition, error) {
-	stashConditions := make([]kmapi.Condition, 0)
-	kubeStashConditions := make([]kmapi.Condition, 0)
+	var stashConditions, kubeStashConditions []kmapi.Condition
 	var err error
 
 	if stashOperatorExist(KBClient) {
@@ -363,5 +364,7 @@ func ResumeBackupConfiguration(KBClient client.Client, stashClient scs.StashV1be
 		}
 	}
 
-	return append(stashConditions, kubeStashConditions...), nil
+	conditions := make([]kmapi.Condition, 0, len(stashConditions)+len(kubeStashConditions))
+	conditions = append(append(conditions, stashConditions...), kubeStashConditions...)
+	return conditions, nil
 }

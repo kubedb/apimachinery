@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMSSQLServerArchivers implements MSSQLServerArchiverInterface
-type FakeMSSQLServerArchivers struct {
+// fakeMSSQLServerArchivers implements MSSQLServerArchiverInterface
+type fakeMSSQLServerArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MSSQLServerArchiver, *v1alpha1.MSSQLServerArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var mssqlserverarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("mssqlserverarchivers")
-
-var mssqlserverarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerArchiver")
-
-// Get takes name of the mSSQLServerArchiver, and returns the corresponding mSSQLServerArchiver object, and an error if there is any.
-func (c *FakeMSSQLServerArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLServerArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mssqlserverarchiversResource, c.ns, name), &v1alpha1.MSSQLServerArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMSSQLServerArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.MSSQLServerArchiverInterface {
+	return &fakeMSSQLServerArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.MSSQLServerArchiver, *v1alpha1.MSSQLServerArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mssqlserverarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerArchiver"),
+			func() *v1alpha1.MSSQLServerArchiver { return &v1alpha1.MSSQLServerArchiver{} },
+			func() *v1alpha1.MSSQLServerArchiverList { return &v1alpha1.MSSQLServerArchiverList{} },
+			func(dst, src *v1alpha1.MSSQLServerArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MSSQLServerArchiverList) []*v1alpha1.MSSQLServerArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MSSQLServerArchiverList, items []*v1alpha1.MSSQLServerArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MSSQLServerArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of MSSQLServerArchivers that match those selectors.
-func (c *FakeMSSQLServerArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLServerArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mssqlserverarchiversResource, mssqlserverarchiversKind, c.ns, opts), &v1alpha1.MSSQLServerArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MSSQLServerArchiverList{ListMeta: obj.(*v1alpha1.MSSQLServerArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MSSQLServerArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mSSQLServerArchivers.
-func (c *FakeMSSQLServerArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mssqlserverarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mSSQLServerArchiver and creates it.  Returns the server's representation of the mSSQLServerArchiver, and an error, if there is any.
-func (c *FakeMSSQLServerArchivers) Create(ctx context.Context, mSSQLServerArchiver *v1alpha1.MSSQLServerArchiver, opts v1.CreateOptions) (result *v1alpha1.MSSQLServerArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mssqlserverarchiversResource, c.ns, mSSQLServerArchiver), &v1alpha1.MSSQLServerArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerArchiver), err
-}
-
-// Update takes the representation of a mSSQLServerArchiver and updates it. Returns the server's representation of the mSSQLServerArchiver, and an error, if there is any.
-func (c *FakeMSSQLServerArchivers) Update(ctx context.Context, mSSQLServerArchiver *v1alpha1.MSSQLServerArchiver, opts v1.UpdateOptions) (result *v1alpha1.MSSQLServerArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mssqlserverarchiversResource, c.ns, mSSQLServerArchiver), &v1alpha1.MSSQLServerArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMSSQLServerArchivers) UpdateStatus(ctx context.Context, mSSQLServerArchiver *v1alpha1.MSSQLServerArchiver, opts v1.UpdateOptions) (*v1alpha1.MSSQLServerArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mssqlserverarchiversResource, "status", c.ns, mSSQLServerArchiver), &v1alpha1.MSSQLServerArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerArchiver), err
-}
-
-// Delete takes name of the mSSQLServerArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeMSSQLServerArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mssqlserverarchiversResource, c.ns, name, opts), &v1alpha1.MSSQLServerArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMSSQLServerArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mssqlserverarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MSSQLServerArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mSSQLServerArchiver.
-func (c *FakeMSSQLServerArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLServerArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mssqlserverarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.MSSQLServerArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerArchiver), err
 }

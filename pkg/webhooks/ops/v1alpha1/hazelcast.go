@@ -28,7 +28,6 @@ import (
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -312,17 +311,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastStorageMigrationOpsR
 func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastRotateAuthenticationOpsRequest(req *opsapi.HazelcastOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

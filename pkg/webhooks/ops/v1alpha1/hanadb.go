@@ -25,9 +25,11 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	secret_lib "kubedb.dev/apimachinery/pkg/secret"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -122,7 +124,15 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 
 	var allErr field.ErrorList
 	switch req.Spec.Type {
+	case opsapi.HanaDBOpsRequestTypeUpdateVersion:
+		if err := w.validateHanaDBUpdateVersionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeRestart:
+	case opsapi.HanaDBOpsRequestTypeHorizontalScaling:
+		if err := w.validateHanaDBHorizontalScalingOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeVerticalScaling:
 		if err := w.validateHanaDBVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"), req.Name, err.Error()))
@@ -164,6 +174,34 @@ func (w *HanaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HanaDBOpsRequ
 		return nil, fmt.Errorf("spec.databaseRef %s/%s is invalid or not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 	return db, nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBUpdateVersionOpsRequest(req *opsapi.HanaDBOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion is nil, not supported in UpdateVersion type")
+	}
+	if updateVersionSpec.TargetVersion == "" {
+		return errors.New("spec.updateVersion.targetVersion can not be empty")
+	}
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBHorizontalScalingOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling is nil, not supported in HorizontalScaling type")
+	}
+	if horizontalScalingSpec.Replicas == nil {
+		return errors.New("spec.horizontalScaling.replicas can not be empty")
+	}
+	if !db.IsSystemReplication() {
+		return errors.New("horizontal scaling is only allowed for HanaDB system replication topology")
+	}
+	if *horizontalScalingSpec.Replicas < 2 {
+		return errors.New("spec.horizontalScaling.replicas must be at least 2 for HanaDB system replication topology")
+	}
+	return nil
 }
 
 func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVerticalScalingOpsRequest(req *opsapi.HanaDBOpsRequest) error {
@@ -236,21 +274,18 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsReq
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
 
-		var newAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
+		isVirtual := authSpec.SecretRef.APIGroup == vsecretapi.GroupName
+		newData, err := secret_lib.GetData(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef.Name, isVirtual)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				return errors.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
 			}
 			return err
 		}
-		if _, err := getHanaDBAuthPassword(newAuthSecret.Data); err != nil {
+		if _, err := getHanaDBAuthPassword(newData); err != nil {
 			return errors.Errorf("referenced secret %s/%s is invalid: %v", req.Namespace, authSpec.SecretRef.Name, err)
 		}
-		if username := newAuthSecret.Data[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
+		if username := newData[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
 			return errors.Errorf("username in referenced secret %s/%s must be %q", req.Namespace, authSpec.SecretRef.Name, kubedb.HanaDBSystemUser)
 		}
 	}

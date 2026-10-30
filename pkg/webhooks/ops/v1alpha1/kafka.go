@@ -68,7 +68,7 @@ func (w *KafkaOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 		return nil, fmt.Errorf("expected an KafkaOpsRequest object but got %T", obj)
 	}
 	kafkaLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -87,19 +87,20 @@ func (w *KafkaOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateKafkaOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db dbapi.Kafka
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *KafkaOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -122,9 +123,9 @@ func validateKafkaOpsRequest(req *opsapi.KafkaOpsRequest, oldReq *opsapi.KafkaOp
 	return nil
 }
 
-func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaOpsRequest) error {
+func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.KafkaOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Kafka are %s", req.Spec.Type, strings.Join(opsapi.KafkaOpsRequestTypeNames(), ", ")))
 	}
 
@@ -133,10 +134,11 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 		kafka *dbapi.Kafka
 	)
 	if kafka, err = w.hasDatabaseRef(req); err != nil {
-		return err
+		return nil, err
 	}
 
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 	switch opsapi.KafkaOpsRequestType(req.GetRequestType()) {
 	case opsapi.KafkaOpsRequestTypeUpdateVersion:
 		if err := w.validateKafkaUpdateVersionOpsRequest(kafka, req); err != nil {
@@ -151,7 +153,9 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 				err.Error()))
 		}
 	case opsapi.KafkaOpsRequestTypeVerticalScaling:
-		if err := w.validateKafkaVerticalScalingOpsRequest(kafka, req); err != nil {
+		warns, err := w.validateKafkaVerticalScalingOpsRequest(kafka, req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -189,9 +193,9 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "kafkaopsrequests.kubedb.com", Kind: "KafkaOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "kafkaopsrequests.kubedb.com", Kind: "KafkaOpsRequest"}, req.Name, allErr)
 }
 
 func (w *KafkaOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.KafkaOpsRequest) (*dbapi.Kafka, error) {
@@ -254,23 +258,28 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaHorizontalScalingOpsRequest(
 	return nil
 }
 
-func (w *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
+func (w *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 
 	if (verticalScalingSpec.Broker != nil || verticalScalingSpec.Controller != nil) && verticalScalingSpec.Node != nil {
-		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
+		return nil, errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
 	}
 	if kafka.Spec.Topology != nil && verticalScalingSpec.Broker == nil && verticalScalingSpec.Controller == nil {
-		return errors.New("spec.verticalScaling.topology can not be empty as reference database mode is topology")
+		return nil, errors.New("spec.verticalScaling.topology can not be empty as reference database mode is topology")
 	}
 	if kafka.Spec.Topology == nil && verticalScalingSpec.Node == nil {
-		return errors.New("spec.verticalScaling.node can not be empty as reference database mode is combined")
+		return nil, errors.New("spec.verticalScaling.node can not be empty as reference database mode is combined")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Kafka: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (w *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
@@ -360,17 +369,7 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationTLSOpsRequest
 func (w *KafkaOpsRequestCustomWebhook) validateKafkaRotateAuthenticationOpsRequest(req *opsapi.KafkaOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

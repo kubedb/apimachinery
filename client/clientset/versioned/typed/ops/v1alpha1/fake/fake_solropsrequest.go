@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSolrOpsRequests implements SolrOpsRequestInterface
-type FakeSolrOpsRequests struct {
+// fakeSolrOpsRequests implements SolrOpsRequestInterface
+type fakeSolrOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.SolrOpsRequest, *v1alpha1.SolrOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var solropsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("solropsrequests")
-
-var solropsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("SolrOpsRequest")
-
-// Get takes name of the solrOpsRequest, and returns the corresponding solrOpsRequest object, and an error if there is any.
-func (c *FakeSolrOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SolrOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(solropsrequestsResource, c.ns, name), &v1alpha1.SolrOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSolrOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.SolrOpsRequestInterface {
+	return &fakeSolrOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.SolrOpsRequest, *v1alpha1.SolrOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("solropsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("SolrOpsRequest"),
+			func() *v1alpha1.SolrOpsRequest { return &v1alpha1.SolrOpsRequest{} },
+			func() *v1alpha1.SolrOpsRequestList { return &v1alpha1.SolrOpsRequestList{} },
+			func(dst, src *v1alpha1.SolrOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SolrOpsRequestList) []*v1alpha1.SolrOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SolrOpsRequestList, items []*v1alpha1.SolrOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SolrOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of SolrOpsRequests that match those selectors.
-func (c *FakeSolrOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SolrOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(solropsrequestsResource, solropsrequestsKind, c.ns, opts), &v1alpha1.SolrOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SolrOpsRequestList{ListMeta: obj.(*v1alpha1.SolrOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SolrOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested solrOpsRequests.
-func (c *FakeSolrOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(solropsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a solrOpsRequest and creates it.  Returns the server's representation of the solrOpsRequest, and an error, if there is any.
-func (c *FakeSolrOpsRequests) Create(ctx context.Context, solrOpsRequest *v1alpha1.SolrOpsRequest, opts v1.CreateOptions) (result *v1alpha1.SolrOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(solropsrequestsResource, c.ns, solrOpsRequest), &v1alpha1.SolrOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrOpsRequest), err
-}
-
-// Update takes the representation of a solrOpsRequest and updates it. Returns the server's representation of the solrOpsRequest, and an error, if there is any.
-func (c *FakeSolrOpsRequests) Update(ctx context.Context, solrOpsRequest *v1alpha1.SolrOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.SolrOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(solropsrequestsResource, c.ns, solrOpsRequest), &v1alpha1.SolrOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSolrOpsRequests) UpdateStatus(ctx context.Context, solrOpsRequest *v1alpha1.SolrOpsRequest, opts v1.UpdateOptions) (*v1alpha1.SolrOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(solropsrequestsResource, "status", c.ns, solrOpsRequest), &v1alpha1.SolrOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrOpsRequest), err
-}
-
-// Delete takes name of the solrOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeSolrOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(solropsrequestsResource, c.ns, name, opts), &v1alpha1.SolrOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSolrOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(solropsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SolrOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched solrOpsRequest.
-func (c *FakeSolrOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SolrOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(solropsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.SolrOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SolrOpsRequest), err
 }

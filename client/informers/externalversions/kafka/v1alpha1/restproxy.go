@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	apiskafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/client/listers/kafka/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RestProxies.
 type RestProxyInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RestProxyLister
+	Lister() kafkav1alpha1.RestProxyLister
 }
 
 type restProxyInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredRestProxyInformer(client versioned.Interface, namespace string, 
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KafkaV1alpha1().RestProxies(namespace).List(context.TODO(), options)
+				return client.KafkaV1alpha1().RestProxies(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KafkaV1alpha1().RestProxies(namespace).Watch(context.TODO(), options)
+				return client.KafkaV1alpha1().RestProxies(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KafkaV1alpha1().RestProxies(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KafkaV1alpha1().RestProxies(namespace).Watch(ctx, options)
 			},
 		},
-		&kafkav1alpha1.RestProxy{},
+		&apiskafkav1alpha1.RestProxy{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *restProxyInformer) defaultInformer(client versioned.Interface, resyncPe
 }
 
 func (f *restProxyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kafkav1alpha1.RestProxy{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskafkav1alpha1.RestProxy{}, f.defaultInformer)
 }
 
-func (f *restProxyInformer) Lister() v1alpha1.RestProxyLister {
-	return v1alpha1.NewRestProxyLister(f.Informer().GetIndexer())
+func (f *restProxyInformer) Lister() kafkav1alpha1.RestProxyLister {
+	return kafkav1alpha1.NewRestProxyLister(f.Informer().GetIndexer())
 }

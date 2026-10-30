@@ -29,7 +29,6 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -284,6 +283,22 @@ func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBReconfigureTLSOpsR
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
+	if tls.Remove && tls.GatewayMutualTLSEnabled != nil && *tls.GatewayMutualTLSEnabled {
+		return errors.New("`spec.tls.gatewayMutualTLSEnabled` can't be true when `spec.tls.remove` is true")
+	}
+	// TLS is all-or-nothing for DocumentDB: the gateway certificate is issued from the database
+	// plane's config when gatewayTLS is unset, so removing one plane alone is not representable.
+	if tls.DBTLS != nil && tls.DBTLS.Remove {
+		return errors.New("`spec.tls.dbTLS.remove` is not supported; use `spec.tls.remove` to remove all TLS configuration")
+	}
+	if tls.GatewayTLS != nil && tls.GatewayTLS.Remove {
+		return errors.New("`spec.tls.gatewayTLS.remove` is not supported; use `spec.tls.remove` to remove all TLS configuration")
+	}
+	// Reject a request that would silently do nothing.
+	if !tls.Remove && tls.DBTLS == nil && tls.GatewayTLS == nil &&
+		tls.SSLMode == "" && tls.ClientAuthMode == "" && tls.GatewayMutualTLSEnabled == nil {
+		return errors.New("`spec.tls` must set at least one of `dbTLS`, `gatewayTLS`, `remove`, `sslMode`, `clientAuthMode` or `gatewayMutualTLSEnabled`")
+	}
 
 	return nil
 }
@@ -297,33 +312,9 @@ func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBRotateAuthenticati
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		var newAuthSecret, oldAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
-			}
+		if err := validateRotateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef, db.GetAdminAuthSecretName(), dbapi.IsVirtualAuthSecretReferred(db.Spec.AuthSecret)); err != nil {
 			return err
 		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAdminAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
-			return err
-		}
-
-		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
-			return errors.New("database username cannot be changed")
-		}
-
 	}
 
 	return nil

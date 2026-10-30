@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeCassandraVersions implements CassandraVersionInterface
-type FakeCassandraVersions struct {
+// fakeCassandraVersions implements CassandraVersionInterface
+type fakeCassandraVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.CassandraVersion, *v1alpha1.CassandraVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var cassandraversionsResource = v1alpha1.SchemeGroupVersion.WithResource("cassandraversions")
-
-var cassandraversionsKind = v1alpha1.SchemeGroupVersion.WithKind("CassandraVersion")
-
-// Get takes name of the cassandraVersion, and returns the corresponding cassandraVersion object, and an error if there is any.
-func (c *FakeCassandraVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.CassandraVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(cassandraversionsResource, name), &v1alpha1.CassandraVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeCassandraVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.CassandraVersionInterface {
+	return &fakeCassandraVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.CassandraVersion, *v1alpha1.CassandraVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("cassandraversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("CassandraVersion"),
+			func() *v1alpha1.CassandraVersion { return &v1alpha1.CassandraVersion{} },
+			func() *v1alpha1.CassandraVersionList { return &v1alpha1.CassandraVersionList{} },
+			func(dst, src *v1alpha1.CassandraVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.CassandraVersionList) []*v1alpha1.CassandraVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.CassandraVersionList, items []*v1alpha1.CassandraVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.CassandraVersion), err
-}
-
-// List takes label and field selectors, and returns the list of CassandraVersions that match those selectors.
-func (c *FakeCassandraVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.CassandraVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(cassandraversionsResource, cassandraversionsKind, opts), &v1alpha1.CassandraVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.CassandraVersionList{ListMeta: obj.(*v1alpha1.CassandraVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.CassandraVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested cassandraVersions.
-func (c *FakeCassandraVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(cassandraversionsResource, opts))
-}
-
-// Create takes the representation of a cassandraVersion and creates it.  Returns the server's representation of the cassandraVersion, and an error, if there is any.
-func (c *FakeCassandraVersions) Create(ctx context.Context, cassandraVersion *v1alpha1.CassandraVersion, opts v1.CreateOptions) (result *v1alpha1.CassandraVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(cassandraversionsResource, cassandraVersion), &v1alpha1.CassandraVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.CassandraVersion), err
-}
-
-// Update takes the representation of a cassandraVersion and updates it. Returns the server's representation of the cassandraVersion, and an error, if there is any.
-func (c *FakeCassandraVersions) Update(ctx context.Context, cassandraVersion *v1alpha1.CassandraVersion, opts v1.UpdateOptions) (result *v1alpha1.CassandraVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(cassandraversionsResource, cassandraVersion), &v1alpha1.CassandraVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.CassandraVersion), err
-}
-
-// Delete takes name of the cassandraVersion and deletes it. Returns an error if one occurs.
-func (c *FakeCassandraVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(cassandraversionsResource, name, opts), &v1alpha1.CassandraVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeCassandraVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(cassandraversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.CassandraVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched cassandraVersion.
-func (c *FakeCassandraVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.CassandraVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(cassandraversionsResource, name, pt, data, subresources...), &v1alpha1.CassandraVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.CassandraVersion), err
 }

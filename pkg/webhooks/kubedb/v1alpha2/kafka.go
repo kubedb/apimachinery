@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	errors2 "github.com/pkg/errors"
 	"gomodules.xyz/pointer"
@@ -43,7 +45,7 @@ import (
 // SetupKafkaWebhookWithManager registers the webhook for Kafka in the manager.
 func SetupKafkaWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Kafka{}).
-		WithValidator(&KafkaCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias)).
 		WithDefaulter(&KafkaCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -59,6 +61,9 @@ var _ webhook.CustomDefaulter = &KafkaCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Kafka)
 	if !ok {
 		return fmt.Errorf("expected an Kafka object but got %T", obj)
@@ -73,6 +78,12 @@ var _ webhook.CustomValidator = &KafkaCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", obj)
@@ -83,6 +94,9 @@ func (w *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", newObj)

@@ -46,7 +46,7 @@ import (
 // SetupNeo4jWebhookWithManager registers the webhook for Neo4j in the manager.
 func SetupNeo4jWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Neo4j{}).
-		WithValidator(&Neo4jCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&Neo4jCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&Neo4jCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -65,6 +65,9 @@ var Neo4jlog = logf.Log.WithName("Neo4j-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *Neo4jCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Neo4j)
 	if !ok {
 		return fmt.Errorf("expected an Neo4j object but got %T", obj)
@@ -81,6 +84,12 @@ var _ webhook.CustomValidator = &Neo4jCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *Neo4jCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Neo4j)
 	if !ok {
 		return nil, fmt.Errorf("expected an Neo4j object but got %T", obj)
@@ -91,6 +100,9 @@ func (w *Neo4jCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *Neo4jCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Neo4j)
 	if !ok {
 		return nil, fmt.Errorf("expected an Neo4j object but got %T", newObj)

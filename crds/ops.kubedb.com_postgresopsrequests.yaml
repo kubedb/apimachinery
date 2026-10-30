@@ -1,7 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
   name: postgresopsrequests.ops.kubedb.com
@@ -118,6 +117,12 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              enableWALEncryption:
+                properties:
+                  keyName:
+                    pattern: ^[A-Za-z0-9_-]{1,128}$
+                    type: string
+                type: object
               forceFailOver:
                 properties:
                   candidates:
@@ -127,6 +132,19 @@ spec:
                 type: object
               horizontalScaling:
                 properties:
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        replicas:
+                          format: int32
+                          type: integer
+                      required:
+                      - clusterName
+                      - replicas
+                      type: object
+                    type: array
                   readReplicas:
                     items:
                       properties:
@@ -393,6 +411,12 @@ spec:
                 type: object
               restart:
                 type: object
+              rotatePrincipalKey:
+                properties:
+                  keyName:
+                    pattern: ^[A-Za-z0-9_-]{1,128}$
+                    type: string
+                type: object
               setRaftKeyPair:
                 properties:
                   keyPair:
@@ -512,6 +536,8 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
+                  rotateGrpcCertificates:
+                    type: boolean
                   sslMode:
                     enum:
                     - disable
@@ -536,6 +562,8 @@ spec:
                 - ForceFailOver
                 - SetRaftKeyPair
                 - StorageMigration
+                - RotatePrincipalKey
+                - EnableWALEncryption
                 type: string
               updateVersion:
                 properties:
@@ -664,6 +692,12 @@ spec:
                             type: object
                         type: object
                     type: object
+                  mode:
+                    default: Restart
+                    enum:
+                    - Restart
+                    - InPlace
+                    type: string
                   postgres:
                     properties:
                       nodeSelectionPolicy:

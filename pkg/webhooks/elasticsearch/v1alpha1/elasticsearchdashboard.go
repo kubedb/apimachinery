@@ -141,7 +141,8 @@ func (w *ElasticsearchdashboardCustomWebhook) ValidateDelete(ctx context.Context
 
 	return nil, apierrors.NewInvalid(
 		schema.GroupKind{Group: "elasticsearch.kubedb.com", Kind: "ElasticsearchDashboard"},
-		ed.Name, allErr)
+		ed.Name, allErr,
+	)
 }
 
 func (w *ElasticsearchdashboardCustomWebhook) Validate(ed *edapi.ElasticsearchDashboard) error {

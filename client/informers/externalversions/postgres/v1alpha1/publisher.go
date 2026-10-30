@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
+	apispostgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/postgres/v1alpha1"
+	postgresv1alpha1 "kubedb.dev/apimachinery/client/listers/postgres/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Publishers.
 type PublisherInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PublisherLister
+	Lister() postgresv1alpha1.PublisherLister
 }
 
 type publisherInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPublisherInformer(client versioned.Interface, namespace string, 
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.PostgresV1alpha1().Publishers(namespace).List(context.TODO(), options)
+				return client.PostgresV1alpha1().Publishers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.PostgresV1alpha1().Publishers(namespace).Watch(context.TODO(), options)
+				return client.PostgresV1alpha1().Publishers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.PostgresV1alpha1().Publishers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.PostgresV1alpha1().Publishers(namespace).Watch(ctx, options)
 			},
 		},
-		&postgresv1alpha1.Publisher{},
+		&apispostgresv1alpha1.Publisher{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *publisherInformer) defaultInformer(client versioned.Interface, resyncPe
 }
 
 func (f *publisherInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&postgresv1alpha1.Publisher{}, f.defaultInformer)
+	return f.factory.InformerFor(&apispostgresv1alpha1.Publisher{}, f.defaultInformer)
 }
 
-func (f *publisherInformer) Lister() v1alpha1.PublisherLister {
-	return v1alpha1.NewPublisherLister(f.Informer().GetIndexer())
+func (f *publisherInformer) Lister() postgresv1alpha1.PublisherLister {
+	return postgresv1alpha1.NewPublisherLister(f.Informer().GetIndexer())
 }

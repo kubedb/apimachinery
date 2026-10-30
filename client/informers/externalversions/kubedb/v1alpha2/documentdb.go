@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	apiskubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DocumentDBs.
 type DocumentDBInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.DocumentDBLister
+	Lister() kubedbv1alpha2.DocumentDBLister
 }
 
 type documentDBInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredDocumentDBInformer(client versioned.Interface, namespace string,
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().DocumentDBs(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().DocumentDBs(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().DocumentDBs(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().DocumentDBs(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().DocumentDBs(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().DocumentDBs(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1alpha2.DocumentDB{},
+		&apiskubedbv1alpha2.DocumentDB{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *documentDBInformer) defaultInformer(client versioned.Interface, resyncP
 }
 
 func (f *documentDBInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.DocumentDB{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1alpha2.DocumentDB{}, f.defaultInformer)
 }
 
-func (f *documentDBInformer) Lister() v1alpha2.DocumentDBLister {
-	return v1alpha2.NewDocumentDBLister(f.Informer().GetIndexer())
+func (f *documentDBInformer) Lister() kubedbv1alpha2.DocumentDBLister {
+	return kubedbv1alpha2.NewDocumentDBLister(f.Informer().GetIndexer())
 }

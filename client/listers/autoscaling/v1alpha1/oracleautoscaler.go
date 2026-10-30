@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // OracleAutoscalerLister helps list OracleAutoscalers.
@@ -31,7 +31,7 @@ import (
 type OracleAutoscalerLister interface {
 	// List lists all OracleAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.OracleAutoscaler, err error)
 	// OracleAutoscalers returns an object that can list and get OracleAutoscalers.
 	OracleAutoscalers(namespace string) OracleAutoscalerNamespaceLister
 	OracleAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type OracleAutoscalerLister interface {
 
 // oracleAutoscalerLister implements the OracleAutoscalerLister interface.
 type oracleAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.OracleAutoscaler]
 }
 
 // NewOracleAutoscalerLister returns a new OracleAutoscalerLister.
 func NewOracleAutoscalerLister(indexer cache.Indexer) OracleAutoscalerLister {
-	return &oracleAutoscalerLister{indexer: indexer}
-}
-
-// List lists all OracleAutoscalers in the indexer.
-func (s *oracleAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.OracleAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleAutoscaler))
-	})
-	return ret, err
+	return &oracleAutoscalerLister{listers.New[*autoscalingv1alpha1.OracleAutoscaler](indexer, autoscalingv1alpha1.Resource("oracleautoscaler"))}
 }
 
 // OracleAutoscalers returns an object that can list and get OracleAutoscalers.
 func (s *oracleAutoscalerLister) OracleAutoscalers(namespace string) OracleAutoscalerNamespaceLister {
-	return oracleAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return oracleAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.OracleAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // OracleAutoscalerNamespaceLister helps list and get OracleAutoscalers.
@@ -65,36 +57,15 @@ func (s *oracleAutoscalerLister) OracleAutoscalers(namespace string) OracleAutos
 type OracleAutoscalerNamespaceLister interface {
 	// List lists all OracleAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.OracleAutoscaler, err error)
 	// Get retrieves the OracleAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.OracleAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.OracleAutoscaler, error)
 	OracleAutoscalerNamespaceListerExpansion
 }
 
 // oracleAutoscalerNamespaceLister implements the OracleAutoscalerNamespaceLister
 // interface.
 type oracleAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all OracleAutoscalers in the indexer for a given namespace.
-func (s oracleAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.OracleAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the OracleAutoscaler from the indexer for a given namespace and name.
-func (s oracleAutoscalerNamespaceLister) Get(name string) (*v1alpha1.OracleAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("oracleautoscaler"), name)
-	}
-	return obj.(*v1alpha1.OracleAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.OracleAutoscaler]
 }

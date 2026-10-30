@@ -30,135 +30,139 @@ type FakeCatalogV1alpha1 struct {
 }
 
 func (c *FakeCatalogV1alpha1) AerospikeVersions() v1alpha1.AerospikeVersionInterface {
-	return &FakeAerospikeVersions{c}
+	return newFakeAerospikeVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) CassandraVersions() v1alpha1.CassandraVersionInterface {
-	return &FakeCassandraVersions{c}
+	return newFakeCassandraVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) ClickHouseVersions() v1alpha1.ClickHouseVersionInterface {
-	return &FakeClickHouseVersions{c}
+	return newFakeClickHouseVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) DB2Versions() v1alpha1.DB2VersionInterface {
-	return &FakeDB2Versions{c}
+	return newFakeDB2Versions(c)
 }
 
 func (c *FakeCatalogV1alpha1) DocumentDBVersions() v1alpha1.DocumentDBVersionInterface {
-	return &FakeDocumentDBVersions{c}
+	return newFakeDocumentDBVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
-	return &FakeDruidVersions{c}
+	return newFakeDruidVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) ElasticsearchVersions() v1alpha1.ElasticsearchVersionInterface {
-	return &FakeElasticsearchVersions{c}
+	return newFakeElasticsearchVersions(c)
+}
+
+func (c *FakeCatalogV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
+	return newFakeEtcdVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) HanaDBVersions() v1alpha1.HanaDBVersionInterface {
-	return &FakeHanaDBVersions{c}
+	return newFakeHanaDBVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) HazelcastVersions() v1alpha1.HazelcastVersionInterface {
-	return &FakeHazelcastVersions{c}
+	return newFakeHazelcastVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) IgniteVersions() v1alpha1.IgniteVersionInterface {
-	return &FakeIgniteVersions{c}
+	return newFakeIgniteVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) KafkaConnectorVersions() v1alpha1.KafkaConnectorVersionInterface {
-	return &FakeKafkaConnectorVersions{c}
+	return newFakeKafkaConnectorVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) KafkaVersions() v1alpha1.KafkaVersionInterface {
-	return &FakeKafkaVersions{c}
+	return newFakeKafkaVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MSSQLServerVersions() v1alpha1.MSSQLServerVersionInterface {
-	return &FakeMSSQLServerVersions{c}
+	return newFakeMSSQLServerVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MariaDBVersions() v1alpha1.MariaDBVersionInterface {
-	return &FakeMariaDBVersions{c}
+	return newFakeMariaDBVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MemcachedVersions() v1alpha1.MemcachedVersionInterface {
-	return &FakeMemcachedVersions{c}
+	return newFakeMemcachedVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MilvusVersions() v1alpha1.MilvusVersionInterface {
-	return &FakeMilvusVersions{c}
+	return newFakeMilvusVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface {
-	return &FakeMongoDBVersions{c}
+	return newFakeMongoDBVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
-	return &FakeMySQLVersions{c}
+	return newFakeMySQLVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) Neo4jVersions() v1alpha1.Neo4jVersionInterface {
-	return &FakeNeo4jVersions{c}
+	return newFakeNeo4jVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {
-	return &FakeOracleVersions{c}
+	return newFakeOracleVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) PerconaXtraDBVersions() v1alpha1.PerconaXtraDBVersionInterface {
-	return &FakePerconaXtraDBVersions{c}
+	return newFakePerconaXtraDBVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) PgBouncerVersions() v1alpha1.PgBouncerVersionInterface {
-	return &FakePgBouncerVersions{c}
+	return newFakePgBouncerVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) PgpoolVersions() v1alpha1.PgpoolVersionInterface {
-	return &FakePgpoolVersions{c}
+	return newFakePgpoolVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) PostgresVersions() v1alpha1.PostgresVersionInterface {
-	return &FakePostgresVersions{c}
+	return newFakePostgresVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) ProxySQLVersions() v1alpha1.ProxySQLVersionInterface {
-	return &FakeProxySQLVersions{c}
+	return newFakeProxySQLVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) QdrantVersions() v1alpha1.QdrantVersionInterface {
-	return &FakeQdrantVersions{c}
+	return newFakeQdrantVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) RabbitMQVersions() v1alpha1.RabbitMQVersionInterface {
-	return &FakeRabbitMQVersions{c}
+	return newFakeRabbitMQVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {
-	return &FakeRedisVersions{c}
+	return newFakeRedisVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) SchemaRegistryVersions() v1alpha1.SchemaRegistryVersionInterface {
-	return &FakeSchemaRegistryVersions{c}
+	return newFakeSchemaRegistryVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionInterface {
-	return &FakeSinglestoreVersions{c}
+	return newFakeSinglestoreVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) SolrVersions() v1alpha1.SolrVersionInterface {
-	return &FakeSolrVersions{c}
+	return newFakeSolrVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) WeaviateVersions() v1alpha1.WeaviateVersionInterface {
-	return &FakeWeaviateVersions{c}
+	return newFakeWeaviateVersions(c)
 }
 
 func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {
-	return &FakeZooKeeperVersions{c}
+	return newFakeZooKeeperVersions(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

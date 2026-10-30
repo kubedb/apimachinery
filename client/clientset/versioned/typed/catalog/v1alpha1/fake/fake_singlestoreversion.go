@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSinglestoreVersions implements SinglestoreVersionInterface
-type FakeSinglestoreVersions struct {
+// fakeSinglestoreVersions implements SinglestoreVersionInterface
+type fakeSinglestoreVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.SinglestoreVersion, *v1alpha1.SinglestoreVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var singlestoreversionsResource = v1alpha1.SchemeGroupVersion.WithResource("singlestoreversions")
-
-var singlestoreversionsKind = v1alpha1.SchemeGroupVersion.WithKind("SinglestoreVersion")
-
-// Get takes name of the singlestoreVersion, and returns the corresponding singlestoreVersion object, and an error if there is any.
-func (c *FakeSinglestoreVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SinglestoreVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(singlestoreversionsResource, name), &v1alpha1.SinglestoreVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeSinglestoreVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.SinglestoreVersionInterface {
+	return &fakeSinglestoreVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.SinglestoreVersion, *v1alpha1.SinglestoreVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("singlestoreversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("SinglestoreVersion"),
+			func() *v1alpha1.SinglestoreVersion { return &v1alpha1.SinglestoreVersion{} },
+			func() *v1alpha1.SinglestoreVersionList { return &v1alpha1.SinglestoreVersionList{} },
+			func(dst, src *v1alpha1.SinglestoreVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SinglestoreVersionList) []*v1alpha1.SinglestoreVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SinglestoreVersionList, items []*v1alpha1.SinglestoreVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SinglestoreVersion), err
-}
-
-// List takes label and field selectors, and returns the list of SinglestoreVersions that match those selectors.
-func (c *FakeSinglestoreVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SinglestoreVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(singlestoreversionsResource, singlestoreversionsKind, opts), &v1alpha1.SinglestoreVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SinglestoreVersionList{ListMeta: obj.(*v1alpha1.SinglestoreVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SinglestoreVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested singlestoreVersions.
-func (c *FakeSinglestoreVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(singlestoreversionsResource, opts))
-}
-
-// Create takes the representation of a singlestoreVersion and creates it.  Returns the server's representation of the singlestoreVersion, and an error, if there is any.
-func (c *FakeSinglestoreVersions) Create(ctx context.Context, singlestoreVersion *v1alpha1.SinglestoreVersion, opts v1.CreateOptions) (result *v1alpha1.SinglestoreVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(singlestoreversionsResource, singlestoreVersion), &v1alpha1.SinglestoreVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreVersion), err
-}
-
-// Update takes the representation of a singlestoreVersion and updates it. Returns the server's representation of the singlestoreVersion, and an error, if there is any.
-func (c *FakeSinglestoreVersions) Update(ctx context.Context, singlestoreVersion *v1alpha1.SinglestoreVersion, opts v1.UpdateOptions) (result *v1alpha1.SinglestoreVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(singlestoreversionsResource, singlestoreVersion), &v1alpha1.SinglestoreVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreVersion), err
-}
-
-// Delete takes name of the singlestoreVersion and deletes it. Returns an error if one occurs.
-func (c *FakeSinglestoreVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(singlestoreversionsResource, name, opts), &v1alpha1.SinglestoreVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSinglestoreVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(singlestoreversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SinglestoreVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched singlestoreVersion.
-func (c *FakeSinglestoreVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SinglestoreVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(singlestoreversionsResource, name, pt, data, subresources...), &v1alpha1.SinglestoreVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreVersion), err
 }

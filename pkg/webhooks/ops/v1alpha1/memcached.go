@@ -27,7 +27,6 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -260,26 +259,7 @@ func (w *MemcachedOpsRequestCustomWebhook) validateMemcachedRotateAuthentication
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		var newAuthSecret, oldAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
-			}
-			return err
-		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetMemcachedAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

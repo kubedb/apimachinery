@@ -19,47 +19,47 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rest "k8s.io/client-go/rest"
+	types "k8s.io/apimachinery/pkg/types"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // DatabaseConfigurationsGetter has a method to return a DatabaseConfigurationInterface.
 // A group's client should implement this interface.
 type DatabaseConfigurationsGetter interface {
-	DatabaseConfigurations() DatabaseConfigurationInterface
+	DatabaseConfigurations(namespace string) DatabaseConfigurationInterface
 }
 
 // DatabaseConfigurationInterface has methods to work with DatabaseConfiguration resources.
 type DatabaseConfigurationInterface interface {
-	Create(ctx context.Context, databaseConfiguration *v1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (*v1alpha1.DatabaseConfiguration, error)
+	Create(ctx context.Context, databaseConfiguration *uiv1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (*uiv1alpha1.DatabaseConfiguration, error)
+	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*uiv1alpha1.DatabaseConfiguration, error)
+	List(ctx context.Context, opts v1.ListOptions) (*uiv1alpha1.DatabaseConfigurationList, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *uiv1alpha1.DatabaseConfiguration, err error)
 	DatabaseConfigurationExpansion
 }
 
 // databaseConfigurations implements DatabaseConfigurationInterface
 type databaseConfigurations struct {
-	client rest.Interface
+	*gentype.ClientWithList[*uiv1alpha1.DatabaseConfiguration, *uiv1alpha1.DatabaseConfigurationList]
 }
 
 // newDatabaseConfigurations returns a DatabaseConfigurations
-func newDatabaseConfigurations(c *UiV1alpha1Client) *databaseConfigurations {
+func newDatabaseConfigurations(c *UiV1alpha1Client, namespace string) *databaseConfigurations {
 	return &databaseConfigurations{
-		client: c.RESTClient(),
+		gentype.NewClientWithList[*uiv1alpha1.DatabaseConfiguration, *uiv1alpha1.DatabaseConfigurationList](
+			"databaseconfigurations",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			namespace,
+			func() *uiv1alpha1.DatabaseConfiguration { return &uiv1alpha1.DatabaseConfiguration{} },
+			func() *uiv1alpha1.DatabaseConfigurationList { return &uiv1alpha1.DatabaseConfigurationList{} },
+		),
 	}
-}
-
-// Create takes the representation of a databaseConfiguration and creates it.  Returns the server's representation of the databaseConfiguration, and an error, if there is any.
-func (c *databaseConfigurations) Create(ctx context.Context, databaseConfiguration *v1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (result *v1alpha1.DatabaseConfiguration, err error) {
-	result = &v1alpha1.DatabaseConfiguration{}
-	err = c.client.Post().
-		Resource("databaseconfigurations").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(databaseConfiguration).
-		Do(ctx).
-		Into(result)
-	return
 }

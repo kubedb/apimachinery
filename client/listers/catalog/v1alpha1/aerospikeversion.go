@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // AerospikeVersionLister helps list AerospikeVersions.
@@ -31,39 +31,19 @@ import (
 type AerospikeVersionLister interface {
 	// List lists all AerospikeVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.AerospikeVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.AerospikeVersion, err error)
 	// Get retrieves the AerospikeVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.AerospikeVersion, error)
+	Get(name string) (*catalogv1alpha1.AerospikeVersion, error)
 	AerospikeVersionListerExpansion
 }
 
 // aerospikeVersionLister implements the AerospikeVersionLister interface.
 type aerospikeVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.AerospikeVersion]
 }
 
 // NewAerospikeVersionLister returns a new AerospikeVersionLister.
 func NewAerospikeVersionLister(indexer cache.Indexer) AerospikeVersionLister {
-	return &aerospikeVersionLister{indexer: indexer}
-}
-
-// List lists all AerospikeVersions in the indexer.
-func (s *aerospikeVersionLister) List(selector labels.Selector) (ret []*v1alpha1.AerospikeVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.AerospikeVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the AerospikeVersion from the index for a given name.
-func (s *aerospikeVersionLister) Get(name string) (*v1alpha1.AerospikeVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("aerospikeversion"), name)
-	}
-	return obj.(*v1alpha1.AerospikeVersion), nil
+	return &aerospikeVersionLister{listers.New[*catalogv1alpha1.AerospikeVersion](indexer, catalogv1alpha1.Resource("aerospikeversion"))}
 }

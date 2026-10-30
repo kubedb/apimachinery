@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeProxySQLQuerieses implements ProxySQLQueriesInterface
-type FakeProxySQLQuerieses struct {
+// fakeProxySQLQuerieses implements ProxySQLQueriesInterface
+type fakeProxySQLQuerieses struct {
+	*gentype.FakeClientWithList[*v1alpha1.ProxySQLQueries, *v1alpha1.ProxySQLQueriesList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var proxysqlqueriesesResource = v1alpha1.SchemeGroupVersion.WithResource("proxysqlquerieses")
-
-var proxysqlqueriesesKind = v1alpha1.SchemeGroupVersion.WithKind("ProxySQLQueries")
-
-// Get takes name of the proxySQLQueries, and returns the corresponding proxySQLQueries object, and an error if there is any.
-func (c *FakeProxySQLQuerieses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ProxySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(proxysqlqueriesesResource, c.ns, name), &v1alpha1.ProxySQLQueries{})
-
-	if obj == nil {
-		return nil, err
+func newFakeProxySQLQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.ProxySQLQueriesInterface {
+	return &fakeProxySQLQuerieses{
+		gentype.NewFakeClientWithList[*v1alpha1.ProxySQLQueries, *v1alpha1.ProxySQLQueriesList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("proxysqlquerieses"),
+			v1alpha1.SchemeGroupVersion.WithKind("ProxySQLQueries"),
+			func() *v1alpha1.ProxySQLQueries { return &v1alpha1.ProxySQLQueries{} },
+			func() *v1alpha1.ProxySQLQueriesList { return &v1alpha1.ProxySQLQueriesList{} },
+			func(dst, src *v1alpha1.ProxySQLQueriesList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ProxySQLQueriesList) []*v1alpha1.ProxySQLQueries {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ProxySQLQueriesList, items []*v1alpha1.ProxySQLQueries) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ProxySQLQueries), err
-}
-
-// List takes label and field selectors, and returns the list of ProxySQLQuerieses that match those selectors.
-func (c *FakeProxySQLQuerieses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ProxySQLQueriesList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(proxysqlqueriesesResource, proxysqlqueriesesKind, c.ns, opts), &v1alpha1.ProxySQLQueriesList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ProxySQLQueriesList{ListMeta: obj.(*v1alpha1.ProxySQLQueriesList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ProxySQLQueriesList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested proxySQLQuerieses.
-func (c *FakeProxySQLQuerieses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(proxysqlqueriesesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a proxySQLQueries and creates it.  Returns the server's representation of the proxySQLQueries, and an error, if there is any.
-func (c *FakeProxySQLQuerieses) Create(ctx context.Context, proxySQLQueries *v1alpha1.ProxySQLQueries, opts v1.CreateOptions) (result *v1alpha1.ProxySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(proxysqlqueriesesResource, c.ns, proxySQLQueries), &v1alpha1.ProxySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLQueries), err
-}
-
-// Update takes the representation of a proxySQLQueries and updates it. Returns the server's representation of the proxySQLQueries, and an error, if there is any.
-func (c *FakeProxySQLQuerieses) Update(ctx context.Context, proxySQLQueries *v1alpha1.ProxySQLQueries, opts v1.UpdateOptions) (result *v1alpha1.ProxySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(proxysqlqueriesesResource, c.ns, proxySQLQueries), &v1alpha1.ProxySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLQueries), err
-}
-
-// Delete takes name of the proxySQLQueries and deletes it. Returns an error if one occurs.
-func (c *FakeProxySQLQuerieses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(proxysqlqueriesesResource, c.ns, name, opts), &v1alpha1.ProxySQLQueries{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeProxySQLQuerieses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(proxysqlqueriesesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ProxySQLQueriesList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched proxySQLQueries.
-func (c *FakeProxySQLQuerieses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ProxySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(proxysqlqueriesesResource, c.ns, name, pt, data, subresources...), &v1alpha1.ProxySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLQueries), err
 }

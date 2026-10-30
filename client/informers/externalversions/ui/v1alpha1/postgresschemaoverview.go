@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PostgresSchemaOverviews.
 type PostgresSchemaOverviewInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PostgresSchemaOverviewLister
+	Lister() uiv1alpha1.PostgresSchemaOverviewLister
 }
 
 type postgresSchemaOverviewInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPostgresSchemaOverviewInformer(client versioned.Interface, names
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().PostgresSchemaOverviews(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.PostgresSchemaOverview{},
+		&apisuiv1alpha1.PostgresSchemaOverview{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *postgresSchemaOverviewInformer) defaultInformer(client versioned.Interf
 }
 
 func (f *postgresSchemaOverviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.PostgresSchemaOverview{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.PostgresSchemaOverview{}, f.defaultInformer)
 }
 
-func (f *postgresSchemaOverviewInformer) Lister() v1alpha1.PostgresSchemaOverviewLister {
-	return v1alpha1.NewPostgresSchemaOverviewLister(f.Informer().GetIndexer())
+func (f *postgresSchemaOverviewInformer) Lister() uiv1alpha1.PostgresSchemaOverviewLister {
+	return uiv1alpha1.NewPostgresSchemaOverviewLister(f.Informer().GetIndexer())
 }

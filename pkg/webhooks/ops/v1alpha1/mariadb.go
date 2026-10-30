@@ -372,31 +372,8 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationTLSOpsReq
 func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBRotateAuthenticationOpsRequest(db *dbapi.MariaDB, req *opsapi.MariaDBOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		var newAuthSecret, oldAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
-			}
+		if err := validateRotateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef, db.GetAuthSecretName(), dbapi.IsVirtualAuthSecretReferred(db.Spec.AuthSecret)); err != nil {
 			return err
-		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
-			return err
-		}
-
-		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
-			return errors.New("database username cannot be changed")
 		}
 	}
 	return nil

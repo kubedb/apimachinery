@@ -30,131 +30,135 @@ type FakeKubedbV1alpha2 struct {
 }
 
 func (c *FakeKubedbV1alpha2) Aerospikes(namespace string) v1alpha2.AerospikeInterface {
-	return &FakeAerospikes{c, namespace}
+	return newFakeAerospikes(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Cassandras(namespace string) v1alpha2.CassandraInterface {
-	return &FakeCassandras{c, namespace}
+	return newFakeCassandras(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) ClickHouses(namespace string) v1alpha2.ClickHouseInterface {
-	return &FakeClickHouses{c, namespace}
+	return newFakeClickHouses(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) DB2s(namespace string) v1alpha2.DB2Interface {
-	return &FakeDB2s{c, namespace}
+	return newFakeDB2s(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) DocumentDBs(namespace string) v1alpha2.DocumentDBInterface {
-	return &FakeDocumentDBs{c, namespace}
+	return newFakeDocumentDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
-	return &FakeDruids{c, namespace}
+	return newFakeDruids(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Elasticsearches(namespace string) v1alpha2.ElasticsearchInterface {
-	return &FakeElasticsearches{c, namespace}
+	return newFakeElasticsearches(c, namespace)
+}
+
+func (c *FakeKubedbV1alpha2) Etcds(namespace string) v1alpha2.EtcdInterface {
+	return newFakeEtcds(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) HanaDBs(namespace string) v1alpha2.HanaDBInterface {
-	return &FakeHanaDBs{c, namespace}
+	return newFakeHanaDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Hazelcasts(namespace string) v1alpha2.HazelcastInterface {
-	return &FakeHazelcasts{c, namespace}
+	return newFakeHazelcasts(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Ignites(namespace string) v1alpha2.IgniteInterface {
-	return &FakeIgnites{c, namespace}
+	return newFakeIgnites(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
-	return &FakeKafkas{c, namespace}
+	return newFakeKafkas(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) MSSQLServers(namespace string) v1alpha2.MSSQLServerInterface {
-	return &FakeMSSQLServers{c, namespace}
+	return newFakeMSSQLServers(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) MariaDBs(namespace string) v1alpha2.MariaDBInterface {
-	return &FakeMariaDBs{c, namespace}
+	return newFakeMariaDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Memcacheds(namespace string) v1alpha2.MemcachedInterface {
-	return &FakeMemcacheds{c, namespace}
+	return newFakeMemcacheds(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Milvuses(namespace string) v1alpha2.MilvusInterface {
-	return &FakeMilvuses{c, namespace}
+	return newFakeMilvuses(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterface {
-	return &FakeMongoDBs{c, namespace}
+	return newFakeMongoDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
-	return &FakeMySQLs{c, namespace}
+	return newFakeMySQLs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Neo4js(namespace string) v1alpha2.Neo4jInterface {
-	return &FakeNeo4js{c, namespace}
+	return newFakeNeo4js(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Oracles(namespace string) v1alpha2.OracleInterface {
-	return &FakeOracles{c, namespace}
+	return newFakeOracles(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) PerconaXtraDBs(namespace string) v1alpha2.PerconaXtraDBInterface {
-	return &FakePerconaXtraDBs{c, namespace}
+	return newFakePerconaXtraDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) PgBouncers(namespace string) v1alpha2.PgBouncerInterface {
-	return &FakePgBouncers{c, namespace}
+	return newFakePgBouncers(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Pgpools(namespace string) v1alpha2.PgpoolInterface {
-	return &FakePgpools{c, namespace}
+	return newFakePgpools(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Postgreses(namespace string) v1alpha2.PostgresInterface {
-	return &FakePostgreses{c, namespace}
+	return newFakePostgreses(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) ProxySQLs(namespace string) v1alpha2.ProxySQLInterface {
-	return &FakeProxySQLs{c, namespace}
+	return newFakeProxySQLs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Qdrants(namespace string) v1alpha2.QdrantInterface {
-	return &FakeQdrants{c, namespace}
+	return newFakeQdrants(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) RabbitMQs(namespace string) v1alpha2.RabbitMQInterface {
-	return &FakeRabbitMQs{c, namespace}
+	return newFakeRabbitMQs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Redises(namespace string) v1alpha2.RedisInterface {
-	return &FakeRedises{c, namespace}
+	return newFakeRedises(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) RedisSentinels(namespace string) v1alpha2.RedisSentinelInterface {
-	return &FakeRedisSentinels{c, namespace}
+	return newFakeRedisSentinels(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.SinglestoreInterface {
-	return &FakeSinglestores{c, namespace}
+	return newFakeSinglestores(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
-	return &FakeSolrs{c, namespace}
+	return newFakeSolrs(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) Weaviates(namespace string) v1alpha2.WeaviateInterface {
-	return &FakeWeaviates{c, namespace}
+	return newFakeWeaviates(c, namespace)
 }
 
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
-	return &FakeZooKeepers{c, namespace}
+	return newFakeZooKeepers(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

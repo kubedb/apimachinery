@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeNeo4jAutoscalers implements Neo4jAutoscalerInterface
-type FakeNeo4jAutoscalers struct {
+// fakeNeo4jAutoscalers implements Neo4jAutoscalerInterface
+type fakeNeo4jAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jAutoscaler, *v1alpha1.Neo4jAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var neo4jautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("neo4jautoscalers")
-
-var neo4jautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("Neo4jAutoscaler")
-
-// Get takes name of the neo4jAutoscaler, and returns the corresponding neo4jAutoscaler object, and an error if there is any.
-func (c *FakeNeo4jAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Neo4jAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(neo4jautoscalersResource, c.ns, name), &v1alpha1.Neo4jAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeNeo4jAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.Neo4jAutoscalerInterface {
+	return &fakeNeo4jAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jAutoscaler, *v1alpha1.Neo4jAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jAutoscaler"),
+			func() *v1alpha1.Neo4jAutoscaler { return &v1alpha1.Neo4jAutoscaler{} },
+			func() *v1alpha1.Neo4jAutoscalerList { return &v1alpha1.Neo4jAutoscalerList{} },
+			func(dst, src *v1alpha1.Neo4jAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jAutoscalerList) []*v1alpha1.Neo4jAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.Neo4jAutoscalerList, items []*v1alpha1.Neo4jAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Neo4jAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of Neo4jAutoscalers that match those selectors.
-func (c *FakeNeo4jAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.Neo4jAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(neo4jautoscalersResource, neo4jautoscalersKind, c.ns, opts), &v1alpha1.Neo4jAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.Neo4jAutoscalerList{ListMeta: obj.(*v1alpha1.Neo4jAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.Neo4jAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested neo4jAutoscalers.
-func (c *FakeNeo4jAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(neo4jautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a neo4jAutoscaler and creates it.  Returns the server's representation of the neo4jAutoscaler, and an error, if there is any.
-func (c *FakeNeo4jAutoscalers) Create(ctx context.Context, neo4jAutoscaler *v1alpha1.Neo4jAutoscaler, opts v1.CreateOptions) (result *v1alpha1.Neo4jAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(neo4jautoscalersResource, c.ns, neo4jAutoscaler), &v1alpha1.Neo4jAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jAutoscaler), err
-}
-
-// Update takes the representation of a neo4jAutoscaler and updates it. Returns the server's representation of the neo4jAutoscaler, and an error, if there is any.
-func (c *FakeNeo4jAutoscalers) Update(ctx context.Context, neo4jAutoscaler *v1alpha1.Neo4jAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.Neo4jAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(neo4jautoscalersResource, c.ns, neo4jAutoscaler), &v1alpha1.Neo4jAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeNeo4jAutoscalers) UpdateStatus(ctx context.Context, neo4jAutoscaler *v1alpha1.Neo4jAutoscaler, opts v1.UpdateOptions) (*v1alpha1.Neo4jAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(neo4jautoscalersResource, "status", c.ns, neo4jAutoscaler), &v1alpha1.Neo4jAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jAutoscaler), err
-}
-
-// Delete takes name of the neo4jAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeNeo4jAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(neo4jautoscalersResource, c.ns, name, opts), &v1alpha1.Neo4jAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeNeo4jAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(neo4jautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.Neo4jAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched neo4jAutoscaler.
-func (c *FakeNeo4jAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Neo4jAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(neo4jautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.Neo4jAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jAutoscaler), err
 }

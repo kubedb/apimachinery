@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jVersionLister helps list Neo4jVersions.
@@ -31,39 +31,19 @@ import (
 type Neo4jVersionLister interface {
 	// List lists all Neo4jVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.Neo4jVersion, err error)
 	// Get retrieves the Neo4jVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jVersion, error)
+	Get(name string) (*catalogv1alpha1.Neo4jVersion, error)
 	Neo4jVersionListerExpansion
 }
 
 // neo4jVersionLister implements the Neo4jVersionLister interface.
 type neo4jVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.Neo4jVersion]
 }
 
 // NewNeo4jVersionLister returns a new Neo4jVersionLister.
 func NewNeo4jVersionLister(indexer cache.Indexer) Neo4jVersionLister {
-	return &neo4jVersionLister{indexer: indexer}
-}
-
-// List lists all Neo4jVersions in the indexer.
-func (s *neo4jVersionLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jVersion from the index for a given name.
-func (s *neo4jVersionLister) Get(name string) (*v1alpha1.Neo4jVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jversion"), name)
-	}
-	return obj.(*v1alpha1.Neo4jVersion), nil
+	return &neo4jVersionLister{listers.New[*catalogv1alpha1.Neo4jVersion](indexer, catalogv1alpha1.Resource("neo4jversion"))}
 }

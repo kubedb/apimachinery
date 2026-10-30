@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // KafkaConnectorVersions.
 type KafkaConnectorVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.KafkaConnectorVersionLister
+	Lister() catalogv1alpha1.KafkaConnectorVersionLister
 }
 
 type kafkaConnectorVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredKafkaConnectorVersionInformer(client versioned.Interface, resync
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().KafkaConnectorVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().KafkaConnectorVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().KafkaConnectorVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().KafkaConnectorVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().KafkaConnectorVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().KafkaConnectorVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.KafkaConnectorVersion{},
+		&apiscatalogv1alpha1.KafkaConnectorVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *kafkaConnectorVersionInformer) defaultInformer(client versioned.Interfa
 }
 
 func (f *kafkaConnectorVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.KafkaConnectorVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.KafkaConnectorVersion{}, f.defaultInformer)
 }
 
-func (f *kafkaConnectorVersionInformer) Lister() v1alpha1.KafkaConnectorVersionLister {
-	return v1alpha1.NewKafkaConnectorVersionLister(f.Informer().GetIndexer())
+func (f *kafkaConnectorVersionInformer) Lister() catalogv1alpha1.KafkaConnectorVersionLister {
+	return catalogv1alpha1.NewKafkaConnectorVersionLister(f.Informer().GetIndexer())
 }

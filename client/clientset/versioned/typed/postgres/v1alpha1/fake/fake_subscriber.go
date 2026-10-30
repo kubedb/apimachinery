@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
+	postgresv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/postgres/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSubscribers implements SubscriberInterface
-type FakeSubscribers struct {
+// fakeSubscribers implements SubscriberInterface
+type fakeSubscribers struct {
+	*gentype.FakeClientWithList[*v1alpha1.Subscriber, *v1alpha1.SubscriberList]
 	Fake *FakePostgresV1alpha1
-	ns   string
 }
 
-var subscribersResource = v1alpha1.SchemeGroupVersion.WithResource("subscribers")
-
-var subscribersKind = v1alpha1.SchemeGroupVersion.WithKind("Subscriber")
-
-// Get takes name of the subscriber, and returns the corresponding subscriber object, and an error if there is any.
-func (c *FakeSubscribers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Subscriber, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(subscribersResource, c.ns, name), &v1alpha1.Subscriber{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSubscribers(fake *FakePostgresV1alpha1, namespace string) postgresv1alpha1.SubscriberInterface {
+	return &fakeSubscribers{
+		gentype.NewFakeClientWithList[*v1alpha1.Subscriber, *v1alpha1.SubscriberList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("subscribers"),
+			v1alpha1.SchemeGroupVersion.WithKind("Subscriber"),
+			func() *v1alpha1.Subscriber { return &v1alpha1.Subscriber{} },
+			func() *v1alpha1.SubscriberList { return &v1alpha1.SubscriberList{} },
+			func(dst, src *v1alpha1.SubscriberList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SubscriberList) []*v1alpha1.Subscriber { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.SubscriberList, items []*v1alpha1.Subscriber) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Subscriber), err
-}
-
-// List takes label and field selectors, and returns the list of Subscribers that match those selectors.
-func (c *FakeSubscribers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SubscriberList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(subscribersResource, subscribersKind, c.ns, opts), &v1alpha1.SubscriberList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SubscriberList{ListMeta: obj.(*v1alpha1.SubscriberList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SubscriberList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested subscribers.
-func (c *FakeSubscribers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(subscribersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a subscriber and creates it.  Returns the server's representation of the subscriber, and an error, if there is any.
-func (c *FakeSubscribers) Create(ctx context.Context, subscriber *v1alpha1.Subscriber, opts v1.CreateOptions) (result *v1alpha1.Subscriber, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(subscribersResource, c.ns, subscriber), &v1alpha1.Subscriber{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Subscriber), err
-}
-
-// Update takes the representation of a subscriber and updates it. Returns the server's representation of the subscriber, and an error, if there is any.
-func (c *FakeSubscribers) Update(ctx context.Context, subscriber *v1alpha1.Subscriber, opts v1.UpdateOptions) (result *v1alpha1.Subscriber, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(subscribersResource, c.ns, subscriber), &v1alpha1.Subscriber{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Subscriber), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSubscribers) UpdateStatus(ctx context.Context, subscriber *v1alpha1.Subscriber, opts v1.UpdateOptions) (*v1alpha1.Subscriber, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(subscribersResource, "status", c.ns, subscriber), &v1alpha1.Subscriber{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Subscriber), err
-}
-
-// Delete takes name of the subscriber and deletes it. Returns an error if one occurs.
-func (c *FakeSubscribers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(subscribersResource, c.ns, name, opts), &v1alpha1.Subscriber{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSubscribers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(subscribersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SubscriberList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched subscriber.
-func (c *FakeSubscribers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Subscriber, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(subscribersResource, c.ns, name, pt, data, subresources...), &v1alpha1.Subscriber{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Subscriber), err
 }

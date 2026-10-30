@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RabbitMQVersions.
 type RabbitMQVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RabbitMQVersionLister
+	Lister() catalogv1alpha1.RabbitMQVersionLister
 }
 
 type rabbitMQVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredRabbitMQVersionInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().RabbitMQVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().RabbitMQVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().RabbitMQVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().RabbitMQVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().RabbitMQVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().RabbitMQVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.RabbitMQVersion{},
+		&apiscatalogv1alpha1.RabbitMQVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *rabbitMQVersionInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *rabbitMQVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.RabbitMQVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.RabbitMQVersion{}, f.defaultInformer)
 }
 
-func (f *rabbitMQVersionInformer) Lister() v1alpha1.RabbitMQVersionLister {
-	return v1alpha1.NewRabbitMQVersionLister(f.Informer().GetIndexer())
+func (f *rabbitMQVersionInformer) Lister() catalogv1alpha1.RabbitMQVersionLister {
+	return catalogv1alpha1.NewRabbitMQVersionLister(f.Informer().GetIndexer())
 }

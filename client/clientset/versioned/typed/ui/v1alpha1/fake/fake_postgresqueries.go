@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresQuerieses implements PostgresQueriesInterface
-type FakePostgresQuerieses struct {
+// fakePostgresQuerieses implements PostgresQueriesInterface
+type fakePostgresQuerieses struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresQueries, *v1alpha1.PostgresQueriesList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var postgresqueriesesResource = v1alpha1.SchemeGroupVersion.WithResource("postgresquerieses")
-
-var postgresqueriesesKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresQueries")
-
-// Get takes name of the postgresQueries, and returns the corresponding postgresQueries object, and an error if there is any.
-func (c *FakePostgresQuerieses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresqueriesesResource, c.ns, name), &v1alpha1.PostgresQueries{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.PostgresQueriesInterface {
+	return &fakePostgresQuerieses{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresQueries, *v1alpha1.PostgresQueriesList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresquerieses"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresQueries"),
+			func() *v1alpha1.PostgresQueries { return &v1alpha1.PostgresQueries{} },
+			func() *v1alpha1.PostgresQueriesList { return &v1alpha1.PostgresQueriesList{} },
+			func(dst, src *v1alpha1.PostgresQueriesList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresQueriesList) []*v1alpha1.PostgresQueries {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresQueriesList, items []*v1alpha1.PostgresQueries) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresQueries), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresQuerieses that match those selectors.
-func (c *FakePostgresQuerieses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresQueriesList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresqueriesesResource, postgresqueriesesKind, c.ns, opts), &v1alpha1.PostgresQueriesList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresQueriesList{ListMeta: obj.(*v1alpha1.PostgresQueriesList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresQueriesList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresQuerieses.
-func (c *FakePostgresQuerieses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresqueriesesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresQueries and creates it.  Returns the server's representation of the postgresQueries, and an error, if there is any.
-func (c *FakePostgresQuerieses) Create(ctx context.Context, postgresQueries *v1alpha1.PostgresQueries, opts v1.CreateOptions) (result *v1alpha1.PostgresQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresqueriesesResource, c.ns, postgresQueries), &v1alpha1.PostgresQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresQueries), err
-}
-
-// Update takes the representation of a postgresQueries and updates it. Returns the server's representation of the postgresQueries, and an error, if there is any.
-func (c *FakePostgresQuerieses) Update(ctx context.Context, postgresQueries *v1alpha1.PostgresQueries, opts v1.UpdateOptions) (result *v1alpha1.PostgresQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresqueriesesResource, c.ns, postgresQueries), &v1alpha1.PostgresQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresQueries), err
-}
-
-// Delete takes name of the postgresQueries and deletes it. Returns an error if one occurs.
-func (c *FakePostgresQuerieses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresqueriesesResource, c.ns, name, opts), &v1alpha1.PostgresQueries{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresQuerieses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresqueriesesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresQueriesList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresQueries.
-func (c *FakePostgresQuerieses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresqueriesesResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresQueries), err
 }

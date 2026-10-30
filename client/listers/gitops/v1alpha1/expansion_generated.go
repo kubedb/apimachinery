@@ -74,6 +74,14 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
+// EtcdListerExpansion allows custom methods to be added to
+// EtcdLister.
+type EtcdListerExpansion interface{}
+
+// EtcdNamespaceListerExpansion allows custom methods to be added to
+// EtcdNamespaceLister.
+type EtcdNamespaceListerExpansion interface{}
+
 // HanaDBListerExpansion allows custom methods to be added to
 // HanaDBLister.
 type HanaDBListerExpansion interface{}

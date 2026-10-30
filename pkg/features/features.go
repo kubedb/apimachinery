@@ -55,6 +55,9 @@ const (
 	// Enables Elasticsearch operator.
 	Elasticsearch featuregate.Feature = "Elasticsearch"
 
+	// Enables Etcd operator.
+	Etcd featuregate.Feature = "Etcd"
+
 	// Enables Flink operator.
 	// Flink featuregate.Feature = "Flink"
 
@@ -164,6 +167,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	DocumentDB:    {Default: false, PreRelease: featuregate.Alpha},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
+	Etcd:          {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
 	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},
 	Ignite:        {Default: true, PreRelease: featuregate.Alpha},

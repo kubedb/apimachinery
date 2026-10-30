@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSolrs implements SolrInterface
-type FakeSolrs struct {
+// fakeSolrs implements SolrInterface
+type fakeSolrs struct {
+	*gentype.FakeClientWithList[*v1alpha2.Solr, *v1alpha2.SolrList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var solrsResource = v1alpha2.SchemeGroupVersion.WithResource("solrs")
-
-var solrsKind = v1alpha2.SchemeGroupVersion.WithKind("Solr")
-
-// Get takes name of the solr, and returns the corresponding solr object, and an error if there is any.
-func (c *FakeSolrs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Solr, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(solrsResource, c.ns, name), &v1alpha2.Solr{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSolrs(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.SolrInterface {
+	return &fakeSolrs{
+		gentype.NewFakeClientWithList[*v1alpha2.Solr, *v1alpha2.SolrList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("solrs"),
+			v1alpha2.SchemeGroupVersion.WithKind("Solr"),
+			func() *v1alpha2.Solr { return &v1alpha2.Solr{} },
+			func() *v1alpha2.SolrList { return &v1alpha2.SolrList{} },
+			func(dst, src *v1alpha2.SolrList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.SolrList) []*v1alpha2.Solr { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.SolrList, items []*v1alpha2.Solr) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Solr), err
-}
-
-// List takes label and field selectors, and returns the list of Solrs that match those selectors.
-func (c *FakeSolrs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.SolrList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(solrsResource, solrsKind, c.ns, opts), &v1alpha2.SolrList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.SolrList{ListMeta: obj.(*v1alpha2.SolrList).ListMeta}
-	for _, item := range obj.(*v1alpha2.SolrList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested solrs.
-func (c *FakeSolrs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(solrsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a solr and creates it.  Returns the server's representation of the solr, and an error, if there is any.
-func (c *FakeSolrs) Create(ctx context.Context, solr *v1alpha2.Solr, opts v1.CreateOptions) (result *v1alpha2.Solr, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(solrsResource, c.ns, solr), &v1alpha2.Solr{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Solr), err
-}
-
-// Update takes the representation of a solr and updates it. Returns the server's representation of the solr, and an error, if there is any.
-func (c *FakeSolrs) Update(ctx context.Context, solr *v1alpha2.Solr, opts v1.UpdateOptions) (result *v1alpha2.Solr, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(solrsResource, c.ns, solr), &v1alpha2.Solr{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Solr), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSolrs) UpdateStatus(ctx context.Context, solr *v1alpha2.Solr, opts v1.UpdateOptions) (*v1alpha2.Solr, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(solrsResource, "status", c.ns, solr), &v1alpha2.Solr{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Solr), err
-}
-
-// Delete takes name of the solr and deletes it. Returns an error if one occurs.
-func (c *FakeSolrs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(solrsResource, c.ns, name, opts), &v1alpha2.Solr{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSolrs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(solrsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.SolrList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched solr.
-func (c *FakeSolrs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Solr, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(solrsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Solr{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Solr), err
 }

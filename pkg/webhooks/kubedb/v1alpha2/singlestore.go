@@ -22,7 +22,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -41,7 +43,7 @@ import (
 // SetupSinglestoreWebhookWithManager registers the webhook for Singlestore in the manager.
 func SetupSinglestoreWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Singlestore{}).
-		WithValidator(&SinglestoreCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&SinglestoreCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&SinglestoreCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +62,9 @@ var singlestorelog = logf.Log.WithName("singlestore-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Singlestore)
 	if !ok {
 		return fmt.Errorf("expected an Singlestore object but got %T", obj)
@@ -75,6 +80,12 @@ var _ webhook.CustomValidator = &SinglestoreCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Singlestore)
 	if !ok {
 		return nil, fmt.Errorf("expected an Singlestore object but got %T", obj)
@@ -90,6 +101,9 @@ func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Singlestore)
 	if !ok {
 		return nil, fmt.Errorf("expected an Singlestore object but got %T", newObj)

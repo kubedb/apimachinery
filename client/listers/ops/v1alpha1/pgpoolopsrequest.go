@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgpoolOpsRequestLister helps list PgpoolOpsRequests.
@@ -31,7 +31,7 @@ import (
 type PgpoolOpsRequestLister interface {
 	// List lists all PgpoolOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgpoolOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PgpoolOpsRequest, err error)
 	// PgpoolOpsRequests returns an object that can list and get PgpoolOpsRequests.
 	PgpoolOpsRequests(namespace string) PgpoolOpsRequestNamespaceLister
 	PgpoolOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type PgpoolOpsRequestLister interface {
 
 // pgpoolOpsRequestLister implements the PgpoolOpsRequestLister interface.
 type pgpoolOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.PgpoolOpsRequest]
 }
 
 // NewPgpoolOpsRequestLister returns a new PgpoolOpsRequestLister.
 func NewPgpoolOpsRequestLister(indexer cache.Indexer) PgpoolOpsRequestLister {
-	return &pgpoolOpsRequestLister{indexer: indexer}
-}
-
-// List lists all PgpoolOpsRequests in the indexer.
-func (s *pgpoolOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.PgpoolOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgpoolOpsRequest))
-	})
-	return ret, err
+	return &pgpoolOpsRequestLister{listers.New[*opsv1alpha1.PgpoolOpsRequest](indexer, opsv1alpha1.Resource("pgpoolopsrequest"))}
 }
 
 // PgpoolOpsRequests returns an object that can list and get PgpoolOpsRequests.
 func (s *pgpoolOpsRequestLister) PgpoolOpsRequests(namespace string) PgpoolOpsRequestNamespaceLister {
-	return pgpoolOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgpoolOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.PgpoolOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // PgpoolOpsRequestNamespaceLister helps list and get PgpoolOpsRequests.
@@ -65,36 +57,15 @@ func (s *pgpoolOpsRequestLister) PgpoolOpsRequests(namespace string) PgpoolOpsRe
 type PgpoolOpsRequestNamespaceLister interface {
 	// List lists all PgpoolOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgpoolOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PgpoolOpsRequest, err error)
 	// Get retrieves the PgpoolOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgpoolOpsRequest, error)
+	Get(name string) (*opsv1alpha1.PgpoolOpsRequest, error)
 	PgpoolOpsRequestNamespaceListerExpansion
 }
 
 // pgpoolOpsRequestNamespaceLister implements the PgpoolOpsRequestNamespaceLister
 // interface.
 type pgpoolOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgpoolOpsRequests in the indexer for a given namespace.
-func (s pgpoolOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgpoolOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgpoolOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgpoolOpsRequest from the indexer for a given namespace and name.
-func (s pgpoolOpsRequestNamespaceLister) Get(name string) (*v1alpha1.PgpoolOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgpoolopsrequest"), name)
-	}
-	return obj.(*v1alpha1.PgpoolOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.PgpoolOpsRequest]
 }

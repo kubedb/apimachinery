@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	apiskubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Cassandras.
 type CassandraInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.CassandraLister
+	Lister() kubedbv1alpha2.CassandraLister
 }
 
 type cassandraInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredCassandraInformer(client versioned.Interface, namespace string, 
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Cassandras(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().Cassandras(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Cassandras(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().Cassandras(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().Cassandras(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().Cassandras(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1alpha2.Cassandra{},
+		&apiskubedbv1alpha2.Cassandra{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *cassandraInformer) defaultInformer(client versioned.Interface, resyncPe
 }
 
 func (f *cassandraInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.Cassandra{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1alpha2.Cassandra{}, f.defaultInformer)
 }
 
-func (f *cassandraInformer) Lister() v1alpha2.CassandraLister {
-	return v1alpha2.NewCassandraLister(f.Informer().GetIndexer())
+func (f *cassandraInformer) Lister() kubedbv1alpha2.CassandraLister {
+	return kubedbv1alpha2.NewCassandraLister(f.Informer().GetIndexer())
 }

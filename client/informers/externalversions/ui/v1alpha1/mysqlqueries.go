@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MySQLQuerieses.
 type MySQLQueriesInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MySQLQueriesLister
+	Lister() uiv1alpha1.MySQLQueriesLister
 }
 
 type mySQLQueriesInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMySQLQueriesInformer(client versioned.Interface, namespace strin
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().MySQLQuerieses(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().MySQLQuerieses(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().MySQLQuerieses(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().MySQLQuerieses(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().MySQLQuerieses(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().MySQLQuerieses(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.MySQLQueries{},
+		&apisuiv1alpha1.MySQLQueries{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mySQLQueriesInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *mySQLQueriesInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.MySQLQueries{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.MySQLQueries{}, f.defaultInformer)
 }
 
-func (f *mySQLQueriesInformer) Lister() v1alpha1.MySQLQueriesLister {
-	return v1alpha1.NewMySQLQueriesLister(f.Informer().GetIndexer())
+func (f *mySQLQueriesInformer) Lister() uiv1alpha1.MySQLQueriesLister {
+	return uiv1alpha1.NewMySQLQueriesLister(f.Informer().GetIndexer())
 }

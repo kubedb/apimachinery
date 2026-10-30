@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchAutoscalerLister helps list ElasticsearchAutoscalers.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchAutoscalerLister interface {
 	// List lists all ElasticsearchAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ElasticsearchAutoscaler, err error)
 	// ElasticsearchAutoscalers returns an object that can list and get ElasticsearchAutoscalers.
 	ElasticsearchAutoscalers(namespace string) ElasticsearchAutoscalerNamespaceLister
 	ElasticsearchAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchAutoscalerLister interface {
 
 // elasticsearchAutoscalerLister implements the ElasticsearchAutoscalerLister interface.
 type elasticsearchAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.ElasticsearchAutoscaler]
 }
 
 // NewElasticsearchAutoscalerLister returns a new ElasticsearchAutoscalerLister.
 func NewElasticsearchAutoscalerLister(indexer cache.Indexer) ElasticsearchAutoscalerLister {
-	return &elasticsearchAutoscalerLister{indexer: indexer}
-}
-
-// List lists all ElasticsearchAutoscalers in the indexer.
-func (s *elasticsearchAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchAutoscaler))
-	})
-	return ret, err
+	return &elasticsearchAutoscalerLister{listers.New[*autoscalingv1alpha1.ElasticsearchAutoscaler](indexer, autoscalingv1alpha1.Resource("elasticsearchautoscaler"))}
 }
 
 // ElasticsearchAutoscalers returns an object that can list and get ElasticsearchAutoscalers.
 func (s *elasticsearchAutoscalerLister) ElasticsearchAutoscalers(namespace string) ElasticsearchAutoscalerNamespaceLister {
-	return elasticsearchAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.ElasticsearchAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchAutoscalerNamespaceLister helps list and get ElasticsearchAutoscalers.
@@ -65,36 +57,15 @@ func (s *elasticsearchAutoscalerLister) ElasticsearchAutoscalers(namespace strin
 type ElasticsearchAutoscalerNamespaceLister interface {
 	// List lists all ElasticsearchAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ElasticsearchAutoscaler, err error)
 	// Get retrieves the ElasticsearchAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ElasticsearchAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.ElasticsearchAutoscaler, error)
 	ElasticsearchAutoscalerNamespaceListerExpansion
 }
 
 // elasticsearchAutoscalerNamespaceLister implements the ElasticsearchAutoscalerNamespaceLister
 // interface.
 type elasticsearchAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ElasticsearchAutoscalers in the indexer for a given namespace.
-func (s elasticsearchAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the ElasticsearchAutoscaler from the indexer for a given namespace and name.
-func (s elasticsearchAutoscalerNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("elasticsearchautoscaler"), name)
-	}
-	return obj.(*v1alpha1.ElasticsearchAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.ElasticsearchAutoscaler]
 }

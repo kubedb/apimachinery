@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SolrVersionLister helps list SolrVersions.
@@ -31,39 +31,19 @@ import (
 type SolrVersionLister interface {
 	// List lists all SolrVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SolrVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.SolrVersion, err error)
 	// Get retrieves the SolrVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SolrVersion, error)
+	Get(name string) (*catalogv1alpha1.SolrVersion, error)
 	SolrVersionListerExpansion
 }
 
 // solrVersionLister implements the SolrVersionLister interface.
 type solrVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.SolrVersion]
 }
 
 // NewSolrVersionLister returns a new SolrVersionLister.
 func NewSolrVersionLister(indexer cache.Indexer) SolrVersionLister {
-	return &solrVersionLister{indexer: indexer}
-}
-
-// List lists all SolrVersions in the indexer.
-func (s *solrVersionLister) List(selector labels.Selector) (ret []*v1alpha1.SolrVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SolrVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the SolrVersion from the index for a given name.
-func (s *solrVersionLister) Get(name string) (*v1alpha1.SolrVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("solrversion"), name)
-	}
-	return obj.(*v1alpha1.SolrVersion), nil
+	return &solrVersionLister{listers.New[*catalogv1alpha1.SolrVersion](indexer, catalogv1alpha1.Resource("solrversion"))}
 }

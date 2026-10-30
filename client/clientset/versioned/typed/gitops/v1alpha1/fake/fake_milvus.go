@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMilvuses implements MilvusInterface
-type FakeMilvuses struct {
+// fakeMilvuses implements MilvusInterface
+type fakeMilvuses struct {
+	*gentype.FakeClientWithList[*v1alpha1.Milvus, *v1alpha1.MilvusList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var milvusesResource = v1alpha1.SchemeGroupVersion.WithResource("milvuses")
-
-var milvusesKind = v1alpha1.SchemeGroupVersion.WithKind("Milvus")
-
-// Get takes name of the milvus, and returns the corresponding milvus object, and an error if there is any.
-func (c *FakeMilvuses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Milvus, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(milvusesResource, c.ns, name), &v1alpha1.Milvus{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMilvuses(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.MilvusInterface {
+	return &fakeMilvuses{
+		gentype.NewFakeClientWithList[*v1alpha1.Milvus, *v1alpha1.MilvusList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("milvuses"),
+			v1alpha1.SchemeGroupVersion.WithKind("Milvus"),
+			func() *v1alpha1.Milvus { return &v1alpha1.Milvus{} },
+			func() *v1alpha1.MilvusList { return &v1alpha1.MilvusList{} },
+			func(dst, src *v1alpha1.MilvusList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MilvusList) []*v1alpha1.Milvus { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.MilvusList, items []*v1alpha1.Milvus) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Milvus), err
-}
-
-// List takes label and field selectors, and returns the list of Milvuses that match those selectors.
-func (c *FakeMilvuses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MilvusList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(milvusesResource, milvusesKind, c.ns, opts), &v1alpha1.MilvusList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MilvusList{ListMeta: obj.(*v1alpha1.MilvusList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MilvusList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested milvuses.
-func (c *FakeMilvuses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(milvusesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a milvus and creates it.  Returns the server's representation of the milvus, and an error, if there is any.
-func (c *FakeMilvuses) Create(ctx context.Context, milvus *v1alpha1.Milvus, opts v1.CreateOptions) (result *v1alpha1.Milvus, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(milvusesResource, c.ns, milvus), &v1alpha1.Milvus{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Milvus), err
-}
-
-// Update takes the representation of a milvus and updates it. Returns the server's representation of the milvus, and an error, if there is any.
-func (c *FakeMilvuses) Update(ctx context.Context, milvus *v1alpha1.Milvus, opts v1.UpdateOptions) (result *v1alpha1.Milvus, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(milvusesResource, c.ns, milvus), &v1alpha1.Milvus{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Milvus), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMilvuses) UpdateStatus(ctx context.Context, milvus *v1alpha1.Milvus, opts v1.UpdateOptions) (*v1alpha1.Milvus, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(milvusesResource, "status", c.ns, milvus), &v1alpha1.Milvus{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Milvus), err
-}
-
-// Delete takes name of the milvus and deletes it. Returns an error if one occurs.
-func (c *FakeMilvuses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(milvusesResource, c.ns, name, opts), &v1alpha1.Milvus{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMilvuses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(milvusesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MilvusList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched milvus.
-func (c *FakeMilvuses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Milvus, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(milvusesResource, c.ns, name, pt, data, subresources...), &v1alpha1.Milvus{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Milvus), err
 }

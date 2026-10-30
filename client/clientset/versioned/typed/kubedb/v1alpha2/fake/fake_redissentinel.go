@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRedisSentinels implements RedisSentinelInterface
-type FakeRedisSentinels struct {
+// fakeRedisSentinels implements RedisSentinelInterface
+type fakeRedisSentinels struct {
+	*gentype.FakeClientWithList[*v1alpha2.RedisSentinel, *v1alpha2.RedisSentinelList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var redissentinelsResource = v1alpha2.SchemeGroupVersion.WithResource("redissentinels")
-
-var redissentinelsKind = v1alpha2.SchemeGroupVersion.WithKind("RedisSentinel")
-
-// Get takes name of the redisSentinel, and returns the corresponding redisSentinel object, and an error if there is any.
-func (c *FakeRedisSentinels) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.RedisSentinel, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(redissentinelsResource, c.ns, name), &v1alpha2.RedisSentinel{})
-
-	if obj == nil {
-		return nil, err
+func newFakeRedisSentinels(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.RedisSentinelInterface {
+	return &fakeRedisSentinels{
+		gentype.NewFakeClientWithList[*v1alpha2.RedisSentinel, *v1alpha2.RedisSentinelList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("redissentinels"),
+			v1alpha2.SchemeGroupVersion.WithKind("RedisSentinel"),
+			func() *v1alpha2.RedisSentinel { return &v1alpha2.RedisSentinel{} },
+			func() *v1alpha2.RedisSentinelList { return &v1alpha2.RedisSentinelList{} },
+			func(dst, src *v1alpha2.RedisSentinelList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.RedisSentinelList) []*v1alpha2.RedisSentinel {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha2.RedisSentinelList, items []*v1alpha2.RedisSentinel) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.RedisSentinel), err
-}
-
-// List takes label and field selectors, and returns the list of RedisSentinels that match those selectors.
-func (c *FakeRedisSentinels) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.RedisSentinelList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(redissentinelsResource, redissentinelsKind, c.ns, opts), &v1alpha2.RedisSentinelList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.RedisSentinelList{ListMeta: obj.(*v1alpha2.RedisSentinelList).ListMeta}
-	for _, item := range obj.(*v1alpha2.RedisSentinelList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested redisSentinels.
-func (c *FakeRedisSentinels) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(redissentinelsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a redisSentinel and creates it.  Returns the server's representation of the redisSentinel, and an error, if there is any.
-func (c *FakeRedisSentinels) Create(ctx context.Context, redisSentinel *v1alpha2.RedisSentinel, opts v1.CreateOptions) (result *v1alpha2.RedisSentinel, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(redissentinelsResource, c.ns, redisSentinel), &v1alpha2.RedisSentinel{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.RedisSentinel), err
-}
-
-// Update takes the representation of a redisSentinel and updates it. Returns the server's representation of the redisSentinel, and an error, if there is any.
-func (c *FakeRedisSentinels) Update(ctx context.Context, redisSentinel *v1alpha2.RedisSentinel, opts v1.UpdateOptions) (result *v1alpha2.RedisSentinel, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(redissentinelsResource, c.ns, redisSentinel), &v1alpha2.RedisSentinel{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.RedisSentinel), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeRedisSentinels) UpdateStatus(ctx context.Context, redisSentinel *v1alpha2.RedisSentinel, opts v1.UpdateOptions) (*v1alpha2.RedisSentinel, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(redissentinelsResource, "status", c.ns, redisSentinel), &v1alpha2.RedisSentinel{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.RedisSentinel), err
-}
-
-// Delete takes name of the redisSentinel and deletes it. Returns an error if one occurs.
-func (c *FakeRedisSentinels) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(redissentinelsResource, c.ns, name, opts), &v1alpha2.RedisSentinel{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRedisSentinels) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(redissentinelsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.RedisSentinelList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched redisSentinel.
-func (c *FakeRedisSentinels) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.RedisSentinel, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(redissentinelsResource, c.ns, name, pt, data, subresources...), &v1alpha2.RedisSentinel{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.RedisSentinel), err
 }

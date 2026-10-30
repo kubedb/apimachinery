@@ -46,7 +46,7 @@ import (
 // SetupRedisWebhookWithManager registers the webhook for Redis in the manager.
 func SetupRedisWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Redis{}).
-		WithValidator(&RedisCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RedisCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RedisCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -62,6 +62,9 @@ var _ webhook.CustomDefaulter = &RedisCustomWebhook{}
 var redisLog = logf.Log.WithName("redis-resource")
 
 func (w RedisCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	redis, ok := obj.(*dbapi.Redis)
 	if !ok {
 		return fmt.Errorf("expected a Redis but got a %T", obj)
@@ -94,6 +97,12 @@ func (w RedisCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 var _ webhook.CustomValidator = &RedisCustomWebhook{}
 
 func (w RedisCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	redis, ok := obj.(*dbapi.Redis)
 	if !ok {
 		return nil, fmt.Errorf("expected a Redis but got a %T", obj)
@@ -104,6 +113,9 @@ func (w RedisCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 }
 
 func (w RedisCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldRedis, ok := oldObj.(*dbapi.Redis)
 	if !ok {
 		return nil, fmt.Errorf("expected a Redis but got a %T", oldRedis)

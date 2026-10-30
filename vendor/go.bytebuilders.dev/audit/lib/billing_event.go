@@ -51,6 +51,13 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 		return nil, err
 	}
 
+	if p.ClusterMetadata != nil && p.ClusterMetadata.License != nil && p.ClusterMetadata.License.OrgID != "" {
+		res.Spec.Tenant = &corev1alpha1.TenantInfo{
+			OrgID:  p.ClusterMetadata.License.OrgID,
+			Source: corev1alpha1.TenantSourceCluster,
+		}
+	}
+
 	if p.NamespaceLister != nil {
 		var ns core.Namespace
 		err = p.NamespaceLister.Get(context.TODO(), client.ObjectKey{Name: obj.GetNamespace()}, &ns)
@@ -64,15 +71,22 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 		}
 		res.Spec.Namespace.EnableResourceTrial = ns.Annotations[kmapi.AceEnableResourceTrialKey] == "true"
 		if ns.Labels[kmapi.ClientOrgKey] == "true" {
-			res.Spec.Namespace.AceOrgID = ns.Annotations[kmapi.AceOrgIDKey]
-
 			orgMetadata := map[string]string{}
 			for k, v := range ns.Annotations {
 				if after, found := strings.CutPrefix(k, kmapi.ClientKeyPrefix); found {
 					orgMetadata[after] = v
 				}
 			}
-			res.Spec.Namespace.AceOrgMetadata = orgMetadata
+			// a client org is more specific than the cluster it sits on
+			res.Spec.Tenant = &corev1alpha1.TenantInfo{
+				OrgID:    ns.Annotations[kmapi.AceOrgIDKey],
+				Metadata: orgMetadata,
+				Source:   corev1alpha1.TenantSourceNamespace,
+			}
+
+			// Deprecated: kept one release for consumers not yet reading Tenant
+			res.Spec.Namespace.AceOrgID = ns.Annotations[kmapi.AceOrgIDKey] // nolint:staticcheck
+			res.Spec.Namespace.AceOrgMetadata = orgMetadata                 // nolint:staticcheck
 		}
 
 		// ensure cluster mode is always up-to-date

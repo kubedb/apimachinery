@@ -49,7 +49,7 @@ import (
 // SetupPostgresWebhookWithManager registers the webhook for Postgres in the manager.
 func SetupPostgresWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Postgres{}).
-		WithValidator(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.ReadReplicaServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -64,6 +64,9 @@ var pgLog = logf.Log.WithName("postgres-resource")
 var _ webhook.CustomDefaulter = &PostgresCustomWebhook{}
 
 func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.Postgres)
 
 	pgLog.Info("defaulting", "name", db.GetName())
@@ -81,6 +84,16 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 	if db.Spec.Replicas == nil {
 		db.Spec.Replicas = pointer.Int32P(1)
 	}
+
+	// A deletion in progress (the finalizer-removal patch on WipeOut) must never be
+	// blocked on the referenced PostgresVersion catalog object still existing: the DB
+	// already ran on it, there is nothing left to default, and requiring it here only
+	// wedges the delete forever if the catalog entry is removed before the DB (N210).
+	// Skipped ONLY for this case, gated strictly on DeletionTimestamp != nil.
+	if db.DeletionTimestamp != nil {
+		return nil
+	}
+
 	var postgresVersion catalogapi.PostgresVersion
 	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
@@ -90,6 +103,18 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 	}
 
 	db.SetDefaults(&postgresVersion)
+
+	if db.Spec.TDE != nil {
+		if db.Spec.TDE.Cipher == "" {
+			db.Spec.TDE.Cipher = "aes_128"
+		}
+	}
+
+	if db.Spec.License != nil {
+		if db.Spec.License.SecretRef.Key == "" {
+			db.Spec.License.SecretRef.Key = "license.pem"
+		}
+	}
 
 	return nil
 }
@@ -160,6 +185,26 @@ func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) err
 	// Once the database has been initialized, don't let update the "spec.init" section
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
 		preconditions.Insert("spec.init")
+	}
+	// Enabling or disabling TDE after creation is not supported: the principal-key
+	// bootstrap and shared_preload_libraries composition only happen at
+	// initialization, and dropping the provider would orphan the existing keys and
+	// leave encrypted data unreadable. Reject the nil<->non-nil transition with a
+	// clear message (this also avoids a nil-traversal in the strategic-patch
+	// precondition when spec.tde becomes JSON null). Modifying the mutable knobs
+	// (encryptWAL, enforceEncryption, defaultEncryptedTables) of an existing
+	// spec.tde stays allowed and flows through an OpsRequest.
+	if (oldObj.Spec.TDE == nil) != (obj.Spec.TDE == nil) {
+		return fmt.Errorf("spec.tde cannot be added or removed after creation; it is a create-time setting")
+	}
+	// The TDE key provider and cipher are immutable once set: changing where the
+	// principal key lives, or the algorithm, would orphan the existing keys and
+	// leave already encrypted data unreadable. The mutable knobs (encryptWAL,
+	// enforceEncryption, defaultEncryptedTables) are reconfigured through an
+	// OpsRequest, which also performs the prerequisite key setup and restart.
+	if oldObj.Spec.TDE != nil {
+		preconditions.Insert("spec.tde.keyProvider")
+		preconditions.Insert("spec.tde.cipher")
 	}
 
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
@@ -245,6 +290,102 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 		}
 	}
 	// end <==============
+	if err := wh.validateTDE(postgres, pgVersion); err != nil {
+		return err
+	}
+	if err := wh.validateLicense(postgres, pgVersion); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateTDE enforces the Transparent Data Encryption (pg_tde) invariants.
+func (wh *PostgresCustomWebhook) validateTDE(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	tde := postgres.Spec.TDE
+	if tde == nil {
+		return nil
+	}
+	// The referenced version must be a Percona build that bundles pg_tde.
+	if pgVersion.Spec.TDE == nil || !pgVersion.Spec.TDE.Supported {
+		return fmt.Errorf("spec.tde is set but PostgresVersion %q does not support TDE (requires a Percona distribution with pg_tde)", pgVersion.Name)
+	}
+	// Exactly one key provider must be configured.
+	kp := tde.KeyProvider
+	providers := 0
+	if kp.Vault != nil {
+		providers++
+	}
+	if kp.KMIP != nil {
+		providers++
+	}
+	if kp.File != nil {
+		providers++
+	}
+	if providers != 1 {
+		return fmt.Errorf("spec.tde.keyProvider must set exactly one of vault, kmip or file, got %d", providers)
+	}
+	// The CRD guarantees the sub-struct is present, not that its required fields
+	// are non-empty. Catch empty required fields here so the operator fails fast at
+	// admission instead of opaquely at pod bootstrap (a missing vault address or
+	// token secret only surfaces as a keyless boot / crash-loop otherwise).
+	switch {
+	case kp.Vault != nil:
+		if kp.Vault.Address == "" || kp.Vault.MountPath == "" || kp.Vault.TokenSecretRef.Name == "" {
+			return fmt.Errorf("spec.tde.keyProvider.vault requires address, mountPath and tokenSecretRef.name to be set")
+		}
+	case kp.KMIP != nil:
+		if kp.KMIP.Address == "" || kp.KMIP.Port <= 0 || kp.KMIP.CredentialSecretRef.Name == "" {
+			return fmt.Errorf("spec.tde.keyProvider.kmip requires address, a valid port and credentialSecretRef.name to be set")
+		}
+	case kp.File != nil:
+		if kp.File.Path == "" {
+			return fmt.Errorf("spec.tde.keyProvider.file requires path to be set")
+		}
+	}
+	// The file (local keyring) provider cannot back replication or WAL encryption.
+	if kp.File != nil {
+		if ptr.Deref(postgres.Spec.Replicas, 1) > 1 {
+			return fmt.Errorf("spec.tde.keyProvider.file is only valid for a single replica (standalone); use vault or kmip for replicated clusters")
+		}
+		if postgres.Spec.Mode != nil && *postgres.Spec.Mode == dbapi.PostgreSQLModeRemoteReplica {
+			return fmt.Errorf("spec.tde.keyProvider.file is not valid for a RemoteReplica; use a global vault or kmip provider")
+		}
+		if tde.EncryptWAL {
+			return fmt.Errorf("spec.tde.encryptWAL requires a global vault or kmip provider, not a file keyring")
+		}
+	}
+	// WAL encryption requires a global provider.
+	if tde.EncryptWAL && kp.Vault == nil && kp.KMIP == nil {
+		return fmt.Errorf("spec.tde.encryptWAL requires a global vault or kmip key provider")
+	}
+	// Cipher must be one of the supported algorithms.
+	switch tde.Cipher {
+	case "", "aes_128", "aes_256":
+	default:
+		return fmt.Errorf("spec.tde.cipher %q invalid, supported values are aes_128 and aes_256", tde.Cipher)
+	}
+	return nil
+}
+
+// validateLicense enforces the AppsCode Postgres Enterprise license invariants.
+// A version that requires a license (spec.license.required = true) must have
+// spec.license set, and conversely spec.license may only be set against a
+// version that requires one; the field only exists to name where the license
+// certificate is, it does not itself decide whether one is needed.
+func (wh *PostgresCustomWebhook) validateLicense(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	versionRequiresLicense := pgVersion.Spec.License != nil && pgVersion.Spec.License.Required
+	if postgres.Spec.License == nil {
+		if versionRequiresLicense {
+			return fmt.Errorf("PostgresVersion %q requires spec.license (a licensed AppsCode Postgres Enterprise build); set spec.license.secretRef to a Secret containing the license certificate under key \"license.pem\"", pgVersion.Name)
+		}
+		return nil
+	}
+	if !versionRequiresLicense {
+		return fmt.Errorf("spec.license is set but PostgresVersion %q is not a licensed distribution (spec.license.required is not set)", pgVersion.Name)
+	}
+	if postgres.Spec.License.SecretRef.Name == "" {
+		return fmt.Errorf("spec.license.secretRef.name must be set")
+	}
 	return nil
 }
 
@@ -293,11 +434,18 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, errors.New(`'spec.version' is missing`)
 	}
 	var postgresVersion catalogapi.PostgresVersion
-	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: postgres.Spec.Version,
-	}, &postgresVersion)
-	if err != nil {
-		return nil, err
+	var err error
+	// See Default()'s and ValidateUpdate()'s matching guards (N210): skip ONLY the
+	// version-existence check for a deletion in progress, so the finalizer-removal
+	// patch is never wedged by an already-deleted PostgresVersion catalog entry. Every
+	// other validation below still runs unconditionally.
+	if postgres.DeletionTimestamp == nil {
+		err = wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: postgres.Spec.Version,
+		}, &postgresVersion)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if postgres.Spec.Replicas == nil || ptr.Deref(postgres.Spec.Replicas, 0) < 1 {
@@ -332,26 +480,69 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 
 	if postgres.Spec.StreamingMode != nil {
 		streamingMode := *postgres.Spec.StreamingMode
-		// TODO: synchronous Streaming is unavailable due to lack of support
 		if streamingMode != dbapi.AsynchronousPostgresStreamingMode &&
 			streamingMode != dbapi.SynchronousPostgresStreamingMode {
 			return nil, fmt.Errorf(`spec.streamingMode "%s" invalid`, streamingMode)
 		}
 	}
 
-	if postgres.Spec.ClientAuthMode == dbapi.ClientAuthModeScram {
+	if postgres.Spec.SynchronousReplicationConfig != nil {
+		if postgres.Spec.StreamingMode == nil || *postgres.Spec.StreamingMode != dbapi.SynchronousPostgresStreamingMode {
+			return nil, fmt.Errorf("spec.synchronousReplicationConfig is only valid when spec.streamingMode is %q", dbapi.SynchronousPostgresStreamingMode)
+		}
+		cfg := postgres.Spec.SynchronousReplicationConfig
+
+		// UseWildcard and StandbyNames are mutually exclusive
+		if cfg.UseWildcard != nil && *cfg.UseWildcard && len(cfg.StandbyNames) > 0 {
+			return nil, fmt.Errorf("spec.synchronousReplicationConfig.useWildcard and standbyNames are mutually exclusive")
+		}
+
+		// Validate StandbyNames: no empty strings, no duplicates
+		if len(cfg.StandbyNames) > 0 {
+			seen := make(map[string]bool, len(cfg.StandbyNames))
+			for _, name := range cfg.StandbyNames {
+				if name == "" {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.standbyNames must not contain empty strings")
+				}
+				if seen[name] {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.standbyNames contains duplicate entry %q", name)
+				}
+				seen[name] = true
+			}
+		}
+
+		if cfg.NumSyncReplicas != nil {
+			if *cfg.NumSyncReplicas < 1 {
+				return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas must be >= 1, got %d", *cfg.NumSyncReplicas)
+			}
+			if len(cfg.StandbyNames) > 0 {
+				// Explicit list: numSyncReplicas must not exceed the list length
+				if *cfg.NumSyncReplicas > int32(len(cfg.StandbyNames)) {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) exceeds the number of standbyNames (%d)", *cfg.NumSyncReplicas, len(cfg.StandbyNames))
+				}
+			} else {
+				// Auto-generated list: numSyncReplicas must be < total replicas to avoid
+				// blocking all writes when a standby is down
+				replicas := int32(1)
+				if postgres.Spec.Replicas != nil {
+					replicas = *postgres.Spec.Replicas
+				}
+				if *cfg.NumSyncReplicas >= replicas {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) must be less than spec.replicas (%d) to avoid blocking all writes if a standby goes down", *cfg.NumSyncReplicas, replicas)
+				}
+			}
+		}
+	}
+
+	if postgres.Spec.ClientAuthMode == dbapi.ClientAuthModeScram && postgres.DeletionTimestamp == nil {
 		if err := checkPgScramAuthMethodSupport(postgresVersion.Spec.Version); err != nil {
 			return nil, err
 		}
 	}
 
 	if postgres.Spec.Configuration != nil && len(postgres.Spec.Configuration.Inline) > 0 {
-		if len(postgres.Spec.Configuration.Inline) > 1 {
-			return nil, fmt.Errorf(`only one configuration source is allowed in spec.configuration.applyConfig and it should be %q`, kubedb.PostgresCustomConfigFile)
-		}
-		_, exists := postgres.Spec.Configuration.Inline[kubedb.PostgresCustomConfigFile]
-		if !exists {
-			return nil, fmt.Errorf(`invalid configuration source found in spec.configuration.applyConfig. only %q is allowed`, kubedb.PostgresCustomConfigFile)
+		if err := validatePostgresInlineConfig(postgres.Spec.Configuration.Inline); err != nil {
+			return nil, err
 		}
 	}
 
@@ -364,9 +555,15 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, err
 	}
 
-	err = wh.validateSpecForDB(postgres, &postgresVersion)
-	if err != nil {
-		return nil, err
+	// Guarded the same as the version-existence check above: postgresVersion is a zero
+	// value while deleting, and validateSpecForDB dereferences its semver-parsed
+	// Spec.Version unconditionally (would panic on an empty version string), so it must
+	// not run against a zero value.
+	if postgres.DeletionTimestamp == nil {
+		err = wh.validateSpecForDB(postgres, &postgresVersion)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// if secret managed externally verify auth secret name is not empty
@@ -376,7 +573,7 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
 
-	if wh.StrictValidation {
+	if wh.StrictValidation && postgres.DeletionTimestamp == nil {
 
 		// Check if postgresVersion is deprecated.
 		// If deprecated, return error
@@ -410,11 +607,20 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 	if err = amv.ValidateHealth(&postgres.Spec.HealthChecker); err != nil {
 		return nil, err
 	}
-	if postgres.IsRemoteReplica() && postgresVersion.Spec.Version < "13" {
+	if postgres.DeletionTimestamp == nil && postgres.IsRemoteReplica() && postgresVersion.Spec.Version < "13" {
 		return nil, fmt.Errorf("remote replica is not currently supported for version bellow 13")
 	}
 
-	if postgres.Spec.Distributed {
+	// Same reasoning as the PostgresVersion guard above (N210), for the PlacementPolicy a
+	// distributed database references. A deletion in progress must never be blocked on that
+	// object still existing: the database already ran on it and there is nothing left to
+	// validate, but requiring it here wedges the delete FOREVER when the policy is removed
+	// first. Reproduced live: deleting the PlacementPolicy before the Postgres left the CR
+	// with a deletionTimestamp and a kubedb.com finalizer that could never be removed,
+	// because every update to the object - including the finalizer-removal patch itself -
+	// was denied with `PlacementPolicy "<name>" not found`. Recovering it required
+	// re-creating the policy purely so the webhook would let the delete finish.
+	if postgres.Spec.Distributed && postgres.DeletionTimestamp == nil {
 		if postgres.Spec.PodTemplate.Spec.PodPlacementPolicy == nil {
 			return nil, fmt.Errorf(`'spec.podPlacementPolicy' is required for distributed postgres`)
 		}
@@ -432,6 +638,12 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 }
 
 func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, wh.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	postgres, ok := obj.(*dbapi.Postgres)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
@@ -442,6 +654,9 @@ func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 }
 
 func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldPostgres, ok := oldObj.(*dbapi.Postgres)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", oldPostgres)
@@ -451,14 +666,18 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		return nil, fmt.Errorf("expected a Postgres but got a %T", postgres)
 	}
 
-	var postgresVersion catalogapi.PostgresVersion
-	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: oldPostgres.Spec.Version,
-	}, &postgresVersion)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
+	// See validate()'s DeletionTimestamp guard (N210): the finalizer-removal patch on
+	// WipeOut must not be blocked on the referenced PostgresVersion still existing.
+	if postgres.DeletionTimestamp == nil {
+		var postgresVersion catalogapi.PostgresVersion
+		err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: oldPostgres.Spec.Version,
+		}, &postgresVersion)
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
+		}
+		oldPostgres.SetDefaults(&postgresVersion)
 	}
-	oldPostgres.SetDefaults(&postgresVersion)
 	if oldPostgres.Spec.AuthSecret == nil {
 		oldPostgres.Spec.AuthSecret = postgres.Spec.AuthSecret
 	}
@@ -494,6 +713,31 @@ func checkPgScramAuthMethodSupport(v string) error {
 	}
 	if pgVersion.Major() < 11 {
 		return fmt.Errorf("scram auth method is available only for 11 or higher Versions")
+	}
+	return nil
+}
+
+// validatePostgresInlineConfig checks the keys of spec.configuration.inline (and the identically
+// shaped applyConfig on a PostgresOpsRequest). Two keys are recognised:
+//
+//	user.conf     -> appended to postgresql.conf via include_if_exists
+//	user_hba.conf -> spliced into $PGDATA/pg_hba.conf by the role scripts
+//
+// Anything else is rejected rather than silently dropped, which is what makes a mistyped key a
+// visible failure instead of a cluster that starts fine and ignores every setting.
+func validatePostgresInlineConfig(inline map[string]string) error {
+	for key, val := range inline {
+		switch key {
+		case kubedb.PostgresCustomConfigFile:
+			// postgresql.conf settings; PostgreSQL itself reports bad entries on reload.
+		case kubedb.PostgresCustomHBAFile:
+			if err := dbapi.ValidateHBAConfig(val); err != nil {
+				return fmt.Errorf("invalid %q in spec.configuration.inline: %w", kubedb.PostgresCustomHBAFile, err)
+			}
+		default:
+			return fmt.Errorf("invalid configuration source %q found in spec.configuration.inline; only %q and %q are allowed",
+				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
 	}
 	return nil
 }

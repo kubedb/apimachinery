@@ -19,11 +19,11 @@ limitations under the License.
 package v1
 
 import (
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisSentinelLister helps list RedisSentinels.
@@ -31,7 +31,7 @@ import (
 type RedisSentinelLister interface {
 	// List lists all RedisSentinels in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.RedisSentinel, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.RedisSentinel, err error)
 	// RedisSentinels returns an object that can list and get RedisSentinels.
 	RedisSentinels(namespace string) RedisSentinelNamespaceLister
 	RedisSentinelListerExpansion
@@ -39,25 +39,17 @@ type RedisSentinelLister interface {
 
 // redisSentinelLister implements the RedisSentinelLister interface.
 type redisSentinelLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1.RedisSentinel]
 }
 
 // NewRedisSentinelLister returns a new RedisSentinelLister.
 func NewRedisSentinelLister(indexer cache.Indexer) RedisSentinelLister {
-	return &redisSentinelLister{indexer: indexer}
-}
-
-// List lists all RedisSentinels in the indexer.
-func (s *redisSentinelLister) List(selector labels.Selector) (ret []*v1.RedisSentinel, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.RedisSentinel))
-	})
-	return ret, err
+	return &redisSentinelLister{listers.New[*kubedbv1.RedisSentinel](indexer, kubedbv1.Resource("redissentinel"))}
 }
 
 // RedisSentinels returns an object that can list and get RedisSentinels.
 func (s *redisSentinelLister) RedisSentinels(namespace string) RedisSentinelNamespaceLister {
-	return redisSentinelNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisSentinelNamespaceLister{listers.NewNamespaced[*kubedbv1.RedisSentinel](s.ResourceIndexer, namespace)}
 }
 
 // RedisSentinelNamespaceLister helps list and get RedisSentinels.
@@ -65,36 +57,15 @@ func (s *redisSentinelLister) RedisSentinels(namespace string) RedisSentinelName
 type RedisSentinelNamespaceLister interface {
 	// List lists all RedisSentinels in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.RedisSentinel, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.RedisSentinel, err error)
 	// Get retrieves the RedisSentinel from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.RedisSentinel, error)
+	Get(name string) (*kubedbv1.RedisSentinel, error)
 	RedisSentinelNamespaceListerExpansion
 }
 
 // redisSentinelNamespaceLister implements the RedisSentinelNamespaceLister
 // interface.
 type redisSentinelNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RedisSentinels in the indexer for a given namespace.
-func (s redisSentinelNamespaceLister) List(selector labels.Selector) (ret []*v1.RedisSentinel, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.RedisSentinel))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisSentinel from the indexer for a given namespace and name.
-func (s redisSentinelNamespaceLister) Get(name string) (*v1.RedisSentinel, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("redissentinel"), name)
-	}
-	return obj.(*v1.RedisSentinel), nil
+	listers.ResourceIndexer[*kubedbv1.RedisSentinel]
 }

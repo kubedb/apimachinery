@@ -31,6 +31,7 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -38,6 +39,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubestash.dev/apimachinery/pkg/blob"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -68,7 +70,7 @@ func (w *SolrOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj ru
 		return nil, fmt.Errorf("expected an SolrOpsRequest object but got %T", obj)
 	}
 	slLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -87,18 +89,19 @@ func (w *SolrOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj
 	if err := validateSolrOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db olddbapi.Solr
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *SolrOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -117,17 +120,18 @@ func validateSolrOpsRequest(req *opsapi.SolrOpsRequest, oldReq *opsapi.SolrOpsRe
 	return nil
 }
 
-func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.SolrOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Solr are %s", req.Spec.Type, strings.Join(opsapi.SolrOpsRequestTypeNames(), ", ")))
 	}
 	db, err := w.hasDatabaseRef(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 	switch opsapi.SolrOpsRequestType(req.GetRequestType()) {
 	case opsapi.SolrOpsRequestTypeRestart:
 
@@ -138,7 +142,11 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeReconfigure:
-
+		if err := w.validateSolrReconfigurationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.SolrOpsRequestTypeUpdateVersion:
 		if err := w.validateSolrUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
@@ -146,7 +154,9 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVerticalScaling:
-		if err := w.validateSolrVerticalScalingOpsRequest(req); err != nil {
+		warns, err := w.validateSolrVerticalScalingOpsRequest(req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -178,9 +188,9 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
 }
 
 func (w *SolrOpsRequestCustomWebhook) validateSolrStorageMigrationOpsRequest(req *opsapi.SolrOpsRequest, db *olddbapi.Solr) error {
@@ -262,17 +272,22 @@ func (w *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest)
 	return db, nil
 }
 
-func (w *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req *opsapi.SolrOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 
 	if verticalScalingSpec.Node != nil && (verticalScalingSpec.Data != nil || verticalScalingSpec.Overseer != nil || verticalScalingSpec.Coordinator != nil) {
-		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
+		return nil, errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Solr: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (w *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
@@ -336,6 +351,124 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req 
 	return nil
 }
 
+func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(db *olddbapi.Solr, req *opsapi.SolrOpsRequest) error {
+	cfg := req.Spec.Configuration
+	if cfg == nil {
+		return errors.New("spec.configuration nil not supported in Reconfigure type")
+	}
+
+	creds := cfg.BackupSpec
+	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
+		(creds == nil || (len(creds.S3Secrets) == 0 && len(creds.GCSSecrets) == 0)) {
+		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backup` must be specified")
+	}
+
+	if cfg.ConfigSecret != nil && cfg.ConfigSecret.Name != "" {
+		if _, err := w.getReferencedSecret(req.Namespace, cfg.ConfigSecret.Name, ""); err != nil {
+			return err
+		}
+	}
+
+	if creds == nil {
+		return nil
+	}
+	reservedSecretName := db.BackupCredentialsSecretName()
+	if err := validateSolrBackupCredentialRefs(creds.S3Secrets, "s3Secrets", reservedSecretName); err != nil {
+		return err
+	}
+	if err := validateSolrBackupCredentialRefs(creds.GCSSecrets, "gcsSecrets", reservedSecretName); err != nil {
+		return err
+	}
+	if len(creds.S3Secrets) != 0 || len(creds.GCSSecrets) != 0 {
+		if err := w.validateSolrBackupCredentialsSecret(db); err != nil {
+			return err
+		}
+	}
+
+	for i, ref := range creds.S3Secrets {
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%d].name` must be specified", i)
+		}
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "s3")
+		if err != nil {
+			return err
+		}
+		for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
+			if _, ok := secret.Data[key]; !ok {
+				return fmt.Errorf("s3 secret %s/%s has no key %q holding the credential", req.Namespace, secret.Name, key)
+			}
+		}
+	}
+
+	for i, ref := range creds.GCSSecrets {
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%d].name` must be specified", i)
+		}
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "gcs")
+		if err != nil {
+			return err
+		}
+		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
+			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", req.Namespace, secret.Name, blob.GoogleServiceAccountJSONKey)
+		}
+	}
+
+	return nil
+}
+
+func validateSolrBackupCredentialRefs(refs []core.LocalObjectReference, fieldName, reservedSecretName string) error {
+	seen := make(map[string]struct{})
+	for i, ref := range refs {
+		if ref.Name == "" {
+			return fmt.Errorf("spec.configuration.backup.%s[%d].name must be specified", fieldName, i)
+		}
+		if ref.Name == reservedSecretName {
+			return fmt.Errorf("spec.configuration.backup.%s cannot reference generated Secret %q", fieldName, reservedSecretName)
+		}
+		if _, found := seen[ref.Name]; found {
+			return fmt.Errorf("spec.configuration.backup.%s contains duplicate Secret %q", fieldName, ref.Name)
+		}
+		seen[ref.Name] = struct{}{}
+	}
+	return nil
+}
+
+func (w *SolrOpsRequestCustomWebhook) validateSolrBackupCredentialsSecret(db *olddbapi.Solr) error {
+	var secret core.Secret
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      db.BackupCredentialsSecretName(),
+		Namespace: db.Namespace,
+	}, &secret)
+	if apierrors.IsNotFound(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if metav1.IsControlledBy(&secret, db) {
+		return nil
+	}
+	return fmt.Errorf("secret %s/%s is reserved for generated backup credentials and is not controlled by Solr %s/%s", secret.Namespace, secret.Name, db.Namespace, db.Name)
+}
+
+func (w *SolrOpsRequestCustomWebhook) getReferencedSecret(namespace, name, kind string) (*core.Secret, error) {
+	var secret core.Secret
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      name,
+		Namespace: namespace,
+	}, &secret)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			if kind != "" {
+				return nil, fmt.Errorf("referenced %s secret %s/%s not found", kind, namespace, name)
+			}
+			return nil, fmt.Errorf("referenced config secret %s/%s not found", namespace, name)
+		}
+		return nil, err
+	}
+	return &secret, nil
+}
+
 func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigureTLSOpsRequest(req *opsapi.SolrOpsRequest) error {
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
@@ -366,17 +499,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigureTLSOpsRequest(req *
 func (w *SolrOpsRequestCustomWebhook) validateSolrRotateAuthenticationOpsRequest(req *opsapi.SolrOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

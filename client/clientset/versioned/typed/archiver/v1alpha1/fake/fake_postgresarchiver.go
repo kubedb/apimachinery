@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresArchivers implements PostgresArchiverInterface
-type FakePostgresArchivers struct {
+// fakePostgresArchivers implements PostgresArchiverInterface
+type fakePostgresArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresArchiver, *v1alpha1.PostgresArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var postgresarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers")
-
-var postgresarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresArchiver")
-
-// Get takes name of the postgresArchiver, and returns the corresponding postgresArchiver object, and an error if there is any.
-func (c *FakePostgresArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresarchiversResource, c.ns, name), &v1alpha1.PostgresArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.PostgresArchiverInterface {
+	return &fakePostgresArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresArchiver, *v1alpha1.PostgresArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresArchiver"),
+			func() *v1alpha1.PostgresArchiver { return &v1alpha1.PostgresArchiver{} },
+			func() *v1alpha1.PostgresArchiverList { return &v1alpha1.PostgresArchiverList{} },
+			func(dst, src *v1alpha1.PostgresArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresArchiverList) []*v1alpha1.PostgresArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresArchiverList, items []*v1alpha1.PostgresArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresArchivers that match those selectors.
-func (c *FakePostgresArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresarchiversResource, postgresarchiversKind, c.ns, opts), &v1alpha1.PostgresArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresArchiverList{ListMeta: obj.(*v1alpha1.PostgresArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresArchivers.
-func (c *FakePostgresArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresArchiver and creates it.  Returns the server's representation of the postgresArchiver, and an error, if there is any.
-func (c *FakePostgresArchivers) Create(ctx context.Context, postgresArchiver *v1alpha1.PostgresArchiver, opts v1.CreateOptions) (result *v1alpha1.PostgresArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresarchiversResource, c.ns, postgresArchiver), &v1alpha1.PostgresArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresArchiver), err
-}
-
-// Update takes the representation of a postgresArchiver and updates it. Returns the server's representation of the postgresArchiver, and an error, if there is any.
-func (c *FakePostgresArchivers) Update(ctx context.Context, postgresArchiver *v1alpha1.PostgresArchiver, opts v1.UpdateOptions) (result *v1alpha1.PostgresArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresarchiversResource, c.ns, postgresArchiver), &v1alpha1.PostgresArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePostgresArchivers) UpdateStatus(ctx context.Context, postgresArchiver *v1alpha1.PostgresArchiver, opts v1.UpdateOptions) (*v1alpha1.PostgresArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresarchiversResource, "status", c.ns, postgresArchiver), &v1alpha1.PostgresArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresArchiver), err
-}
-
-// Delete takes name of the postgresArchiver and deletes it. Returns an error if one occurs.
-func (c *FakePostgresArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresarchiversResource, c.ns, name, opts), &v1alpha1.PostgresArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresArchiver.
-func (c *FakePostgresArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresArchiver), err
 }

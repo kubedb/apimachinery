@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRabbitMQs implements RabbitMQInterface
-type FakeRabbitMQs struct {
+// fakeRabbitMQs implements RabbitMQInterface
+type fakeRabbitMQs struct {
+	*gentype.FakeClientWithList[*v1alpha1.RabbitMQ, *v1alpha1.RabbitMQList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var rabbitmqsResource = v1alpha1.SchemeGroupVersion.WithResource("rabbitmqs")
-
-var rabbitmqsKind = v1alpha1.SchemeGroupVersion.WithKind("RabbitMQ")
-
-// Get takes name of the rabbitMQ, and returns the corresponding rabbitMQ object, and an error if there is any.
-func (c *FakeRabbitMQs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RabbitMQ, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(rabbitmqsResource, c.ns, name), &v1alpha1.RabbitMQ{})
-
-	if obj == nil {
-		return nil, err
+func newFakeRabbitMQs(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.RabbitMQInterface {
+	return &fakeRabbitMQs{
+		gentype.NewFakeClientWithList[*v1alpha1.RabbitMQ, *v1alpha1.RabbitMQList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("rabbitmqs"),
+			v1alpha1.SchemeGroupVersion.WithKind("RabbitMQ"),
+			func() *v1alpha1.RabbitMQ { return &v1alpha1.RabbitMQ{} },
+			func() *v1alpha1.RabbitMQList { return &v1alpha1.RabbitMQList{} },
+			func(dst, src *v1alpha1.RabbitMQList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.RabbitMQList) []*v1alpha1.RabbitMQ { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.RabbitMQList, items []*v1alpha1.RabbitMQ) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.RabbitMQ), err
-}
-
-// List takes label and field selectors, and returns the list of RabbitMQs that match those selectors.
-func (c *FakeRabbitMQs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RabbitMQList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(rabbitmqsResource, rabbitmqsKind, c.ns, opts), &v1alpha1.RabbitMQList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.RabbitMQList{ListMeta: obj.(*v1alpha1.RabbitMQList).ListMeta}
-	for _, item := range obj.(*v1alpha1.RabbitMQList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested rabbitMQs.
-func (c *FakeRabbitMQs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(rabbitmqsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a rabbitMQ and creates it.  Returns the server's representation of the rabbitMQ, and an error, if there is any.
-func (c *FakeRabbitMQs) Create(ctx context.Context, rabbitMQ *v1alpha1.RabbitMQ, opts v1.CreateOptions) (result *v1alpha1.RabbitMQ, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(rabbitmqsResource, c.ns, rabbitMQ), &v1alpha1.RabbitMQ{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RabbitMQ), err
-}
-
-// Update takes the representation of a rabbitMQ and updates it. Returns the server's representation of the rabbitMQ, and an error, if there is any.
-func (c *FakeRabbitMQs) Update(ctx context.Context, rabbitMQ *v1alpha1.RabbitMQ, opts v1.UpdateOptions) (result *v1alpha1.RabbitMQ, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(rabbitmqsResource, c.ns, rabbitMQ), &v1alpha1.RabbitMQ{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RabbitMQ), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeRabbitMQs) UpdateStatus(ctx context.Context, rabbitMQ *v1alpha1.RabbitMQ, opts v1.UpdateOptions) (*v1alpha1.RabbitMQ, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(rabbitmqsResource, "status", c.ns, rabbitMQ), &v1alpha1.RabbitMQ{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RabbitMQ), err
-}
-
-// Delete takes name of the rabbitMQ and deletes it. Returns an error if one occurs.
-func (c *FakeRabbitMQs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(rabbitmqsResource, c.ns, name, opts), &v1alpha1.RabbitMQ{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRabbitMQs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(rabbitmqsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.RabbitMQList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched rabbitMQ.
-func (c *FakeRabbitMQs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RabbitMQ, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(rabbitmqsResource, c.ns, name, pt, data, subresources...), &v1alpha1.RabbitMQ{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RabbitMQ), err
 }

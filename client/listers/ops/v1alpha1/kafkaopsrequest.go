@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // KafkaOpsRequestLister helps list KafkaOpsRequests.
@@ -31,7 +31,7 @@ import (
 type KafkaOpsRequestLister interface {
 	// List lists all KafkaOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.KafkaOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.KafkaOpsRequest, err error)
 	// KafkaOpsRequests returns an object that can list and get KafkaOpsRequests.
 	KafkaOpsRequests(namespace string) KafkaOpsRequestNamespaceLister
 	KafkaOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type KafkaOpsRequestLister interface {
 
 // kafkaOpsRequestLister implements the KafkaOpsRequestLister interface.
 type kafkaOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.KafkaOpsRequest]
 }
 
 // NewKafkaOpsRequestLister returns a new KafkaOpsRequestLister.
 func NewKafkaOpsRequestLister(indexer cache.Indexer) KafkaOpsRequestLister {
-	return &kafkaOpsRequestLister{indexer: indexer}
-}
-
-// List lists all KafkaOpsRequests in the indexer.
-func (s *kafkaOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.KafkaOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.KafkaOpsRequest))
-	})
-	return ret, err
+	return &kafkaOpsRequestLister{listers.New[*opsv1alpha1.KafkaOpsRequest](indexer, opsv1alpha1.Resource("kafkaopsrequest"))}
 }
 
 // KafkaOpsRequests returns an object that can list and get KafkaOpsRequests.
 func (s *kafkaOpsRequestLister) KafkaOpsRequests(namespace string) KafkaOpsRequestNamespaceLister {
-	return kafkaOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return kafkaOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.KafkaOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // KafkaOpsRequestNamespaceLister helps list and get KafkaOpsRequests.
@@ -65,36 +57,15 @@ func (s *kafkaOpsRequestLister) KafkaOpsRequests(namespace string) KafkaOpsReque
 type KafkaOpsRequestNamespaceLister interface {
 	// List lists all KafkaOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.KafkaOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.KafkaOpsRequest, err error)
 	// Get retrieves the KafkaOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.KafkaOpsRequest, error)
+	Get(name string) (*opsv1alpha1.KafkaOpsRequest, error)
 	KafkaOpsRequestNamespaceListerExpansion
 }
 
 // kafkaOpsRequestNamespaceLister implements the KafkaOpsRequestNamespaceLister
 // interface.
 type kafkaOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all KafkaOpsRequests in the indexer for a given namespace.
-func (s kafkaOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.KafkaOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.KafkaOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the KafkaOpsRequest from the indexer for a given namespace and name.
-func (s kafkaOpsRequestNamespaceLister) Get(name string) (*v1alpha1.KafkaOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("kafkaopsrequest"), name)
-	}
-	return obj.(*v1alpha1.KafkaOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.KafkaOpsRequest]
 }

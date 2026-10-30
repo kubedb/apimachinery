@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBQuerieses implements MariaDBQueriesInterface
-type FakeMariaDBQuerieses struct {
+// fakeMariaDBQuerieses implements MariaDBQueriesInterface
+type fakeMariaDBQuerieses struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBQueries, *v1alpha1.MariaDBQueriesList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var mariadbqueriesesResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbquerieses")
-
-var mariadbqueriesesKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBQueries")
-
-// Get takes name of the mariaDBQueries, and returns the corresponding mariaDBQueries object, and an error if there is any.
-func (c *FakeMariaDBQuerieses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbqueriesesResource, c.ns, name), &v1alpha1.MariaDBQueries{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.MariaDBQueriesInterface {
+	return &fakeMariaDBQuerieses{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBQueries, *v1alpha1.MariaDBQueriesList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbquerieses"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBQueries"),
+			func() *v1alpha1.MariaDBQueries { return &v1alpha1.MariaDBQueries{} },
+			func() *v1alpha1.MariaDBQueriesList { return &v1alpha1.MariaDBQueriesList{} },
+			func(dst, src *v1alpha1.MariaDBQueriesList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBQueriesList) []*v1alpha1.MariaDBQueries {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBQueriesList, items []*v1alpha1.MariaDBQueries) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBQueries), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBQuerieses that match those selectors.
-func (c *FakeMariaDBQuerieses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBQueriesList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbqueriesesResource, mariadbqueriesesKind, c.ns, opts), &v1alpha1.MariaDBQueriesList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBQueriesList{ListMeta: obj.(*v1alpha1.MariaDBQueriesList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBQueriesList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBQuerieses.
-func (c *FakeMariaDBQuerieses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbqueriesesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBQueries and creates it.  Returns the server's representation of the mariaDBQueries, and an error, if there is any.
-func (c *FakeMariaDBQuerieses) Create(ctx context.Context, mariaDBQueries *v1alpha1.MariaDBQueries, opts v1.CreateOptions) (result *v1alpha1.MariaDBQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbqueriesesResource, c.ns, mariaDBQueries), &v1alpha1.MariaDBQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBQueries), err
-}
-
-// Update takes the representation of a mariaDBQueries and updates it. Returns the server's representation of the mariaDBQueries, and an error, if there is any.
-func (c *FakeMariaDBQuerieses) Update(ctx context.Context, mariaDBQueries *v1alpha1.MariaDBQueries, opts v1.UpdateOptions) (result *v1alpha1.MariaDBQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbqueriesesResource, c.ns, mariaDBQueries), &v1alpha1.MariaDBQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBQueries), err
-}
-
-// Delete takes name of the mariaDBQueries and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBQuerieses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbqueriesesResource, c.ns, name, opts), &v1alpha1.MariaDBQueries{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBQuerieses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbqueriesesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBQueriesList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBQueries.
-func (c *FakeMariaDBQuerieses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbqueriesesResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBQueries), err
 }

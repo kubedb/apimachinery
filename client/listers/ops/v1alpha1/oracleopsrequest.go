@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // OracleOpsRequestLister helps list OracleOpsRequests.
@@ -31,7 +31,7 @@ import (
 type OracleOpsRequestLister interface {
 	// List lists all OracleOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.OracleOpsRequest, err error)
 	// OracleOpsRequests returns an object that can list and get OracleOpsRequests.
 	OracleOpsRequests(namespace string) OracleOpsRequestNamespaceLister
 	OracleOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type OracleOpsRequestLister interface {
 
 // oracleOpsRequestLister implements the OracleOpsRequestLister interface.
 type oracleOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.OracleOpsRequest]
 }
 
 // NewOracleOpsRequestLister returns a new OracleOpsRequestLister.
 func NewOracleOpsRequestLister(indexer cache.Indexer) OracleOpsRequestLister {
-	return &oracleOpsRequestLister{indexer: indexer}
-}
-
-// List lists all OracleOpsRequests in the indexer.
-func (s *oracleOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.OracleOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleOpsRequest))
-	})
-	return ret, err
+	return &oracleOpsRequestLister{listers.New[*opsv1alpha1.OracleOpsRequest](indexer, opsv1alpha1.Resource("oracleopsrequest"))}
 }
 
 // OracleOpsRequests returns an object that can list and get OracleOpsRequests.
 func (s *oracleOpsRequestLister) OracleOpsRequests(namespace string) OracleOpsRequestNamespaceLister {
-	return oracleOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return oracleOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.OracleOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // OracleOpsRequestNamespaceLister helps list and get OracleOpsRequests.
@@ -65,36 +57,15 @@ func (s *oracleOpsRequestLister) OracleOpsRequests(namespace string) OracleOpsRe
 type OracleOpsRequestNamespaceLister interface {
 	// List lists all OracleOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.OracleOpsRequest, err error)
 	// Get retrieves the OracleOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.OracleOpsRequest, error)
+	Get(name string) (*opsv1alpha1.OracleOpsRequest, error)
 	OracleOpsRequestNamespaceListerExpansion
 }
 
 // oracleOpsRequestNamespaceLister implements the OracleOpsRequestNamespaceLister
 // interface.
 type oracleOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all OracleOpsRequests in the indexer for a given namespace.
-func (s oracleOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.OracleOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the OracleOpsRequest from the indexer for a given namespace and name.
-func (s oracleOpsRequestNamespaceLister) Get(name string) (*v1alpha1.OracleOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("oracleopsrequest"), name)
-	}
-	return obj.(*v1alpha1.OracleOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.OracleOpsRequest]
 }

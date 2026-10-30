@@ -51,7 +51,7 @@ import (
 // SetupMariaDBWebhookWithManager registers the webhook for MariaDB in the manager.
 func SetupMariaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MariaDB{}).
-		WithValidator(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -67,6 +67,9 @@ var mariadbLog = logf.Log.WithName("mariadb-resource")
 
 // setDefaultValues provides the defaulting that is performed in mutating stage of creating/updating a MySQL database
 func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
@@ -136,6 +139,12 @@ func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 var _ webhook.CustomValidator = &MariaDBCustomWebhook{}
 
 func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
@@ -143,6 +152,9 @@ func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 }
 
 func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldMariaDB, ok := oldObj.(*dbapi.MariaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a MariaDB but got a %T", oldMariaDB)
@@ -209,6 +221,9 @@ func (w MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 }
 
 func validateMariaDBReplicationSpec(db *dbapi.MariaDB) error {
+	if db.Spec.Topology.MaxScale == nil {
+		return fmt.Errorf("spec.topology.maxscale must be set when spec.topology.mode is %s", dbapi.MariaDBModeReplication)
+	}
 	if db.Spec.Topology.MaxScale.Replicas == nil || ptr.Deref(db.Spec.Replicas, 0) < 1 {
 		return fmt.Errorf(`spec.topology.maxscale.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(db.Spec.Topology.MaxScale.Replicas, 0))
 	}
@@ -262,7 +277,7 @@ var mariaDBreservedVolumes = []string{
 }
 
 func getTLSReservedVolumes() []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, kubedb.MariaDBServerTLSVolumeName)
 	volumes = append(volumes, kubedb.MariaDBClientTLSVolumeName)
 	volumes = append(volumes, kubedb.MariaDBExporterTLSVolumeName)
@@ -285,7 +300,7 @@ var reservedVolumeMounts = []string{
 }
 
 func getTLSReservedVolumeMounts(db *dbapi.MariaDB) []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBServerCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBClientCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBExporterCert))

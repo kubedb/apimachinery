@@ -48,7 +48,7 @@ import (
 // SetupOracleWebhookWithManager registers the webhook for Oracle in the manager.
 func SetupOracleWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Oracle{}).
-		WithValidator(&OracleCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&OracleCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&OracleCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -67,6 +67,9 @@ var oraLog = logf.Log.WithName("oracle-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *OracleCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Oracle)
 	if !ok {
 		return fmt.Errorf("expected a Oracle object, got a %T", obj)
@@ -82,6 +85,12 @@ var _ webhook.CustomValidator = &OracleCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *OracleCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Oracle)
 	if !ok {
 		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
@@ -98,6 +107,9 @@ func (w *OracleCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *OracleCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Oracle)
 	if !ok {
 		return nil, fmt.Errorf("expected a Oracle object, got a %T", newObj)
@@ -178,7 +190,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 
 	if db.Spec.Configuration != nil && db.Spec.Configuration.Inline != nil {
 		if len(db.Spec.Configuration.Inline) != 1 {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline"),
 					db.Spec.Configuration.Inline,
@@ -188,7 +201,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 		_, exist := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
 		if !exist {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline"),
 					db.Spec.Configuration.Inline,
@@ -198,7 +212,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 		value := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
 		if err := ValidateConfigContent([]byte(value), fmt.Sprintf("inline config %q", kubedb.OracleCustomConfigFileName)); err != nil {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline").Key(kubedb.OracleCustomConfigFileName),
 					value,
@@ -302,9 +317,20 @@ var oracleReservedVolumesMountPaths = []string{
 func (w *OracleCustomWebhook) oracleValidateVersion(db *olddbapi.Oracle) error {
 	var oracleVersion catalog.OracleVersion
 
-	return w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
-	}, &oracleVersion)
+	}, &oracleVersion); err != nil {
+		return err
+	}
+	if err := oracleVersion.ValidateSpecs(); err != nil {
+		return err
+	}
+	if db.Spec.Mode == olddbapi.OracleModeDataGuard {
+		if err := oracleVersion.ValidateDataGuardSpecs(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func oracleValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {

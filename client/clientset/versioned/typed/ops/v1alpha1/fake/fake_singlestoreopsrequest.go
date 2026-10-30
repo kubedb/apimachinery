@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSinglestoreOpsRequests implements SinglestoreOpsRequestInterface
-type FakeSinglestoreOpsRequests struct {
+// fakeSinglestoreOpsRequests implements SinglestoreOpsRequestInterface
+type fakeSinglestoreOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.SinglestoreOpsRequest, *v1alpha1.SinglestoreOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var singlestoreopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("singlestoreopsrequests")
-
-var singlestoreopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("SinglestoreOpsRequest")
-
-// Get takes name of the singlestoreOpsRequest, and returns the corresponding singlestoreOpsRequest object, and an error if there is any.
-func (c *FakeSinglestoreOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SinglestoreOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(singlestoreopsrequestsResource, c.ns, name), &v1alpha1.SinglestoreOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSinglestoreOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.SinglestoreOpsRequestInterface {
+	return &fakeSinglestoreOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.SinglestoreOpsRequest, *v1alpha1.SinglestoreOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("singlestoreopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("SinglestoreOpsRequest"),
+			func() *v1alpha1.SinglestoreOpsRequest { return &v1alpha1.SinglestoreOpsRequest{} },
+			func() *v1alpha1.SinglestoreOpsRequestList { return &v1alpha1.SinglestoreOpsRequestList{} },
+			func(dst, src *v1alpha1.SinglestoreOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SinglestoreOpsRequestList) []*v1alpha1.SinglestoreOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SinglestoreOpsRequestList, items []*v1alpha1.SinglestoreOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of SinglestoreOpsRequests that match those selectors.
-func (c *FakeSinglestoreOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SinglestoreOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(singlestoreopsrequestsResource, singlestoreopsrequestsKind, c.ns, opts), &v1alpha1.SinglestoreOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SinglestoreOpsRequestList{ListMeta: obj.(*v1alpha1.SinglestoreOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SinglestoreOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested singlestoreOpsRequests.
-func (c *FakeSinglestoreOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(singlestoreopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a singlestoreOpsRequest and creates it.  Returns the server's representation of the singlestoreOpsRequest, and an error, if there is any.
-func (c *FakeSinglestoreOpsRequests) Create(ctx context.Context, singlestoreOpsRequest *v1alpha1.SinglestoreOpsRequest, opts v1.CreateOptions) (result *v1alpha1.SinglestoreOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(singlestoreopsrequestsResource, c.ns, singlestoreOpsRequest), &v1alpha1.SinglestoreOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), err
-}
-
-// Update takes the representation of a singlestoreOpsRequest and updates it. Returns the server's representation of the singlestoreOpsRequest, and an error, if there is any.
-func (c *FakeSinglestoreOpsRequests) Update(ctx context.Context, singlestoreOpsRequest *v1alpha1.SinglestoreOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.SinglestoreOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(singlestoreopsrequestsResource, c.ns, singlestoreOpsRequest), &v1alpha1.SinglestoreOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSinglestoreOpsRequests) UpdateStatus(ctx context.Context, singlestoreOpsRequest *v1alpha1.SinglestoreOpsRequest, opts v1.UpdateOptions) (*v1alpha1.SinglestoreOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(singlestoreopsrequestsResource, "status", c.ns, singlestoreOpsRequest), &v1alpha1.SinglestoreOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), err
-}
-
-// Delete takes name of the singlestoreOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeSinglestoreOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(singlestoreopsrequestsResource, c.ns, name, opts), &v1alpha1.SinglestoreOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSinglestoreOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(singlestoreopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SinglestoreOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched singlestoreOpsRequest.
-func (c *FakeSinglestoreOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SinglestoreOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(singlestoreopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.SinglestoreOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), err
 }

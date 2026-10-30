@@ -1,7 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
   name: postgresversions.catalog.kubedb.com
@@ -60,6 +59,9 @@ spec:
                         - mariadb-addon
                         - mssqlserver-addon
                         - clickhouse-addon
+                        - neo4j-addon
+                        - documentdb-addon
+                        - milvus-addon
                         type: string
                       tasks:
                         properties:
@@ -122,6 +124,23 @@ spec:
                 required:
                 - image
                 type: object
+              courier:
+                properties:
+                  cli:
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
+                  statusReporter:
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
+                type: object
               db:
                 properties:
                   baseOS:
@@ -142,6 +161,7 @@ spec:
                 - DocumentDB
                 - PostgreSQL
                 - Percona
+                - AppsCode
                 type: string
               endOfLife:
                 type: boolean
@@ -166,22 +186,12 @@ spec:
                 required:
                 - image
                 type: object
-              migrator:
+              license:
                 properties:
-                  cli:
-                    properties:
-                      image:
-                        type: string
-                    required:
-                    - image
-                    type: object
-                  statusReporter:
-                    properties:
-                      image:
-                        type: string
-                    required:
-                    - image
-                    type: object
+                  required:
+                    type: boolean
+                required:
+                - required
                 type: object
               podSecurityPolicies:
                 properties:
@@ -244,6 +254,16 @@ spec:
                     - backupTask
                     - restoreTask
                     type: object
+                type: object
+              tde:
+                properties:
+                  extensionName:
+                    default: pg_tde
+                    type: string
+                  supported:
+                    type: boolean
+                required:
+                - supported
                 type: object
               tls:
                 properties:

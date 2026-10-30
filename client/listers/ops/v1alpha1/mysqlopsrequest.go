@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLOpsRequestLister helps list MySQLOpsRequests.
@@ -31,7 +31,7 @@ import (
 type MySQLOpsRequestLister interface {
 	// List lists all MySQLOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MySQLOpsRequest, err error)
 	// MySQLOpsRequests returns an object that can list and get MySQLOpsRequests.
 	MySQLOpsRequests(namespace string) MySQLOpsRequestNamespaceLister
 	MySQLOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type MySQLOpsRequestLister interface {
 
 // mySQLOpsRequestLister implements the MySQLOpsRequestLister interface.
 type mySQLOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.MySQLOpsRequest]
 }
 
 // NewMySQLOpsRequestLister returns a new MySQLOpsRequestLister.
 func NewMySQLOpsRequestLister(indexer cache.Indexer) MySQLOpsRequestLister {
-	return &mySQLOpsRequestLister{indexer: indexer}
-}
-
-// List lists all MySQLOpsRequests in the indexer.
-func (s *mySQLOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLOpsRequest))
-	})
-	return ret, err
+	return &mySQLOpsRequestLister{listers.New[*opsv1alpha1.MySQLOpsRequest](indexer, opsv1alpha1.Resource("mysqlopsrequest"))}
 }
 
 // MySQLOpsRequests returns an object that can list and get MySQLOpsRequests.
 func (s *mySQLOpsRequestLister) MySQLOpsRequests(namespace string) MySQLOpsRequestNamespaceLister {
-	return mySQLOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.MySQLOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // MySQLOpsRequestNamespaceLister helps list and get MySQLOpsRequests.
@@ -65,36 +57,15 @@ func (s *mySQLOpsRequestLister) MySQLOpsRequests(namespace string) MySQLOpsReque
 type MySQLOpsRequestNamespaceLister interface {
 	// List lists all MySQLOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MySQLOpsRequest, err error)
 	// Get retrieves the MySQLOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLOpsRequest, error)
+	Get(name string) (*opsv1alpha1.MySQLOpsRequest, error)
 	MySQLOpsRequestNamespaceListerExpansion
 }
 
 // mySQLOpsRequestNamespaceLister implements the MySQLOpsRequestNamespaceLister
 // interface.
 type mySQLOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLOpsRequests in the indexer for a given namespace.
-func (s mySQLOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLOpsRequest from the indexer for a given namespace and name.
-func (s mySQLOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MySQLOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlopsrequest"), name)
-	}
-	return obj.(*v1alpha1.MySQLOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.MySQLOpsRequest]
 }

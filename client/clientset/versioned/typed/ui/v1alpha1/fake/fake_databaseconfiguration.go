@@ -19,29 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDatabaseConfigurations implements DatabaseConfigurationInterface
-type FakeDatabaseConfigurations struct {
+// fakeDatabaseConfigurations implements DatabaseConfigurationInterface
+type fakeDatabaseConfigurations struct {
+	*gentype.FakeClientWithList[*v1alpha1.DatabaseConfiguration, *v1alpha1.DatabaseConfigurationList]
 	Fake *FakeUiV1alpha1
 }
 
-var databaseconfigurationsResource = v1alpha1.SchemeGroupVersion.WithResource("databaseconfigurations")
-
-var databaseconfigurationsKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseConfiguration")
-
-// Create takes the representation of a databaseConfiguration and creates it.  Returns the server's representation of the databaseConfiguration, and an error, if there is any.
-func (c *FakeDatabaseConfigurations) Create(ctx context.Context, databaseConfiguration *v1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (result *v1alpha1.DatabaseConfiguration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(databaseconfigurationsResource, databaseConfiguration), &v1alpha1.DatabaseConfiguration{})
-	if obj == nil {
-		return nil, err
+func newFakeDatabaseConfigurations(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.DatabaseConfigurationInterface {
+	return &fakeDatabaseConfigurations{
+		gentype.NewFakeClientWithList[*v1alpha1.DatabaseConfiguration, *v1alpha1.DatabaseConfigurationList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("databaseconfigurations"),
+			v1alpha1.SchemeGroupVersion.WithKind("DatabaseConfiguration"),
+			func() *v1alpha1.DatabaseConfiguration { return &v1alpha1.DatabaseConfiguration{} },
+			func() *v1alpha1.DatabaseConfigurationList { return &v1alpha1.DatabaseConfigurationList{} },
+			func(dst, src *v1alpha1.DatabaseConfigurationList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DatabaseConfigurationList) []*v1alpha1.DatabaseConfiguration {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DatabaseConfigurationList, items []*v1alpha1.DatabaseConfiguration) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DatabaseConfiguration), err
 }

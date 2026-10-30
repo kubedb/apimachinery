@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDocumentDBs implements DocumentDBInterface
-type FakeDocumentDBs struct {
+// fakeDocumentDBs implements DocumentDBInterface
+type fakeDocumentDBs struct {
+	*gentype.FakeClientWithList[*v1alpha1.DocumentDB, *v1alpha1.DocumentDBList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var documentdbsResource = v1alpha1.SchemeGroupVersion.WithResource("documentdbs")
-
-var documentdbsKind = v1alpha1.SchemeGroupVersion.WithKind("DocumentDB")
-
-// Get takes name of the documentDB, and returns the corresponding documentDB object, and an error if there is any.
-func (c *FakeDocumentDBs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DocumentDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(documentdbsResource, c.ns, name), &v1alpha1.DocumentDB{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDocumentDBs(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.DocumentDBInterface {
+	return &fakeDocumentDBs{
+		gentype.NewFakeClientWithList[*v1alpha1.DocumentDB, *v1alpha1.DocumentDBList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("documentdbs"),
+			v1alpha1.SchemeGroupVersion.WithKind("DocumentDB"),
+			func() *v1alpha1.DocumentDB { return &v1alpha1.DocumentDB{} },
+			func() *v1alpha1.DocumentDBList { return &v1alpha1.DocumentDBList{} },
+			func(dst, src *v1alpha1.DocumentDBList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DocumentDBList) []*v1alpha1.DocumentDB { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.DocumentDBList, items []*v1alpha1.DocumentDB) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DocumentDB), err
-}
-
-// List takes label and field selectors, and returns the list of DocumentDBs that match those selectors.
-func (c *FakeDocumentDBs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DocumentDBList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(documentdbsResource, documentdbsKind, c.ns, opts), &v1alpha1.DocumentDBList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DocumentDBList{ListMeta: obj.(*v1alpha1.DocumentDBList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DocumentDBList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested documentDBs.
-func (c *FakeDocumentDBs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(documentdbsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a documentDB and creates it.  Returns the server's representation of the documentDB, and an error, if there is any.
-func (c *FakeDocumentDBs) Create(ctx context.Context, documentDB *v1alpha1.DocumentDB, opts v1.CreateOptions) (result *v1alpha1.DocumentDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(documentdbsResource, c.ns, documentDB), &v1alpha1.DocumentDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDB), err
-}
-
-// Update takes the representation of a documentDB and updates it. Returns the server's representation of the documentDB, and an error, if there is any.
-func (c *FakeDocumentDBs) Update(ctx context.Context, documentDB *v1alpha1.DocumentDB, opts v1.UpdateOptions) (result *v1alpha1.DocumentDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(documentdbsResource, c.ns, documentDB), &v1alpha1.DocumentDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDB), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDocumentDBs) UpdateStatus(ctx context.Context, documentDB *v1alpha1.DocumentDB, opts v1.UpdateOptions) (*v1alpha1.DocumentDB, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(documentdbsResource, "status", c.ns, documentDB), &v1alpha1.DocumentDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDB), err
-}
-
-// Delete takes name of the documentDB and deletes it. Returns an error if one occurs.
-func (c *FakeDocumentDBs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(documentdbsResource, c.ns, name, opts), &v1alpha1.DocumentDB{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDocumentDBs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(documentdbsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DocumentDBList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched documentDB.
-func (c *FakeDocumentDBs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DocumentDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(documentdbsResource, c.ns, name, pt, data, subresources...), &v1alpha1.DocumentDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDB), err
 }

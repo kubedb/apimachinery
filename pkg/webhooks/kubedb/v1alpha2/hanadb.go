@@ -22,6 +22,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -45,7 +46,7 @@ import (
 // SetupHanaDBWebhookWithManager registers the webhook for HanaDB in the manager.
 func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&api.HanaDB{}).
-		WithValidator(&HanaDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&HanaDBCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&HanaDBCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -64,6 +65,9 @@ var hanaLog = logf.Log.WithName("hanadb-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
 		return fmt.Errorf("expected a HanaDB object, got a %T", obj)
@@ -79,6 +83,12 @@ var _ webhook.CustomValidator = &HanaDBCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
@@ -95,16 +105,15 @@ func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*api.HanaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", newObj)
 	}
-	olddb, ok := old.(*api.HanaDB)
-	if !ok {
+	if _, ok := old.(*api.HanaDB); !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", old)
-	}
-	if ptr.Deref(olddb.Spec.Replicas, 0) > 1 && ptr.Deref(db.Spec.Replicas, 0) == 1 {
-		return nil, fmt.Errorf("can't scale down to 1 replica")
 	}
 	hanaLog.Info("validate update", "name", db.Name)
 
@@ -188,6 +197,12 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
+	}
+
+	if db.Spec.EnforceVolumePermission && db.Spec.StorageType == api.StorageTypeEphemeral {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enforceVolumePermission"),
+			db.Spec.EnforceVolumePermission,
+			"enforceVolumePermission can only be used with durable storage"))
 	}
 
 	if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {

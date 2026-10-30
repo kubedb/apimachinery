@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgreses implements PostgresInterface
-type FakePostgreses struct {
+// fakePostgreses implements PostgresInterface
+type fakePostgreses struct {
+	*gentype.FakeClientWithList[*v1alpha2.Postgres, *v1alpha2.PostgresList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var postgresesResource = v1alpha2.SchemeGroupVersion.WithResource("postgreses")
-
-var postgresesKind = v1alpha2.SchemeGroupVersion.WithKind("Postgres")
-
-// Get takes name of the postgres, and returns the corresponding postgres object, and an error if there is any.
-func (c *FakePostgreses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresesResource, c.ns, name), &v1alpha2.Postgres{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgreses(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.PostgresInterface {
+	return &fakePostgreses{
+		gentype.NewFakeClientWithList[*v1alpha2.Postgres, *v1alpha2.PostgresList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("postgreses"),
+			v1alpha2.SchemeGroupVersion.WithKind("Postgres"),
+			func() *v1alpha2.Postgres { return &v1alpha2.Postgres{} },
+			func() *v1alpha2.PostgresList { return &v1alpha2.PostgresList{} },
+			func(dst, src *v1alpha2.PostgresList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.PostgresList) []*v1alpha2.Postgres { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.PostgresList, items []*v1alpha2.Postgres) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Postgres), err
-}
-
-// List takes label and field selectors, and returns the list of Postgreses that match those selectors.
-func (c *FakePostgreses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.PostgresList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresesResource, postgresesKind, c.ns, opts), &v1alpha2.PostgresList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.PostgresList{ListMeta: obj.(*v1alpha2.PostgresList).ListMeta}
-	for _, item := range obj.(*v1alpha2.PostgresList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgreses.
-func (c *FakePostgreses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgres and creates it.  Returns the server's representation of the postgres, and an error, if there is any.
-func (c *FakePostgreses) Create(ctx context.Context, postgres *v1alpha2.Postgres, opts v1.CreateOptions) (result *v1alpha2.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresesResource, c.ns, postgres), &v1alpha2.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Postgres), err
-}
-
-// Update takes the representation of a postgres and updates it. Returns the server's representation of the postgres, and an error, if there is any.
-func (c *FakePostgreses) Update(ctx context.Context, postgres *v1alpha2.Postgres, opts v1.UpdateOptions) (result *v1alpha2.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresesResource, c.ns, postgres), &v1alpha2.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Postgres), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePostgreses) UpdateStatus(ctx context.Context, postgres *v1alpha2.Postgres, opts v1.UpdateOptions) (*v1alpha2.Postgres, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresesResource, "status", c.ns, postgres), &v1alpha2.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Postgres), err
-}
-
-// Delete takes name of the postgres and deletes it. Returns an error if one occurs.
-func (c *FakePostgreses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresesResource, c.ns, name, opts), &v1alpha2.Postgres{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgreses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.PostgresList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgres.
-func (c *FakePostgreses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresesResource, c.ns, name, pt, data, subresources...), &v1alpha2.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Postgres), err
 }

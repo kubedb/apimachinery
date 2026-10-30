@@ -23,7 +23,9 @@ import (
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -42,7 +44,7 @@ import (
 // SetupZooKeeperWebhookWithManager registers the webhook for ZooKeeper in the manager.
 func SetupZooKeeperWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.ZooKeeper{}).
-		WithValidator(&ZooKeeperCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ZooKeeperCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ZooKeeperCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -61,6 +63,9 @@ var _ webhook.CustomDefaulter = &ZooKeeperCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *ZooKeeperCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return fmt.Errorf("expected an ZooKeeper object but got %T", obj)
@@ -76,6 +81,12 @@ var _ webhook.CustomValidator = &ZooKeeperCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *ZooKeeperCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", obj)
@@ -86,6 +97,9 @@ func (w *ZooKeeperCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *ZooKeeperCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", newObj)

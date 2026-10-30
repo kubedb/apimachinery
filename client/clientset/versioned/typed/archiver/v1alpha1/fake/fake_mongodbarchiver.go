@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMongoDBArchivers implements MongoDBArchiverInterface
-type FakeMongoDBArchivers struct {
+// fakeMongoDBArchivers implements MongoDBArchiverInterface
+type fakeMongoDBArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MongoDBArchiver, *v1alpha1.MongoDBArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var mongodbarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbarchivers")
-
-var mongodbarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBArchiver")
-
-// Get takes name of the mongoDBArchiver, and returns the corresponding mongoDBArchiver object, and an error if there is any.
-func (c *FakeMongoDBArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mongodbarchiversResource, c.ns, name), &v1alpha1.MongoDBArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMongoDBArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.MongoDBArchiverInterface {
+	return &fakeMongoDBArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.MongoDBArchiver, *v1alpha1.MongoDBArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mongodbarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MongoDBArchiver"),
+			func() *v1alpha1.MongoDBArchiver { return &v1alpha1.MongoDBArchiver{} },
+			func() *v1alpha1.MongoDBArchiverList { return &v1alpha1.MongoDBArchiverList{} },
+			func(dst, src *v1alpha1.MongoDBArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MongoDBArchiverList) []*v1alpha1.MongoDBArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MongoDBArchiverList, items []*v1alpha1.MongoDBArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MongoDBArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of MongoDBArchivers that match those selectors.
-func (c *FakeMongoDBArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MongoDBArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mongodbarchiversResource, mongodbarchiversKind, c.ns, opts), &v1alpha1.MongoDBArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MongoDBArchiverList{ListMeta: obj.(*v1alpha1.MongoDBArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MongoDBArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mongoDBArchivers.
-func (c *FakeMongoDBArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mongodbarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mongoDBArchiver and creates it.  Returns the server's representation of the mongoDBArchiver, and an error, if there is any.
-func (c *FakeMongoDBArchivers) Create(ctx context.Context, mongoDBArchiver *v1alpha1.MongoDBArchiver, opts v1.CreateOptions) (result *v1alpha1.MongoDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mongodbarchiversResource, c.ns, mongoDBArchiver), &v1alpha1.MongoDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBArchiver), err
-}
-
-// Update takes the representation of a mongoDBArchiver and updates it. Returns the server's representation of the mongoDBArchiver, and an error, if there is any.
-func (c *FakeMongoDBArchivers) Update(ctx context.Context, mongoDBArchiver *v1alpha1.MongoDBArchiver, opts v1.UpdateOptions) (result *v1alpha1.MongoDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mongodbarchiversResource, c.ns, mongoDBArchiver), &v1alpha1.MongoDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMongoDBArchivers) UpdateStatus(ctx context.Context, mongoDBArchiver *v1alpha1.MongoDBArchiver, opts v1.UpdateOptions) (*v1alpha1.MongoDBArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mongodbarchiversResource, "status", c.ns, mongoDBArchiver), &v1alpha1.MongoDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBArchiver), err
-}
-
-// Delete takes name of the mongoDBArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeMongoDBArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mongodbarchiversResource, c.ns, name, opts), &v1alpha1.MongoDBArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMongoDBArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mongodbarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MongoDBArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mongoDBArchiver.
-func (c *FakeMongoDBArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MongoDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mongodbarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.MongoDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBArchiver), err
 }

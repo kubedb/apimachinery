@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,7 +43,7 @@ import (
 // SetupIgniteWebhookWithManager registers the webhook for Ignite in the manager.
 func SetupIgniteWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Ignite{}).
-		WithValidator(&IgniteCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&IgniteCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&IgniteCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +62,9 @@ var Ignitelog = logf.Log.WithName("Ignite-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *IgniteCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Ignite)
 	if !ok {
 		return fmt.Errorf("expected an Ignite object but got %T", obj)
@@ -76,6 +81,12 @@ var _ webhook.CustomValidator = &IgniteCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *IgniteCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Ignite)
 	if !ok {
 		return nil, fmt.Errorf("expected an Ignite object but got %T", obj)
@@ -86,6 +97,9 @@ func (w *IgniteCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *IgniteCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Ignite)
 	if !ok {
 		return nil, fmt.Errorf("expected an Ignite object but got %T", newObj)

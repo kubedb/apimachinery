@@ -19,11 +19,11 @@ limitations under the License.
 package v1
 
 import (
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MemcachedLister helps list Memcacheds.
@@ -31,7 +31,7 @@ import (
 type MemcachedLister interface {
 	// List lists all Memcacheds in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.Memcached, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.Memcached, err error)
 	// Memcacheds returns an object that can list and get Memcacheds.
 	Memcacheds(namespace string) MemcachedNamespaceLister
 	MemcachedListerExpansion
@@ -39,25 +39,17 @@ type MemcachedLister interface {
 
 // memcachedLister implements the MemcachedLister interface.
 type memcachedLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1.Memcached]
 }
 
 // NewMemcachedLister returns a new MemcachedLister.
 func NewMemcachedLister(indexer cache.Indexer) MemcachedLister {
-	return &memcachedLister{indexer: indexer}
-}
-
-// List lists all Memcacheds in the indexer.
-func (s *memcachedLister) List(selector labels.Selector) (ret []*v1.Memcached, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.Memcached))
-	})
-	return ret, err
+	return &memcachedLister{listers.New[*kubedbv1.Memcached](indexer, kubedbv1.Resource("memcached"))}
 }
 
 // Memcacheds returns an object that can list and get Memcacheds.
 func (s *memcachedLister) Memcacheds(namespace string) MemcachedNamespaceLister {
-	return memcachedNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return memcachedNamespaceLister{listers.NewNamespaced[*kubedbv1.Memcached](s.ResourceIndexer, namespace)}
 }
 
 // MemcachedNamespaceLister helps list and get Memcacheds.
@@ -65,36 +57,15 @@ func (s *memcachedLister) Memcacheds(namespace string) MemcachedNamespaceLister 
 type MemcachedNamespaceLister interface {
 	// List lists all Memcacheds in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.Memcached, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.Memcached, err error)
 	// Get retrieves the Memcached from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.Memcached, error)
+	Get(name string) (*kubedbv1.Memcached, error)
 	MemcachedNamespaceListerExpansion
 }
 
 // memcachedNamespaceLister implements the MemcachedNamespaceLister
 // interface.
 type memcachedNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Memcacheds in the indexer for a given namespace.
-func (s memcachedNamespaceLister) List(selector labels.Selector) (ret []*v1.Memcached, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.Memcached))
-	})
-	return ret, err
-}
-
-// Get retrieves the Memcached from the indexer for a given namespace and name.
-func (s memcachedNamespaceLister) Get(name string) (*v1.Memcached, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("memcached"), name)
-	}
-	return obj.(*v1.Memcached), nil
+	listers.ResourceIndexer[*kubedbv1.Memcached]
 }

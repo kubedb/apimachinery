@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresSchemaOverviews implements PostgresSchemaOverviewInterface
-type FakePostgresSchemaOverviews struct {
+// fakePostgresSchemaOverviews implements PostgresSchemaOverviewInterface
+type fakePostgresSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresSchemaOverview, *v1alpha1.PostgresSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var postgresschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("postgresschemaoverviews")
-
-var postgresschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresSchemaOverview")
-
-// Get takes name of the postgresSchemaOverview, and returns the corresponding postgresSchemaOverview object, and an error if there is any.
-func (c *FakePostgresSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresschemaoverviewsResource, c.ns, name), &v1alpha1.PostgresSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.PostgresSchemaOverviewInterface {
+	return &fakePostgresSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresSchemaOverview, *v1alpha1.PostgresSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresSchemaOverview"),
+			func() *v1alpha1.PostgresSchemaOverview { return &v1alpha1.PostgresSchemaOverview{} },
+			func() *v1alpha1.PostgresSchemaOverviewList { return &v1alpha1.PostgresSchemaOverviewList{} },
+			func(dst, src *v1alpha1.PostgresSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresSchemaOverviewList) []*v1alpha1.PostgresSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresSchemaOverviewList, items []*v1alpha1.PostgresSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresSchemaOverviews that match those selectors.
-func (c *FakePostgresSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresschemaoverviewsResource, postgresschemaoverviewsKind, c.ns, opts), &v1alpha1.PostgresSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresSchemaOverviewList{ListMeta: obj.(*v1alpha1.PostgresSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresSchemaOverviews.
-func (c *FakePostgresSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresSchemaOverview and creates it.  Returns the server's representation of the postgresSchemaOverview, and an error, if there is any.
-func (c *FakePostgresSchemaOverviews) Create(ctx context.Context, postgresSchemaOverview *v1alpha1.PostgresSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.PostgresSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresschemaoverviewsResource, c.ns, postgresSchemaOverview), &v1alpha1.PostgresSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSchemaOverview), err
-}
-
-// Update takes the representation of a postgresSchemaOverview and updates it. Returns the server's representation of the postgresSchemaOverview, and an error, if there is any.
-func (c *FakePostgresSchemaOverviews) Update(ctx context.Context, postgresSchemaOverview *v1alpha1.PostgresSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.PostgresSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresschemaoverviewsResource, c.ns, postgresSchemaOverview), &v1alpha1.PostgresSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSchemaOverview), err
-}
-
-// Delete takes name of the postgresSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakePostgresSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresschemaoverviewsResource, c.ns, name, opts), &v1alpha1.PostgresSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresSchemaOverview.
-func (c *FakePostgresSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSchemaOverview), err
 }

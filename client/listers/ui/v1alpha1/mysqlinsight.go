@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLInsightLister helps list MySQLInsights.
@@ -31,7 +31,7 @@ import (
 type MySQLInsightLister interface {
 	// List lists all MySQLInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLInsight, err error)
 	// MySQLInsights returns an object that can list and get MySQLInsights.
 	MySQLInsights(namespace string) MySQLInsightNamespaceLister
 	MySQLInsightListerExpansion
@@ -39,25 +39,17 @@ type MySQLInsightLister interface {
 
 // mySQLInsightLister implements the MySQLInsightLister interface.
 type mySQLInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.MySQLInsight]
 }
 
 // NewMySQLInsightLister returns a new MySQLInsightLister.
 func NewMySQLInsightLister(indexer cache.Indexer) MySQLInsightLister {
-	return &mySQLInsightLister{indexer: indexer}
-}
-
-// List lists all MySQLInsights in the indexer.
-func (s *mySQLInsightLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLInsight))
-	})
-	return ret, err
+	return &mySQLInsightLister{listers.New[*uiv1alpha1.MySQLInsight](indexer, uiv1alpha1.Resource("mysqlinsight"))}
 }
 
 // MySQLInsights returns an object that can list and get MySQLInsights.
 func (s *mySQLInsightLister) MySQLInsights(namespace string) MySQLInsightNamespaceLister {
-	return mySQLInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.MySQLInsight](s.ResourceIndexer, namespace)}
 }
 
 // MySQLInsightNamespaceLister helps list and get MySQLInsights.
@@ -65,36 +57,15 @@ func (s *mySQLInsightLister) MySQLInsights(namespace string) MySQLInsightNamespa
 type MySQLInsightNamespaceLister interface {
 	// List lists all MySQLInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLInsight, err error)
 	// Get retrieves the MySQLInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLInsight, error)
+	Get(name string) (*uiv1alpha1.MySQLInsight, error)
 	MySQLInsightNamespaceListerExpansion
 }
 
 // mySQLInsightNamespaceLister implements the MySQLInsightNamespaceLister
 // interface.
 type mySQLInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLInsights in the indexer for a given namespace.
-func (s mySQLInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLInsight from the indexer for a given namespace and name.
-func (s mySQLInsightNamespaceLister) Get(name string) (*v1alpha1.MySQLInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlinsight"), name)
-	}
-	return obj.(*v1alpha1.MySQLInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.MySQLInsight]
 }

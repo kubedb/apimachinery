@@ -25,10 +25,14 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/coreos/go-semver/semver"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -44,7 +48,7 @@ import (
 // SetupSolrWebhookWithManager registers the webhook for Solr in the manager.
 func SetupSolrWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Solr{}).
-		WithValidator(&SolrCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&SolrCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&SolrCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -63,6 +67,9 @@ var solrlog = logf.Log.WithName("solr-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *SolrCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return fmt.Errorf("expected an Solr object but got %T", obj)
@@ -78,6 +85,12 @@ var _ webhook.CustomValidator = &SolrCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
@@ -93,6 +106,9 @@ func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", newObj)
@@ -130,6 +146,8 @@ var solrReservedVolumes = []string{
 	kubedb.SolrVolumeDefaultConfig,
 	kubedb.SolrVolumeCustomConfig,
 	kubedb.SolrVolumeAuthConfig,
+	kubedb.SolrVolumeBackupCredentials,
+	kubedb.SolrVolumeMergedTruststore,
 }
 
 var solrReservedVolumeMountPaths = []string{
@@ -138,6 +156,13 @@ var solrReservedVolumeMountPaths = []string{
 	kubedb.SolrCustomConfigDir,
 	kubedb.SolrSecurityConfigDir,
 	kubedb.SolrTempConfigDir,
+	kubedb.SolrBackupCredentialsDir,
+	kubedb.SolrMergedTruststoreMountPath,
+}
+
+var solrForbiddenEnvVars = []string{
+	kubedb.SolrAWSSharedCredentialsEnv,
+	kubedb.SolrSSLTrustStoreSourceEnv,
 }
 
 var solrAvailableModules = []string{
@@ -189,6 +214,17 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.Erro
 			db.Name,
 			err.Error()))
 	}
+	if err := solrValidateBackupCredentials(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("backup"),
+			db.Name,
+			err.Error()))
+	} else if len(db.S3BackupCredentials()) != 0 || len(db.GCSBackupCredentials()) != 0 {
+		if err := w.validateBackupCredentialsSecret(db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("backup"),
+				db.Name,
+				err.Error()))
+		}
+	}
 
 	if db.Spec.Topology == nil {
 		if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
@@ -203,6 +239,12 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.Erro
 				err.Error()))
 		}
 		err = solrValidateVolumesMountPaths(&db.Spec.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
+		err = solrValidateEnvVars(&db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
 				db.Name,
@@ -232,6 +274,12 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.Erro
 				db.Name,
 				err.Error()))
 		}
+		err = solrValidateEnvVars(&db.Spec.Topology.Data.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
 
 		if db.Spec.Topology.Overseer == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer"),
@@ -255,6 +303,12 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.Erro
 				db.Name,
 				err.Error()))
 		}
+		err = solrValidateEnvVars(&db.Spec.Topology.Overseer.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
 
 		if db.Spec.Topology.Coordinator == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator"),
@@ -273,6 +327,12 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.Erro
 				err.Error()))
 		}
 		err = solrValidateVolumesMountPaths(&db.Spec.Topology.Coordinator.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
+		err = solrValidateEnvVars(&db.Spec.Topology.Coordinator.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("podTemplate").Child("spec").Child("containers"),
 				db.Name,
@@ -326,6 +386,66 @@ func solrValidateModules(db *olddbapi.Solr) error {
 		fl := slices.Contains(solrAvailableModules, mod)
 		if !fl {
 			return fmt.Errorf("%s does not exist in available modules", mod)
+		}
+	}
+	return nil
+}
+
+func solrValidateBackupCredentials(db *olddbapi.Solr) error {
+	reservedSecretName := db.BackupCredentialsSecretName()
+	if err := validateSolrBackupCredentialRefs(db.S3BackupCredentials(), "s3Secrets", reservedSecretName); err != nil {
+		return err
+	}
+	return validateSolrBackupCredentialRefs(db.GCSBackupCredentials(), "gcsSecrets", reservedSecretName)
+}
+
+func validateSolrBackupCredentialRefs(refs []core.LocalObjectReference, fieldName, reservedSecretName string) error {
+	seen := make(map[string]struct{})
+	for i, ref := range refs {
+		if ref.Name == "" {
+			return fmt.Errorf("spec.configuration.backup.%s[%d].name must be specified", fieldName, i)
+		}
+		if ref.Name == reservedSecretName {
+			return fmt.Errorf("spec.configuration.backup.%s cannot reference generated Secret %q", fieldName, reservedSecretName)
+		}
+		if _, found := seen[ref.Name]; found {
+			return fmt.Errorf("spec.configuration.backup.%s contains duplicate Secret %q", fieldName, ref.Name)
+		}
+		seen[ref.Name] = struct{}{}
+	}
+	return nil
+}
+
+func (w *SolrCustomWebhook) validateBackupCredentialsSecret(db *olddbapi.Solr) error {
+	var secret core.Secret
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      db.BackupCredentialsSecretName(),
+		Namespace: db.Namespace,
+	}, &secret)
+	if apierrors.IsNotFound(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if metav1.IsControlledBy(&secret, db) {
+		return nil
+	}
+	return fmt.Errorf("secret %s/%s is reserved for generated backup credentials and is not controlled by this Solr", secret.Namespace, secret.Name)
+}
+
+func solrValidateEnvVars(podTemplate *ofst.PodTemplateSpec) error {
+	if podTemplate == nil {
+		return nil
+	}
+	for _, container := range podTemplate.Spec.Containers {
+		if err := amv.ValidateEnvVar(container.Env, solrForbiddenEnvVars, olddbapi.ResourceKindSolr); err != nil {
+			return err
+		}
+	}
+	for _, container := range podTemplate.Spec.InitContainers {
+		if err := amv.ValidateEnvVar(container.Env, solrForbiddenEnvVars, olddbapi.ResourceKindSolr); err != nil {
+			return err
 		}
 	}
 	return nil

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgBouncerServerOverviewLister helps list PgBouncerServerOverviews.
@@ -31,7 +31,7 @@ import (
 type PgBouncerServerOverviewLister interface {
 	// List lists all PgBouncerServerOverviews in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerServerOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PgBouncerServerOverview, err error)
 	// PgBouncerServerOverviews returns an object that can list and get PgBouncerServerOverviews.
 	PgBouncerServerOverviews(namespace string) PgBouncerServerOverviewNamespaceLister
 	PgBouncerServerOverviewListerExpansion
@@ -39,25 +39,17 @@ type PgBouncerServerOverviewLister interface {
 
 // pgBouncerServerOverviewLister implements the PgBouncerServerOverviewLister interface.
 type pgBouncerServerOverviewLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.PgBouncerServerOverview]
 }
 
 // NewPgBouncerServerOverviewLister returns a new PgBouncerServerOverviewLister.
 func NewPgBouncerServerOverviewLister(indexer cache.Indexer) PgBouncerServerOverviewLister {
-	return &pgBouncerServerOverviewLister{indexer: indexer}
-}
-
-// List lists all PgBouncerServerOverviews in the indexer.
-func (s *pgBouncerServerOverviewLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerServerOverview, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerServerOverview))
-	})
-	return ret, err
+	return &pgBouncerServerOverviewLister{listers.New[*uiv1alpha1.PgBouncerServerOverview](indexer, uiv1alpha1.Resource("pgbouncerserveroverview"))}
 }
 
 // PgBouncerServerOverviews returns an object that can list and get PgBouncerServerOverviews.
 func (s *pgBouncerServerOverviewLister) PgBouncerServerOverviews(namespace string) PgBouncerServerOverviewNamespaceLister {
-	return pgBouncerServerOverviewNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgBouncerServerOverviewNamespaceLister{listers.NewNamespaced[*uiv1alpha1.PgBouncerServerOverview](s.ResourceIndexer, namespace)}
 }
 
 // PgBouncerServerOverviewNamespaceLister helps list and get PgBouncerServerOverviews.
@@ -65,36 +57,15 @@ func (s *pgBouncerServerOverviewLister) PgBouncerServerOverviews(namespace strin
 type PgBouncerServerOverviewNamespaceLister interface {
 	// List lists all PgBouncerServerOverviews in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerServerOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PgBouncerServerOverview, err error)
 	// Get retrieves the PgBouncerServerOverview from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgBouncerServerOverview, error)
+	Get(name string) (*uiv1alpha1.PgBouncerServerOverview, error)
 	PgBouncerServerOverviewNamespaceListerExpansion
 }
 
 // pgBouncerServerOverviewNamespaceLister implements the PgBouncerServerOverviewNamespaceLister
 // interface.
 type pgBouncerServerOverviewNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgBouncerServerOverviews in the indexer for a given namespace.
-func (s pgBouncerServerOverviewNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerServerOverview, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerServerOverview))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgBouncerServerOverview from the indexer for a given namespace and name.
-func (s pgBouncerServerOverviewNamespaceLister) Get(name string) (*v1alpha1.PgBouncerServerOverview, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgbouncerserveroverview"), name)
-	}
-	return obj.(*v1alpha1.PgBouncerServerOverview), nil
+	listers.ResourceIndexer[*uiv1alpha1.PgBouncerServerOverview]
 }

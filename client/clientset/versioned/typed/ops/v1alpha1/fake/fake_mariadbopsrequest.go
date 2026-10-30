@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBOpsRequests implements MariaDBOpsRequestInterface
-type FakeMariaDBOpsRequests struct {
+// fakeMariaDBOpsRequests implements MariaDBOpsRequestInterface
+type fakeMariaDBOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBOpsRequest, *v1alpha1.MariaDBOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var mariadbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbopsrequests")
-
-var mariadbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBOpsRequest")
-
-// Get takes name of the mariaDBOpsRequest, and returns the corresponding mariaDBOpsRequest object, and an error if there is any.
-func (c *FakeMariaDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbopsrequestsResource, c.ns, name), &v1alpha1.MariaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.MariaDBOpsRequestInterface {
+	return &fakeMariaDBOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBOpsRequest, *v1alpha1.MariaDBOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBOpsRequest"),
+			func() *v1alpha1.MariaDBOpsRequest { return &v1alpha1.MariaDBOpsRequest{} },
+			func() *v1alpha1.MariaDBOpsRequestList { return &v1alpha1.MariaDBOpsRequestList{} },
+			func(dst, src *v1alpha1.MariaDBOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBOpsRequestList) []*v1alpha1.MariaDBOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBOpsRequestList, items []*v1alpha1.MariaDBOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBOpsRequests that match those selectors.
-func (c *FakeMariaDBOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbopsrequestsResource, mariadbopsrequestsKind, c.ns, opts), &v1alpha1.MariaDBOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBOpsRequestList{ListMeta: obj.(*v1alpha1.MariaDBOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBOpsRequests.
-func (c *FakeMariaDBOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBOpsRequest and creates it.  Returns the server's representation of the mariaDBOpsRequest, and an error, if there is any.
-func (c *FakeMariaDBOpsRequests) Create(ctx context.Context, mariaDBOpsRequest *v1alpha1.MariaDBOpsRequest, opts v1.CreateOptions) (result *v1alpha1.MariaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbopsrequestsResource, c.ns, mariaDBOpsRequest), &v1alpha1.MariaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), err
-}
-
-// Update takes the representation of a mariaDBOpsRequest and updates it. Returns the server's representation of the mariaDBOpsRequest, and an error, if there is any.
-func (c *FakeMariaDBOpsRequests) Update(ctx context.Context, mariaDBOpsRequest *v1alpha1.MariaDBOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MariaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbopsrequestsResource, c.ns, mariaDBOpsRequest), &v1alpha1.MariaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMariaDBOpsRequests) UpdateStatus(ctx context.Context, mariaDBOpsRequest *v1alpha1.MariaDBOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MariaDBOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mariadbopsrequestsResource, "status", c.ns, mariaDBOpsRequest), &v1alpha1.MariaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), err
-}
-
-// Delete takes name of the mariaDBOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbopsrequestsResource, c.ns, name, opts), &v1alpha1.MariaDBOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBOpsRequest.
-func (c *FakeMariaDBOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), err
 }

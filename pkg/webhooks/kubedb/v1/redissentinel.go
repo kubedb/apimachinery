@@ -44,7 +44,7 @@ import (
 // SetupRedisSentinelWebhookWithManager registers the webhook for RedisSentinel in the manager.
 func SetupRedisSentinelWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.RedisSentinel{}).
-		WithValidator(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +60,9 @@ var _ webhook.CustomDefaulter = &RedisSentinelCustomWebhook{}
 var sentinelLog = logf.Log.WithName("redissentinel-resource")
 
 func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {
 		return fmt.Errorf("expected a RedisSentinel but got a %T", obj)
@@ -92,6 +95,12 @@ func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &RedisSentinelCustomWebhook{}
 
 func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)
@@ -102,6 +111,9 @@ func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 }
 
 func (w RedisSentinelCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldRedisSentinel, ok := oldObj.(*dbapi.RedisSentinel)
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", oldRedisSentinel)

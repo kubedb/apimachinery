@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // WeaviateLister helps list Weaviates.
@@ -31,7 +31,7 @@ import (
 type WeaviateLister interface {
 	// List lists all Weaviates in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Weaviate, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Weaviate, err error)
 	// Weaviates returns an object that can list and get Weaviates.
 	Weaviates(namespace string) WeaviateNamespaceLister
 	WeaviateListerExpansion
@@ -39,25 +39,17 @@ type WeaviateLister interface {
 
 // weaviateLister implements the WeaviateLister interface.
 type weaviateLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Weaviate]
 }
 
 // NewWeaviateLister returns a new WeaviateLister.
 func NewWeaviateLister(indexer cache.Indexer) WeaviateLister {
-	return &weaviateLister{indexer: indexer}
-}
-
-// List lists all Weaviates in the indexer.
-func (s *weaviateLister) List(selector labels.Selector) (ret []*v1alpha1.Weaviate, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Weaviate))
-	})
-	return ret, err
+	return &weaviateLister{listers.New[*gitopsv1alpha1.Weaviate](indexer, gitopsv1alpha1.Resource("weaviate"))}
 }
 
 // Weaviates returns an object that can list and get Weaviates.
 func (s *weaviateLister) Weaviates(namespace string) WeaviateNamespaceLister {
-	return weaviateNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return weaviateNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Weaviate](s.ResourceIndexer, namespace)}
 }
 
 // WeaviateNamespaceLister helps list and get Weaviates.
@@ -65,36 +57,15 @@ func (s *weaviateLister) Weaviates(namespace string) WeaviateNamespaceLister {
 type WeaviateNamespaceLister interface {
 	// List lists all Weaviates in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Weaviate, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Weaviate, err error)
 	// Get retrieves the Weaviate from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Weaviate, error)
+	Get(name string) (*gitopsv1alpha1.Weaviate, error)
 	WeaviateNamespaceListerExpansion
 }
 
 // weaviateNamespaceLister implements the WeaviateNamespaceLister
 // interface.
 type weaviateNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Weaviates in the indexer for a given namespace.
-func (s weaviateNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Weaviate, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Weaviate))
-	})
-	return ret, err
-}
-
-// Get retrieves the Weaviate from the indexer for a given namespace and name.
-func (s weaviateNamespaceLister) Get(name string) (*v1alpha1.Weaviate, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("weaviate"), name)
-	}
-	return obj.(*v1alpha1.Weaviate), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Weaviate]
 }

@@ -20,8 +20,8 @@ BIN      := apimachinery
 
 CRD_OPTIONS          ?= "crd:maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
-CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.32
-CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 migrator:v1alpha1
+CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.34
+CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 courier:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -58,10 +58,10 @@ BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
 OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 
-BASEIMAGE_PROD   ?= gcr.io/distroless/static-debian12
-BASEIMAGE_DBG    ?= debian:12
+BASEIMAGE_PROD   ?= gcr.io/distroless/static-debian13
+BASEIMAGE_DBG    ?= debian:13
 
-GO_VERSION       ?= 1.25
+GO_VERSION       ?= 1.27
 BUILD_IMAGE      ?= ghcr.io/appscode/golang-dev:$(GO_VERSION)
 
 OUTBIN = bin/$(OS)_$(ARCH)/$(BIN)
@@ -104,9 +104,21 @@ version:
 
 DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 
-# Generate a typed clientset
-.PHONY: clientset
-clientset:
+# Generate a typed clientset, listers, informers and deepcopy/conversion
+# helpers, using update-codegen.sh -- a generic script bundled into
+# $(CODE_GENERATOR_IMAGE) (see
+# https://github.com/appscodelabs/gengo-builder/blob/master/scripts/update-codegen.sh
+# for the full env-var interface) driving k8s.io/code-generator's
+# kube_codegen.sh toolchain. Generation scope is configured entirely through
+# the env vars below rather than a repo-local copy of this script.
+# Staleness is checked by verify-gen (which re-runs `gen`, including this
+# target, and diffs against HEAD) rather than a separate verify-codegen
+# target.
+CONVERSION_GROUPS           ?= kubedb:v1alpha2
+CONVERSION_EXTRA_PEER_DIRS  ?= kmodules.xyz/monitoring-agent-api/api/v1
+
+.PHONY: update-codegen
+update-codegen:
 	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
@@ -114,28 +126,11 @@ clientset:
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		--env API_GROUPS="$(API_GROUPS)"                 \
+		--env CONVERSION_GROUPS="$(CONVERSION_GROUPS)"   \
+		--env CONVERSION_EXTRA_PEER_DIRS="$(CONVERSION_EXTRA_PEER_DIRS)" \
 		$(CODE_GENERATOR_IMAGE)                          \
-		/go/src/k8s.io/code-generator/generate-groups.sh \
-			client,deepcopy,informer,lister              \
-			$(GO_PKG)/$(REPO)/client                     \
-			$(GO_PKG)/$(REPO)/apis                       \
-			"$(API_GROUPS)" \
-			--go-header-file "./hack/license/go.txt"
-
-.PHONY: gen-conversion
-gen-conversion:
-	@docker run --rm                                   \
-		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
-		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
-		-w $(DOCKER_REPO_ROOT)                           \
-		--env HTTP_PROXY=$(HTTP_PROXY)                   \
-		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
-		$(CODE_GENERATOR_IMAGE)                          \
-		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
-			--input-dirs ./apis/kubedb/v1alpha2 \
-			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1" \
-			-O zz_generated.conversion
+		update-codegen.sh
 
 # Generate openapi schema
 .PHONY: openapi
@@ -166,10 +161,34 @@ openapi-%:
 		$(CODE_GENERATOR_IMAGE)                          \
 		openapi-gen                                      \
 			--v 1 --logtostderr                          \
-			--go-header-file "./hack/license/go.txt" \
-			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,k8s.io/api/autoscaling/v2beta2,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1" \
-			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
-			--report-filename .config/api-rules/violation_exceptions.list
+			--go-header-file "./hack/license/go.txt"     \
+			--output-dir "$(DOCKER_REPO_ROOT)/apis/$(subst _,/,$*)" \
+			--output-pkg "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
+			--output-file "openapi_generated.go"         \
+			--report-filename .config/api-rules/violation_exceptions.list \
+			$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*) \
+			k8s.io/apimachinery/pkg/apis/meta/v1 \
+			k8s.io/apimachinery/pkg/api/resource \
+			k8s.io/apimachinery/pkg/runtime \
+			k8s.io/apimachinery/pkg/util/intstr \
+			k8s.io/apimachinery/pkg/version \
+			k8s.io/api/core/v1 \
+			k8s.io/api/apps/v1 \
+			kmodules.xyz/offshoot-api/api/v1 \
+			kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1 \
+			kmodules.xyz/monitoring-agent-api/api/v1 \
+			k8s.io/api/rbac/v1 \
+			k8s.io/api/autoscaling/v2beta2 \
+			kmodules.xyz/objectstore-api/api/v1 \
+			kmodules.xyz/client-go/api/v1 \
+			k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1 \
+			github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1
+
+# Duck-type kinds that embed TypeMeta+ObjectMeta and so are picked up by
+# controller-gen, but are projections (never served as their own CRD).
+# controller-gen has no per-type "skip CRD" marker, so we delete the emitted
+# manifests right after generation.
+duck_crds := courier.kubedb.com_migrations.yaml
 
 # Generate CRD manifests
 .PHONY: gen-crds
@@ -187,11 +206,14 @@ gen-crds:
 			$(CRD_OPTIONS)                  \
 			paths="./apis/..."              \
 			output:crd:artifacts:config=crds
+	@echo "Removing duck-type CRDs (projected, never served)"
+	@rm -f $(addprefix crds/, $(duck_crds))
 
 crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_clickhouses.yaml \
 								kubedb.com_druids.yaml \
 								kubedb.com_elasticsearches.yaml \
+								kubedb.com_etcds.yaml \
 								kubedb.com_hanadbs.yaml \
 								kubedb.com_kafkas.yaml \
 								kubedb.com_mariadbs.yaml \
@@ -286,11 +308,21 @@ gen-enum: $(BUILD_DIRS)
 	        go generate ./apis/...                              \
 	    "
 
+.PHONY: gen-grpc-protos
+# Regenerates the hand-written gRPC APIs under pkg/utils/grpc/. Run from the repo root so
+# each descriptor registers under its full path; a bare filename would collide in the
+# global proto registry with any other api.proto linked into the same binary.
+gen-grpc-protos:
+	@echo "Generating protobuf for pkg/utils/grpc/postgres"
+	protoc --go_out=. --go_opt=module=kubedb.dev/apimachinery                  \
+		--go-grpc_out=. --go-grpc_opt=module=kubedb.dev/apimachinery       \
+		--proto_path=. ./pkg/utils/grpc/postgres/proto/postgres.proto
+
 .PHONY: manifests
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset gen-enum manifests openapi gen-conversion #gen-crd-protos
+gen: update-codegen gen-enum manifests openapi #gen-crd-protos
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \

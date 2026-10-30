@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,7 +37,7 @@ import (
 // SetupAerospikeWebhookWithManager registers the webhook for Aerospike in the manager.
 func SetupAerospikeWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Aerospike{}).
-		WithValidator(&AerospikeCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&AerospikeCustomWebhook{mgr.GetClient()})).
 		WithDefaulter(&AerospikeCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -57,6 +58,9 @@ var _ webhook.CustomDefaulter = &AerospikeCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	ar, ok := obj.(*olddbapi.Aerospike)
 	if !ok {
 		return fmt.Errorf("expected an aerospike object but got %T", obj)
@@ -72,6 +76,12 @@ var _ webhook.CustomValidator = &AerospikeCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	ar, ok := obj.(*olddbapi.Aerospike)
 	if !ok {
 		return nil, fmt.Errorf("expected an aerospike object but got %T", obj)
@@ -82,6 +92,9 @@ func (w *AerospikeCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	ar, ok := newObj.(*olddbapi.Aerospike)
 	if !ok {
 		return nil, fmt.Errorf("expected an aerospike object but got %T", ar)

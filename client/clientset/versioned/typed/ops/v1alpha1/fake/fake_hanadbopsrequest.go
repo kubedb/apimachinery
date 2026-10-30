@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHanaDBOpsRequests implements HanaDBOpsRequestInterface
-type FakeHanaDBOpsRequests struct {
+// fakeHanaDBOpsRequests implements HanaDBOpsRequestInterface
+type fakeHanaDBOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.HanaDBOpsRequest, *v1alpha1.HanaDBOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var hanadbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("hanadbopsrequests")
-
-var hanadbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("HanaDBOpsRequest")
-
-// Get takes name of the hanaDBOpsRequest, and returns the corresponding hanaDBOpsRequest object, and an error if there is any.
-func (c *FakeHanaDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HanaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hanadbopsrequestsResource, c.ns, name), &v1alpha1.HanaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHanaDBOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.HanaDBOpsRequestInterface {
+	return &fakeHanaDBOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.HanaDBOpsRequest, *v1alpha1.HanaDBOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("hanadbopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("HanaDBOpsRequest"),
+			func() *v1alpha1.HanaDBOpsRequest { return &v1alpha1.HanaDBOpsRequest{} },
+			func() *v1alpha1.HanaDBOpsRequestList { return &v1alpha1.HanaDBOpsRequestList{} },
+			func(dst, src *v1alpha1.HanaDBOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HanaDBOpsRequestList) []*v1alpha1.HanaDBOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HanaDBOpsRequestList, items []*v1alpha1.HanaDBOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HanaDBOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of HanaDBOpsRequests that match those selectors.
-func (c *FakeHanaDBOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HanaDBOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hanadbopsrequestsResource, hanadbopsrequestsKind, c.ns, opts), &v1alpha1.HanaDBOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HanaDBOpsRequestList{ListMeta: obj.(*v1alpha1.HanaDBOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HanaDBOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hanaDBOpsRequests.
-func (c *FakeHanaDBOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hanadbopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hanaDBOpsRequest and creates it.  Returns the server's representation of the hanaDBOpsRequest, and an error, if there is any.
-func (c *FakeHanaDBOpsRequests) Create(ctx context.Context, hanaDBOpsRequest *v1alpha1.HanaDBOpsRequest, opts v1.CreateOptions) (result *v1alpha1.HanaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hanadbopsrequestsResource, c.ns, hanaDBOpsRequest), &v1alpha1.HanaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBOpsRequest), err
-}
-
-// Update takes the representation of a hanaDBOpsRequest and updates it. Returns the server's representation of the hanaDBOpsRequest, and an error, if there is any.
-func (c *FakeHanaDBOpsRequests) Update(ctx context.Context, hanaDBOpsRequest *v1alpha1.HanaDBOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.HanaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hanadbopsrequestsResource, c.ns, hanaDBOpsRequest), &v1alpha1.HanaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHanaDBOpsRequests) UpdateStatus(ctx context.Context, hanaDBOpsRequest *v1alpha1.HanaDBOpsRequest, opts v1.UpdateOptions) (*v1alpha1.HanaDBOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hanadbopsrequestsResource, "status", c.ns, hanaDBOpsRequest), &v1alpha1.HanaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBOpsRequest), err
-}
-
-// Delete takes name of the hanaDBOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeHanaDBOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hanadbopsrequestsResource, c.ns, name, opts), &v1alpha1.HanaDBOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHanaDBOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hanadbopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HanaDBOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hanaDBOpsRequest.
-func (c *FakeHanaDBOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HanaDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hanadbopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.HanaDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBOpsRequest), err
 }

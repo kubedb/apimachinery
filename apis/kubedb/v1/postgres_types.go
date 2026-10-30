@@ -79,6 +79,11 @@ type PostgresSpec struct {
 	// Streaming mode
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty"`
 
+	// SynchronousReplicationConfig holds fine-grained config for synchronous replication.
+	// Only applicable when StreamingMode is Synchronous.
+	// +optional
+	SynchronousReplicationConfig *PostgresSynchronousReplicationSpec `json:"synchronousReplicationConfig,omitempty"`
+
 	// + optional
 	Mode *PostgreSQLMode `json:"mode,omitempty"`
 	// RemoteReplica implies that the instance will be a MySQL Read Only Replica,
@@ -173,6 +178,118 @@ type PostgresSpec struct {
 
 	// +optional
 	ReadReplicas []ReadReplicaSpec `json:"readReplicas,omitempty"`
+
+	// TDE configures Transparent Data Encryption (encryption at rest) using the
+	// Percona pg_tde extension. It is only valid when the referenced
+	// PostgresVersion has spec.tde.supported = true (a Percona distribution).
+	// +optional
+	TDE *PostgresTDESpec `json:"tde,omitempty"`
+
+	// License references the Secret holding the license certificate required to
+	// start a "Postgres Enterprise by AppsCode" build. It is only valid, and
+	// required, when the referenced PostgresVersion has spec.license.required =
+	// true (the AppsCode distribution).
+	// +optional
+	License *PostgresLicenseSpec `json:"license,omitempty"`
+}
+
+// PostgresLicenseSpec references the Secret holding the AppsCode Postgres
+// Enterprise license certificate (an X.509 PEM file the custom postgres
+// binary verifies at startup and every 60 seconds thereafter; see
+// doc/LICENSE_ENFORCEMENT.md in the AppsCode Postgres source repo). It is
+// mounted outside PGDATA at an identical path on every pod and pointed to via
+// the PGLICENSE environment variable.
+type PostgresLicenseSpec struct {
+	// SecretRef selects the key of a Secret holding the license certificate.
+	// Key defaults to "license.pem" if left unset.
+	SecretRef core.SecretKeySelector `json:"secretRef"`
+}
+
+// PostgresTDESpec configures Transparent Data Encryption (encryption at rest)
+// for a Postgres instance using the Percona pg_tde extension.
+type PostgresTDESpec struct {
+	// KeyProvider selects and configures the KMS that backs the principal key.
+	KeyProvider TDEKeyProvider `json:"keyProvider"`
+
+	// EncryptWAL turns on cluster-wide WAL encryption (pg_tde.wal_encrypt=on).
+	// It requires a global provider (Vault or KMIP) and a rolling restart.
+	// +optional
+	EncryptWAL bool `json:"encryptWAL,omitempty"`
+
+	// EnforceEncryption sets pg_tde.enforce_encryption=on so that no unencrypted
+	// table can be created.
+	// +optional
+	EnforceEncryption bool `json:"enforceEncryption,omitempty"`
+
+	// DefaultEncryptedTables makes tde_heap the default table access method
+	// (default_table_access_method=tde_heap) so all new tables are encrypted.
+	// +optional
+	DefaultEncryptedTables bool `json:"defaultEncryptedTables,omitempty"`
+
+	// Cipher selects the encryption algorithm. One of aes_128 (default) or aes_256.
+	// +kubebuilder:validation:Enum=aes_128;aes_256
+	// +optional
+	Cipher string `json:"cipher,omitempty"`
+}
+
+// TDEKeyProvider selects exactly one KMS backend for the principal key.
+type TDEKeyProvider struct {
+	// Vault configures a HashiCorp Vault (KVv2) global key provider.
+	// +optional
+	Vault *TDEVaultProvider `json:"vault,omitempty"`
+
+	// KMIP configures a KMIP server global key provider.
+	// +optional
+	KMIP *TDEKMIPProvider `json:"kmip,omitempty"`
+
+	// File configures a local keyring file provider. Discouraged: it is only
+	// valid for a single-node (standalone) Postgres and cannot back WAL encryption.
+	// +optional
+	File *TDEFileProvider `json:"file,omitempty"`
+}
+
+// TDEVaultProvider configures a HashiCorp Vault KVv2 global key provider.
+type TDEVaultProvider struct {
+	// Address is the Vault server URL, e.g. https://vault.example.com:8200.
+	Address string `json:"address"`
+
+	// MountPath is the KVv2 secrets engine mount, e.g. "secret".
+	MountPath string `json:"mountPath"`
+
+	// TokenSecretRef references a Secret holding the Vault token under the key
+	// "token". It is mounted outside PGDATA at an identical path on every pod.
+	TokenSecretRef core.LocalObjectReference `json:"tokenSecretRef"`
+
+	// CASecretRef optionally references a Secret holding the CA bundle used to
+	// verify Vault's TLS certificate under the key "ca.crt".
+	// +optional
+	CASecretRef *core.LocalObjectReference `json:"caSecretRef,omitempty"`
+
+	// Namespace is an optional Vault Enterprise namespace.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+}
+
+// TDEKMIPProvider configures a KMIP server global key provider.
+type TDEKMIPProvider struct {
+	// Address is the KMIP server host.
+	Address string `json:"address"`
+
+	// Port is the KMIP server port.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Port int32 `json:"port"`
+
+	// CredentialSecretRef references a Secret holding the KMIP client credentials
+	// under the keys "ca.crt", "client.crt" and "client.key". It is mounted
+	// outside PGDATA at an identical path on every pod.
+	CredentialSecretRef core.LocalObjectReference `json:"credentialSecretRef"`
+}
+
+// TDEFileProvider configures a local keyring file provider (standalone only).
+type TDEFileProvider struct {
+	// Path is the keyring file path on a mounted volume outside PGDATA.
+	Path string `json:"path"`
 }
 
 type PostgresConfiguration struct {
@@ -206,6 +323,58 @@ type PostgresReplication struct {
 	// in the range lagged lsn between the new primary and the old primary
 	// +optional
 	ForceFailoverAcceptingDataLossAfter *metav1.Duration `json:"forceFailoverAcceptingDataLossAfter,omitempty"`
+
+	// BestEffortCrossDCLagBytesForFailover bounds how much un-replicated write ahead log an
+	// UNPLANNED cross data center failover may destroy. A surviving data center that is further
+	// behind the lost primary than this refuses to promote itself, and the database stays down
+	// until a human accepts the loss.
+	//
+	// It is BEST EFFORT, and the name says so because the distinction decides whether it can be
+	// relied upon:
+	//
+	//   - When a data center is genuinely LOST, the figure is near exact. The primary stopped
+	//     writing at the same instant the survivor stopped hearing from it, so the last write
+	//     position the survivor received IS the primary's final position. The error is bounded by
+	//     one replication message, which is sub-second while a primary is actually writing.
+	//
+	//   - During a NETWORK PARTITION where the primary keeps running, it is understated, and
+	//     without bound. The survivor's view of the primary froze when the link broke while the
+	//     primary kept writing, so the two positions sit still together and the computed lag reads
+	//     near zero however far apart they really are. In that state the failover Lease does not
+	//     move and no promotion happens, so the gap only matters if the primary's data center then
+	//     also loses its control plane connection. That compound case is out of scope: this field
+	//     will not catch it.
+	//
+	// It is therefore a budget, not a guarantee. Do not represent it to auditors as a bound on
+	// data loss; a bound requires synchronous replication, which this is not.
+	//
+	// This is NOT spec.leaderElection.maximumLagBeforeFailover, which governs the INTRA-DC raft
+	// election. This one governs cross data center disaster recovery, where the data at risk is
+	// whatever never crossed the link.
+	//
+	// Enforcement is fail closed and lives in the data plane, because that is the only place that
+	// can actually stop a promotion: the surviving data center's coordinator compares the last
+	// primary write position it received against its own flushed position and refuses to promote
+	// when the difference is over budget. Refusing leaves the database down, which is the correct
+	// trade only because a human can override it by annotating the Postgres object with
+	// dr.kubedb.com/accept-failover-data-loss=true, an explicit decision to accept the loss.
+	//
+	// When unset nothing is enforced and failover behaves exactly as before, so existing
+	// deployments are unaffected. Setting it to 0 demands a fully caught up survivor.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	BestEffortCrossDCLagBytesForFailover *int64 `json:"bestEffortCrossDCLagBytesForFailover,omitempty"`
+
+	// Maintainer note, do not "simplify" the field above. It is int64 rather than uint64
+	// because OpenAPI v3, and therefore CRD validation, has no unsigned integer type, so a
+	// uint64 cannot be expressed in the published schema. Minimum=0 is what rules out
+	// negatives. It is a pointer rather than a plain int64 so that nil keeps meaning
+	// "unset", which is what distinguishes "no budget enforced" from a budget of 0.
+	//
+	// Adding a field here that v1alpha2 does not have also means the conversions in
+	// apis/kubedb/v1alpha2/conversion.go can no longer cast PostgresReplication between the
+	// two versions with unsafe.Pointer; doing so reads past the end of the smaller
+	// allocation. See TestPostgresReplicationConversionIsFieldByField.
 }
 
 type ArbiterSpec struct {
@@ -342,6 +511,144 @@ type PostgresStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Postgres.
+	// +optional
+	DisasterRecovery *PostgresDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// PostgresDRPhase is the cross data center DR phase of a distributed Postgres.
+type PostgresDRPhase string
+
+const (
+	PostgresDRPhaseSteady      PostgresDRPhase = "Steady"
+	PostgresDRPhaseFailingOver PostgresDRPhase = "FailingOver"
+	PostgresDRPhaseFailingBack PostgresDRPhase = "FailingBack"
+	PostgresDRPhaseDegraded    PostgresDRPhase = "Degraded"
+)
+
+// PostgresDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed Postgres. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object.
+type PostgresDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase PostgresDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []PostgresDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	// Protected reports whether the database currently has cross data center DR protection: at
+	// least one Member data center other than the active one is confirmed to be streaming within
+	// the lag budget, as of a fresh observation.
+	//
+	// This is deliberately separate from Phase and from the per-DC Healthy flags. After every
+	// promotion there is a window in which the new primary is up and serving while the demoted
+	// data center has not finished re-cascading, so the database is running with no surviving
+	// copy of its writes anywhere else. A second fault landing in that window is roughly twice
+	// as expensive as the first. Protected is the field that answers "is it safe to do this
+	// again yet" without having to infer it from lag and health.
+	//
+	// nil means unknown, which is NOT the same as false: the hub could not establish the
+	// protection state this cycle. Treat unknown as unprotected when deciding whether to
+	// proceed with a planned operation.
+	// +optional
+	Protected *bool `json:"protected,omitempty"`
+
+	// ProtectionMessage explains the current value of Protected in operator-facing terms, for
+	// example which data center is not streaming yet, or why protection could not be established.
+	// +optional
+	ProtectionMessage string `json:"protectionMessage,omitempty"`
+}
+
+// PostgresDCStatus is one data center's local view inside a distributed Postgres.
+type PostgresDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member, Arbiter, or Witness.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Leader is this DC's local raft leader pod.
+	// +optional
+	Leader string `json:"leader,omitempty"`
+
+	// Writable is true when this DC's leader is the cluster's writable primary.
+	//
+	// It is seeded from the placement (the active DC is expected to be writable) and is only
+	// overridden by an actual probe of the leader. That default is deliberate for the planned
+	// switchover gate, which waits for Writable to go false before handing off and must not be
+	// released by a failed probe. It also means a true here can be nothing more than the
+	// expectation: read WritableObservedAt before treating it as evidence.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// WritableObservedAt is when Writable was last established by actually probing this DC's
+	// leader, as opposed to assumed from the placement.
+	//
+	// Writable on its own fails open: it starts true for the active DC and is only ever lowered
+	// by a SUCCESSFUL probe, so every failure to reach the leader leaves a true behind that is
+	// indistinguishable from a healthy one. Anything that reads Writable as positive EVIDENCE -
+	// that the database is serving writes, or that an accepted failover has landed and no longer
+	// needs re-driving - must pair it with a fresh stamp here, or it will stand down in exactly
+	// the outage it exists to handle.
+	//
+	// nil means this pass never determined the DC's writability. It is set on a successful probe
+	// whichever way the answer came out, so a recent stamp with Writable false is a real
+	// observation of a read-only leader, not a missing one.
+	// +optional
+	WritableObservedAt *metav1.Time `json:"writableObservedAt,omitempty"`
+
+	// CrossDCStreamer is the pod in this data center that streams directly from the ACTIVE data
+	// center's primary, and from which this DC's own replicas cascade. It is the head of this
+	// DC's copy of the data, so it is the node holding the most write ahead log here, and the
+	// only correct promotion target if this DC has to take over.
+	//
+	// It is recorded because it can only be observed while this DC is still a standby: it is read
+	// from the active primary's pg_stat_replication, which stops being available the moment that
+	// primary is lost, which is precisely when the promotion target has to be chosen. Once
+	// recorded it is carried forward until a fresh observation replaces it.
+	// +optional
+	CrossDCStreamer string `json:"crossDCStreamer,omitempty"`
+
+	// NotReadyPods names the pods in this data center that are not currently participating:
+	// not streaming from the data center's leader, not attached cross data center, or not
+	// running at all. It exists so a non Ready phase can say WHICH pod is holding the
+	// database back instead of only that something is, which otherwise has to be rediscovered
+	// by hand across several clusters at the exact moment that is most expensive.
+	// +optional
+	NotReadyPods []string `json:"notReadyPods,omitempty"`
+
+	// LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// LagObservedAt is when LagBytes was last successfully measured.
+	//
+	// LagBytes alone cannot be acted on, because a stale value and a current value look
+	// identical, and the difference matters most during exactly the events where the
+	// measurement stops being refreshed. A nil LagBytes with a recent LagObservedAt means "we
+	// looked and this DC was not streaming"; a nil LagObservedAt means "we could not look".
+	// +optional
+	LagObservedAt *metav1.Time `json:"lagObservedAt,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	//
+	// Note that this is a liveness signal about the DC's agent, not a statement that the DC
+	// holds a usable copy of the data. A Member standby can be Healthy and still not be
+	// streaming. Use Protected on the parent status for the second question.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -380,6 +687,141 @@ const (
 	SynchronousPostgresStreamingMode  PostgresStreamingMode = "Synchronous"
 	AsynchronousPostgresStreamingMode PostgresStreamingMode = "Asynchronous"
 )
+
+// PostgresSyncReplicationMode defines how standby replicas are selected for synchronous replication.
+// +kubebuilder:validation:Enum=Any;First
+type PostgresSyncReplicationMode string
+
+const (
+	// PostgresSyncReplicationModeAny uses quorum-based selection: wait for any NumSyncReplicas standbys.
+	PostgresSyncReplicationModeAny PostgresSyncReplicationMode = "Any"
+	// PostgresSyncReplicationModeFirst uses priority-based selection: wait for the first NumSyncReplicas standbys in list order.
+	PostgresSyncReplicationModeFirst PostgresSyncReplicationMode = "First"
+)
+
+// PostgresSynchronousCommitLevel maps to PostgreSQL's synchronous_commit parameter.
+// +kubebuilder:validation:Enum=On;RemoteApply;RemoteWrite;Local;Off
+type PostgresSynchronousCommitLevel string
+
+const (
+	// PostgresSynchronousCommitOn waits until the standby has written and flushed WAL to disk.
+	PostgresSynchronousCommitOn PostgresSynchronousCommitLevel = "On"
+	// PostgresSynchronousCommitRemoteApply waits until the standby has applied the WAL.
+	PostgresSynchronousCommitRemoteApply PostgresSynchronousCommitLevel = "RemoteApply"
+	// PostgresSynchronousCommitRemoteWrite waits until the standby has written WAL to its OS buffer (default).
+	PostgresSynchronousCommitRemoteWrite PostgresSynchronousCommitLevel = "RemoteWrite"
+	// PostgresSynchronousCommitLocal waits for local WAL flush only; standby is not waited on.
+	PostgresSynchronousCommitLocal PostgresSynchronousCommitLevel = "Local"
+	// PostgresSynchronousCommitOff allows commit without waiting for WAL flush.
+	PostgresSynchronousCommitOff PostgresSynchronousCommitLevel = "Off"
+)
+
+// PostgresSynchronousReplicationSpec configures fine-grained synchronous replication behavior.
+// Only applicable when spec.streamingMode is Synchronous.
+//
+// Sample configurations:
+//
+//	# Case 1 — Minimal: all defaults (Any 1, RemoteWrite, auto-generated pod list)
+//	streamingMode: Synchronous
+//	# synchronousReplicationConfig omitted → ANY 1 ("pg-0","pg-1","pg-2")
+//
+//	# Case 2 — Quorum: wait for any 2 of N standbys
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 2
+//	  commitLevel: RemoteWrite
+//
+//	# Case 3 — Priority: ordered list, first live standby wins
+//	synchronousReplicationConfig:
+//	  mode: First
+//	  numSyncReplicas: 1
+//	  commitLevel: On
+//
+//	# Case 4 — Explicit standby names with Any mode
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 2
+//	  standbyNames: [pg-1, pg-2, pg-3]
+//	  commitLevel: RemoteWrite
+//
+//	# Case 5 — Explicit standby names with First mode (order = priority)
+//	synchronousReplicationConfig:
+//	  mode: First
+//	  numSyncReplicas: 1
+//	  standbyNames: [pg-3, pg-1, pg-2]   # pg-3 has highest priority
+//	  commitLevel: RemoteApply
+//
+//	# Case 6 — Strongest durability: WAL flushed on standby before commit returns
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 1
+//	  commitLevel: On
+//
+//	# Case 7 — Relaxed durability: only local WAL flush, standby not waited on
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 1
+//	  commitLevel: Local
+//
+//	# Case 8 — No WAL flush guarantee at all
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 1
+//	  commitLevel: Off
+//
+//	# Case 9 — Wildcard: accept any connected standby (useful when standby
+//	#           application_names are unknown, e.g. external DR replicas).
+//	#           Mutually exclusive with standbyNames.
+//	#           With First mode, avoid wildcard — priority order is non-deterministic.
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 1
+//	  useWildcard: true
+//	  # renders: ANY 1 (*)
+//
+//	# Case 10 — Wildcard quorum: any 2 standbys regardless of name
+//	synchronousReplicationConfig:
+//	  mode: Any
+//	  numSyncReplicas: 2
+//	  useWildcard: true
+//	  # renders: ANY 2 (*)
+type PostgresSynchronousReplicationSpec struct {
+	// Mode controls how standbys are selected: Any (quorum) or First (priority).
+	// Defaults to Any.
+	// +optional
+	Mode *PostgresSyncReplicationMode `json:"mode,omitempty"`
+
+	// NumSyncReplicas is the number of synchronous standby replicas to wait for.
+	// Must be >= 1 and less than spec.replicas.
+	// Defaults to 1.
+	// +optional
+	NumSyncReplicas *int32 `json:"numSyncReplicas,omitempty"`
+
+	// CommitLevel maps to PostgreSQL's synchronous_commit parameter, controlling the
+	// durability vs. performance trade-off for synchronous standbys.
+	// Defaults to RemoteWrite.
+	// +optional
+	CommitLevel *PostgresSynchronousCommitLevel `json:"commitLevel,omitempty"`
+
+	// StandbyNames is an explicit ordered list of standby application_names to include in
+	// synchronous_standby_names. When set, only these names participate in synchronous
+	// replication instead of the auto-generated list of all pod names.
+	// For FIRST mode the order determines priority (first entry = highest priority).
+	// Must not contain duplicates or empty strings.
+	// When absent, all standby pods are included in ascending pod-index order.
+	// Mutually exclusive with UseWildcard.
+	// +optional
+	// +listType=atomic
+	StandbyNames []string `json:"standbyNames,omitempty"`
+
+	// UseWildcard, when true, uses '*' in synchronous_standby_names to match any
+	// connected standby regardless of its application_name. Useful when standby names
+	// are not known in advance (e.g. external DR replicas with custom application_name).
+	// Avoid combining with mode: First — connection-order priority is non-deterministic.
+	// Mutually exclusive with StandbyNames.
+	// +optional
+	UseWildcard *bool `json:"useWildcard,omitempty"`
+}
 
 // ref: https://www.postgresql.org/docs/13/libpq-ssl.html
 // +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full

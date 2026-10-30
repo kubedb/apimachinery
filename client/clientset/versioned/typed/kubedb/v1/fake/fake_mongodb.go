@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMongoDBs implements MongoDBInterface
-type FakeMongoDBs struct {
+// fakeMongoDBs implements MongoDBInterface
+type fakeMongoDBs struct {
+	*gentype.FakeClientWithList[*v1.MongoDB, *v1.MongoDBList]
 	Fake *FakeKubedbV1
-	ns   string
 }
 
-var mongodbsResource = v1.SchemeGroupVersion.WithResource("mongodbs")
-
-var mongodbsKind = v1.SchemeGroupVersion.WithKind("MongoDB")
-
-// Get takes name of the mongoDB, and returns the corresponding mongoDB object, and an error if there is any.
-func (c *FakeMongoDBs) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.MongoDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mongodbsResource, c.ns, name), &v1.MongoDB{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMongoDBs(fake *FakeKubedbV1, namespace string) kubedbv1.MongoDBInterface {
+	return &fakeMongoDBs{
+		gentype.NewFakeClientWithList[*v1.MongoDB, *v1.MongoDBList](
+			fake.Fake,
+			namespace,
+			v1.SchemeGroupVersion.WithResource("mongodbs"),
+			v1.SchemeGroupVersion.WithKind("MongoDB"),
+			func() *v1.MongoDB { return &v1.MongoDB{} },
+			func() *v1.MongoDBList { return &v1.MongoDBList{} },
+			func(dst, src *v1.MongoDBList) { dst.ListMeta = src.ListMeta },
+			func(list *v1.MongoDBList) []*v1.MongoDB { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1.MongoDBList, items []*v1.MongoDB) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1.MongoDB), err
-}
-
-// List takes label and field selectors, and returns the list of MongoDBs that match those selectors.
-func (c *FakeMongoDBs) List(ctx context.Context, opts metav1.ListOptions) (result *v1.MongoDBList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mongodbsResource, mongodbsKind, c.ns, opts), &v1.MongoDBList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1.MongoDBList{ListMeta: obj.(*v1.MongoDBList).ListMeta}
-	for _, item := range obj.(*v1.MongoDBList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mongoDBs.
-func (c *FakeMongoDBs) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mongodbsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mongoDB and creates it.  Returns the server's representation of the mongoDB, and an error, if there is any.
-func (c *FakeMongoDBs) Create(ctx context.Context, mongoDB *v1.MongoDB, opts metav1.CreateOptions) (result *v1.MongoDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mongodbsResource, c.ns, mongoDB), &v1.MongoDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.MongoDB), err
-}
-
-// Update takes the representation of a mongoDB and updates it. Returns the server's representation of the mongoDB, and an error, if there is any.
-func (c *FakeMongoDBs) Update(ctx context.Context, mongoDB *v1.MongoDB, opts metav1.UpdateOptions) (result *v1.MongoDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mongodbsResource, c.ns, mongoDB), &v1.MongoDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.MongoDB), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMongoDBs) UpdateStatus(ctx context.Context, mongoDB *v1.MongoDB, opts metav1.UpdateOptions) (*v1.MongoDB, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mongodbsResource, "status", c.ns, mongoDB), &v1.MongoDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.MongoDB), err
-}
-
-// Delete takes name of the mongoDB and deletes it. Returns an error if one occurs.
-func (c *FakeMongoDBs) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mongodbsResource, c.ns, name, opts), &v1.MongoDB{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMongoDBs) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mongodbsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1.MongoDBList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mongoDB.
-func (c *FakeMongoDBs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.MongoDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mongodbsResource, c.ns, name, pt, data, subresources...), &v1.MongoDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.MongoDB), err
 }

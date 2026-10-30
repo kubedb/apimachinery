@@ -51,7 +51,7 @@ import (
 // SetupMongoDBWebhookWithManager registers the webhook for MongoDB in the manager.
 func SetupMongoDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MongoDB{}).
-		WithValidator(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -64,6 +64,9 @@ type MongoDBCustomWebhook struct {
 var _ webhook.CustomDefaulter = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	log := logf.FromContext(ctx)
 	log.Info("defaulting MongoDB")
 	db := obj.(*dbapi.MongoDB)
@@ -95,12 +98,21 @@ func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 var _ webhook.CustomValidator = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	log := logf.FromContext(ctx)
 	log.Info("creating MongoDB")
 	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))
 }
 
 func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	log := logf.FromContext(ctx)
 	log.Info("updating MongoDB")
 	oldMongoDB, ok := oldObj.(*dbapi.MongoDB)
@@ -625,7 +637,7 @@ func validateVolumesAndMounts(db *dbapi.MongoDB) error {
 }
 
 func getVolumesMountsForAllContainers(podTemplate *ofstv2.PodTemplateSpec) []core.VolumeMount {
-	mounts := make([]core.VolumeMount, 0)
+	mounts := make([]core.VolumeMount, 0, len(podTemplate.Spec.Containers))
 	for _, container := range podTemplate.Spec.Containers {
 		mounts = append(mounts, container.VolumeMounts...)
 	}

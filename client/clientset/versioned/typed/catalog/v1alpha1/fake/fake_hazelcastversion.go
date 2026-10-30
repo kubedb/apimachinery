@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHazelcastVersions implements HazelcastVersionInterface
-type FakeHazelcastVersions struct {
+// fakeHazelcastVersions implements HazelcastVersionInterface
+type fakeHazelcastVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.HazelcastVersion, *v1alpha1.HazelcastVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var hazelcastversionsResource = v1alpha1.SchemeGroupVersion.WithResource("hazelcastversions")
-
-var hazelcastversionsKind = v1alpha1.SchemeGroupVersion.WithKind("HazelcastVersion")
-
-// Get takes name of the hazelcastVersion, and returns the corresponding hazelcastVersion object, and an error if there is any.
-func (c *FakeHazelcastVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HazelcastVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(hazelcastversionsResource, name), &v1alpha1.HazelcastVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeHazelcastVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.HazelcastVersionInterface {
+	return &fakeHazelcastVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.HazelcastVersion, *v1alpha1.HazelcastVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("hazelcastversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("HazelcastVersion"),
+			func() *v1alpha1.HazelcastVersion { return &v1alpha1.HazelcastVersion{} },
+			func() *v1alpha1.HazelcastVersionList { return &v1alpha1.HazelcastVersionList{} },
+			func(dst, src *v1alpha1.HazelcastVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HazelcastVersionList) []*v1alpha1.HazelcastVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HazelcastVersionList, items []*v1alpha1.HazelcastVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HazelcastVersion), err
-}
-
-// List takes label and field selectors, and returns the list of HazelcastVersions that match those selectors.
-func (c *FakeHazelcastVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HazelcastVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(hazelcastversionsResource, hazelcastversionsKind, opts), &v1alpha1.HazelcastVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HazelcastVersionList{ListMeta: obj.(*v1alpha1.HazelcastVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HazelcastVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hazelcastVersions.
-func (c *FakeHazelcastVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(hazelcastversionsResource, opts))
-}
-
-// Create takes the representation of a hazelcastVersion and creates it.  Returns the server's representation of the hazelcastVersion, and an error, if there is any.
-func (c *FakeHazelcastVersions) Create(ctx context.Context, hazelcastVersion *v1alpha1.HazelcastVersion, opts v1.CreateOptions) (result *v1alpha1.HazelcastVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(hazelcastversionsResource, hazelcastVersion), &v1alpha1.HazelcastVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastVersion), err
-}
-
-// Update takes the representation of a hazelcastVersion and updates it. Returns the server's representation of the hazelcastVersion, and an error, if there is any.
-func (c *FakeHazelcastVersions) Update(ctx context.Context, hazelcastVersion *v1alpha1.HazelcastVersion, opts v1.UpdateOptions) (result *v1alpha1.HazelcastVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(hazelcastversionsResource, hazelcastVersion), &v1alpha1.HazelcastVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastVersion), err
-}
-
-// Delete takes name of the hazelcastVersion and deletes it. Returns an error if one occurs.
-func (c *FakeHazelcastVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(hazelcastversionsResource, name, opts), &v1alpha1.HazelcastVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHazelcastVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(hazelcastversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HazelcastVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hazelcastVersion.
-func (c *FakeHazelcastVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HazelcastVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(hazelcastversionsResource, name, pt, data, subresources...), &v1alpha1.HazelcastVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastVersion), err
 }

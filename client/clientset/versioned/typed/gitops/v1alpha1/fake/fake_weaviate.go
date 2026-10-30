@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeWeaviates implements WeaviateInterface
-type FakeWeaviates struct {
+// fakeWeaviates implements WeaviateInterface
+type fakeWeaviates struct {
+	*gentype.FakeClientWithList[*v1alpha1.Weaviate, *v1alpha1.WeaviateList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var weaviatesResource = v1alpha1.SchemeGroupVersion.WithResource("weaviates")
-
-var weaviatesKind = v1alpha1.SchemeGroupVersion.WithKind("Weaviate")
-
-// Get takes name of the weaviate, and returns the corresponding weaviate object, and an error if there is any.
-func (c *FakeWeaviates) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Weaviate, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(weaviatesResource, c.ns, name), &v1alpha1.Weaviate{})
-
-	if obj == nil {
-		return nil, err
+func newFakeWeaviates(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.WeaviateInterface {
+	return &fakeWeaviates{
+		gentype.NewFakeClientWithList[*v1alpha1.Weaviate, *v1alpha1.WeaviateList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("weaviates"),
+			v1alpha1.SchemeGroupVersion.WithKind("Weaviate"),
+			func() *v1alpha1.Weaviate { return &v1alpha1.Weaviate{} },
+			func() *v1alpha1.WeaviateList { return &v1alpha1.WeaviateList{} },
+			func(dst, src *v1alpha1.WeaviateList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.WeaviateList) []*v1alpha1.Weaviate { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.WeaviateList, items []*v1alpha1.Weaviate) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Weaviate), err
-}
-
-// List takes label and field selectors, and returns the list of Weaviates that match those selectors.
-func (c *FakeWeaviates) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.WeaviateList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(weaviatesResource, weaviatesKind, c.ns, opts), &v1alpha1.WeaviateList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.WeaviateList{ListMeta: obj.(*v1alpha1.WeaviateList).ListMeta}
-	for _, item := range obj.(*v1alpha1.WeaviateList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested weaviates.
-func (c *FakeWeaviates) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(weaviatesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a weaviate and creates it.  Returns the server's representation of the weaviate, and an error, if there is any.
-func (c *FakeWeaviates) Create(ctx context.Context, weaviate *v1alpha1.Weaviate, opts v1.CreateOptions) (result *v1alpha1.Weaviate, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(weaviatesResource, c.ns, weaviate), &v1alpha1.Weaviate{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Weaviate), err
-}
-
-// Update takes the representation of a weaviate and updates it. Returns the server's representation of the weaviate, and an error, if there is any.
-func (c *FakeWeaviates) Update(ctx context.Context, weaviate *v1alpha1.Weaviate, opts v1.UpdateOptions) (result *v1alpha1.Weaviate, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(weaviatesResource, c.ns, weaviate), &v1alpha1.Weaviate{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Weaviate), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeWeaviates) UpdateStatus(ctx context.Context, weaviate *v1alpha1.Weaviate, opts v1.UpdateOptions) (*v1alpha1.Weaviate, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(weaviatesResource, "status", c.ns, weaviate), &v1alpha1.Weaviate{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Weaviate), err
-}
-
-// Delete takes name of the weaviate and deletes it. Returns an error if one occurs.
-func (c *FakeWeaviates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(weaviatesResource, c.ns, name, opts), &v1alpha1.Weaviate{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeWeaviates) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(weaviatesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.WeaviateList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched weaviate.
-func (c *FakeWeaviates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Weaviate, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(weaviatesResource, c.ns, name, pt, data, subresources...), &v1alpha1.Weaviate{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Weaviate), err
 }

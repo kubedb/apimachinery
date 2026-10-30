@@ -47,7 +47,7 @@ import (
 // SetupMSSQLServerWebhookWithManager registers the webhook for MSSQLServer in the manager.
 func SetupMSSQLServerWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.MSSQLServer{}).
-		WithValidator(&MSSQLServerCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MSSQLServerCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MSSQLServerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -66,6 +66,9 @@ var mssqllog = logf.Log.WithName("mssql-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *MSSQLServerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
@@ -81,6 +84,12 @@ var _ webhook.CustomValidator = &MSSQLServerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
@@ -97,6 +106,9 @@ func (w *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", newObj)

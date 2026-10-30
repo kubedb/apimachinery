@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSinglestoreAutoscalers implements SinglestoreAutoscalerInterface
-type FakeSinglestoreAutoscalers struct {
+// fakeSinglestoreAutoscalers implements SinglestoreAutoscalerInterface
+type fakeSinglestoreAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.SinglestoreAutoscaler, *v1alpha1.SinglestoreAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var singlestoreautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("singlestoreautoscalers")
-
-var singlestoreautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("SinglestoreAutoscaler")
-
-// Get takes name of the singlestoreAutoscaler, and returns the corresponding singlestoreAutoscaler object, and an error if there is any.
-func (c *FakeSinglestoreAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SinglestoreAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(singlestoreautoscalersResource, c.ns, name), &v1alpha1.SinglestoreAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSinglestoreAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.SinglestoreAutoscalerInterface {
+	return &fakeSinglestoreAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.SinglestoreAutoscaler, *v1alpha1.SinglestoreAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("singlestoreautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("SinglestoreAutoscaler"),
+			func() *v1alpha1.SinglestoreAutoscaler { return &v1alpha1.SinglestoreAutoscaler{} },
+			func() *v1alpha1.SinglestoreAutoscalerList { return &v1alpha1.SinglestoreAutoscalerList{} },
+			func(dst, src *v1alpha1.SinglestoreAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SinglestoreAutoscalerList) []*v1alpha1.SinglestoreAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SinglestoreAutoscalerList, items []*v1alpha1.SinglestoreAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of SinglestoreAutoscalers that match those selectors.
-func (c *FakeSinglestoreAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SinglestoreAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(singlestoreautoscalersResource, singlestoreautoscalersKind, c.ns, opts), &v1alpha1.SinglestoreAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SinglestoreAutoscalerList{ListMeta: obj.(*v1alpha1.SinglestoreAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SinglestoreAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested singlestoreAutoscalers.
-func (c *FakeSinglestoreAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(singlestoreautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a singlestoreAutoscaler and creates it.  Returns the server's representation of the singlestoreAutoscaler, and an error, if there is any.
-func (c *FakeSinglestoreAutoscalers) Create(ctx context.Context, singlestoreAutoscaler *v1alpha1.SinglestoreAutoscaler, opts v1.CreateOptions) (result *v1alpha1.SinglestoreAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(singlestoreautoscalersResource, c.ns, singlestoreAutoscaler), &v1alpha1.SinglestoreAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), err
-}
-
-// Update takes the representation of a singlestoreAutoscaler and updates it. Returns the server's representation of the singlestoreAutoscaler, and an error, if there is any.
-func (c *FakeSinglestoreAutoscalers) Update(ctx context.Context, singlestoreAutoscaler *v1alpha1.SinglestoreAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.SinglestoreAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(singlestoreautoscalersResource, c.ns, singlestoreAutoscaler), &v1alpha1.SinglestoreAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSinglestoreAutoscalers) UpdateStatus(ctx context.Context, singlestoreAutoscaler *v1alpha1.SinglestoreAutoscaler, opts v1.UpdateOptions) (*v1alpha1.SinglestoreAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(singlestoreautoscalersResource, "status", c.ns, singlestoreAutoscaler), &v1alpha1.SinglestoreAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), err
-}
-
-// Delete takes name of the singlestoreAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeSinglestoreAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(singlestoreautoscalersResource, c.ns, name, opts), &v1alpha1.SinglestoreAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSinglestoreAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(singlestoreautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SinglestoreAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched singlestoreAutoscaler.
-func (c *FakeSinglestoreAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SinglestoreAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(singlestoreautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.SinglestoreAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), err
 }

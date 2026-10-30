@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SinglestoreAutoscalerLister helps list SinglestoreAutoscalers.
@@ -31,7 +31,7 @@ import (
 type SinglestoreAutoscalerLister interface {
 	// List lists all SinglestoreAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SinglestoreAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.SinglestoreAutoscaler, err error)
 	// SinglestoreAutoscalers returns an object that can list and get SinglestoreAutoscalers.
 	SinglestoreAutoscalers(namespace string) SinglestoreAutoscalerNamespaceLister
 	SinglestoreAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type SinglestoreAutoscalerLister interface {
 
 // singlestoreAutoscalerLister implements the SinglestoreAutoscalerLister interface.
 type singlestoreAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.SinglestoreAutoscaler]
 }
 
 // NewSinglestoreAutoscalerLister returns a new SinglestoreAutoscalerLister.
 func NewSinglestoreAutoscalerLister(indexer cache.Indexer) SinglestoreAutoscalerLister {
-	return &singlestoreAutoscalerLister{indexer: indexer}
-}
-
-// List lists all SinglestoreAutoscalers in the indexer.
-func (s *singlestoreAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.SinglestoreAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SinglestoreAutoscaler))
-	})
-	return ret, err
+	return &singlestoreAutoscalerLister{listers.New[*autoscalingv1alpha1.SinglestoreAutoscaler](indexer, autoscalingv1alpha1.Resource("singlestoreautoscaler"))}
 }
 
 // SinglestoreAutoscalers returns an object that can list and get SinglestoreAutoscalers.
 func (s *singlestoreAutoscalerLister) SinglestoreAutoscalers(namespace string) SinglestoreAutoscalerNamespaceLister {
-	return singlestoreAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return singlestoreAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.SinglestoreAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // SinglestoreAutoscalerNamespaceLister helps list and get SinglestoreAutoscalers.
@@ -65,36 +57,15 @@ func (s *singlestoreAutoscalerLister) SinglestoreAutoscalers(namespace string) S
 type SinglestoreAutoscalerNamespaceLister interface {
 	// List lists all SinglestoreAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SinglestoreAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.SinglestoreAutoscaler, err error)
 	// Get retrieves the SinglestoreAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SinglestoreAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.SinglestoreAutoscaler, error)
 	SinglestoreAutoscalerNamespaceListerExpansion
 }
 
 // singlestoreAutoscalerNamespaceLister implements the SinglestoreAutoscalerNamespaceLister
 // interface.
 type singlestoreAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all SinglestoreAutoscalers in the indexer for a given namespace.
-func (s singlestoreAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.SinglestoreAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SinglestoreAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the SinglestoreAutoscaler from the indexer for a given namespace and name.
-func (s singlestoreAutoscalerNamespaceLister) Get(name string) (*v1alpha1.SinglestoreAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("singlestoreautoscaler"), name)
-	}
-	return obj.(*v1alpha1.SinglestoreAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.SinglestoreAutoscaler]
 }

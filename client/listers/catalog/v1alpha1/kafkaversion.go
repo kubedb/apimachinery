@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // KafkaVersionLister helps list KafkaVersions.
@@ -31,39 +31,19 @@ import (
 type KafkaVersionLister interface {
 	// List lists all KafkaVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.KafkaVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.KafkaVersion, err error)
 	// Get retrieves the KafkaVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.KafkaVersion, error)
+	Get(name string) (*catalogv1alpha1.KafkaVersion, error)
 	KafkaVersionListerExpansion
 }
 
 // kafkaVersionLister implements the KafkaVersionLister interface.
 type kafkaVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.KafkaVersion]
 }
 
 // NewKafkaVersionLister returns a new KafkaVersionLister.
 func NewKafkaVersionLister(indexer cache.Indexer) KafkaVersionLister {
-	return &kafkaVersionLister{indexer: indexer}
-}
-
-// List lists all KafkaVersions in the indexer.
-func (s *kafkaVersionLister) List(selector labels.Selector) (ret []*v1alpha1.KafkaVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.KafkaVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the KafkaVersion from the index for a given name.
-func (s *kafkaVersionLister) Get(name string) (*v1alpha1.KafkaVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("kafkaversion"), name)
-	}
-	return obj.(*v1alpha1.KafkaVersion), nil
+	return &kafkaVersionLister{listers.New[*catalogv1alpha1.KafkaVersion](indexer, catalogv1alpha1.Resource("kafkaversion"))}
 }

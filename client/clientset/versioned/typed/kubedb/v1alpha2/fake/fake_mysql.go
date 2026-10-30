@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLs implements MySQLInterface
-type FakeMySQLs struct {
+// fakeMySQLs implements MySQLInterface
+type fakeMySQLs struct {
+	*gentype.FakeClientWithList[*v1alpha2.MySQL, *v1alpha2.MySQLList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var mysqlsResource = v1alpha2.SchemeGroupVersion.WithResource("mysqls")
-
-var mysqlsKind = v1alpha2.SchemeGroupVersion.WithKind("MySQL")
-
-// Get takes name of the mySQL, and returns the corresponding mySQL object, and an error if there is any.
-func (c *FakeMySQLs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlsResource, c.ns, name), &v1alpha2.MySQL{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMySQLs(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.MySQLInterface {
+	return &fakeMySQLs{
+		gentype.NewFakeClientWithList[*v1alpha2.MySQL, *v1alpha2.MySQLList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("mysqls"),
+			v1alpha2.SchemeGroupVersion.WithKind("MySQL"),
+			func() *v1alpha2.MySQL { return &v1alpha2.MySQL{} },
+			func() *v1alpha2.MySQLList { return &v1alpha2.MySQLList{} },
+			func(dst, src *v1alpha2.MySQLList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.MySQLList) []*v1alpha2.MySQL { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.MySQLList, items []*v1alpha2.MySQL) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.MySQL), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLs that match those selectors.
-func (c *FakeMySQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MySQLList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlsResource, mysqlsKind, c.ns, opts), &v1alpha2.MySQLList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.MySQLList{ListMeta: obj.(*v1alpha2.MySQLList).ListMeta}
-	for _, item := range obj.(*v1alpha2.MySQLList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLs.
-func (c *FakeMySQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mysqlsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mySQL and creates it.  Returns the server's representation of the mySQL, and an error, if there is any.
-func (c *FakeMySQLs) Create(ctx context.Context, mySQL *v1alpha2.MySQL, opts v1.CreateOptions) (result *v1alpha2.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlsResource, c.ns, mySQL), &v1alpha2.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MySQL), err
-}
-
-// Update takes the representation of a mySQL and updates it. Returns the server's representation of the mySQL, and an error, if there is any.
-func (c *FakeMySQLs) Update(ctx context.Context, mySQL *v1alpha2.MySQL, opts v1.UpdateOptions) (result *v1alpha2.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlsResource, c.ns, mySQL), &v1alpha2.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MySQL), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMySQLs) UpdateStatus(ctx context.Context, mySQL *v1alpha2.MySQL, opts v1.UpdateOptions) (*v1alpha2.MySQL, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mysqlsResource, "status", c.ns, mySQL), &v1alpha2.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MySQL), err
-}
-
-// Delete takes name of the mySQL and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mysqlsResource, c.ns, name, opts), &v1alpha2.MySQL{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.MySQLList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQL.
-func (c *FakeMySQLs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlsResource, c.ns, name, pt, data, subresources...), &v1alpha2.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MySQL), err
 }

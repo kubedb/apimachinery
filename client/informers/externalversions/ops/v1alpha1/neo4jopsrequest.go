@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	apisopsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Neo4jOpsRequests.
 type Neo4jOpsRequestInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.Neo4jOpsRequestLister
+	Lister() opsv1alpha1.Neo4jOpsRequestLister
 }
 
 type neo4jOpsRequestInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredNeo4jOpsRequestInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).List(context.TODO(), options)
+				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).Watch(context.TODO(), options)
+				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().Neo4jOpsRequests(namespace).Watch(ctx, options)
 			},
 		},
-		&opsv1alpha1.Neo4jOpsRequest{},
+		&apisopsv1alpha1.Neo4jOpsRequest{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *neo4jOpsRequestInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *neo4jOpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.Neo4jOpsRequest{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisopsv1alpha1.Neo4jOpsRequest{}, f.defaultInformer)
 }
 
-func (f *neo4jOpsRequestInformer) Lister() v1alpha1.Neo4jOpsRequestLister {
-	return v1alpha1.NewNeo4jOpsRequestLister(f.Informer().GetIndexer())
+func (f *neo4jOpsRequestInformer) Lister() opsv1alpha1.Neo4jOpsRequestLister {
+	return opsv1alpha1.NewNeo4jOpsRequestLister(f.Informer().GetIndexer())
 }

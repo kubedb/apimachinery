@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHazelcastOpsRequests implements HazelcastOpsRequestInterface
-type FakeHazelcastOpsRequests struct {
+// fakeHazelcastOpsRequests implements HazelcastOpsRequestInterface
+type fakeHazelcastOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.HazelcastOpsRequest, *v1alpha1.HazelcastOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var hazelcastopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("hazelcastopsrequests")
-
-var hazelcastopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("HazelcastOpsRequest")
-
-// Get takes name of the hazelcastOpsRequest, and returns the corresponding hazelcastOpsRequest object, and an error if there is any.
-func (c *FakeHazelcastOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HazelcastOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hazelcastopsrequestsResource, c.ns, name), &v1alpha1.HazelcastOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHazelcastOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.HazelcastOpsRequestInterface {
+	return &fakeHazelcastOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.HazelcastOpsRequest, *v1alpha1.HazelcastOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("hazelcastopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("HazelcastOpsRequest"),
+			func() *v1alpha1.HazelcastOpsRequest { return &v1alpha1.HazelcastOpsRequest{} },
+			func() *v1alpha1.HazelcastOpsRequestList { return &v1alpha1.HazelcastOpsRequestList{} },
+			func(dst, src *v1alpha1.HazelcastOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HazelcastOpsRequestList) []*v1alpha1.HazelcastOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HazelcastOpsRequestList, items []*v1alpha1.HazelcastOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of HazelcastOpsRequests that match those selectors.
-func (c *FakeHazelcastOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HazelcastOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hazelcastopsrequestsResource, hazelcastopsrequestsKind, c.ns, opts), &v1alpha1.HazelcastOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HazelcastOpsRequestList{ListMeta: obj.(*v1alpha1.HazelcastOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HazelcastOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hazelcastOpsRequests.
-func (c *FakeHazelcastOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hazelcastopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hazelcastOpsRequest and creates it.  Returns the server's representation of the hazelcastOpsRequest, and an error, if there is any.
-func (c *FakeHazelcastOpsRequests) Create(ctx context.Context, hazelcastOpsRequest *v1alpha1.HazelcastOpsRequest, opts v1.CreateOptions) (result *v1alpha1.HazelcastOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hazelcastopsrequestsResource, c.ns, hazelcastOpsRequest), &v1alpha1.HazelcastOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), err
-}
-
-// Update takes the representation of a hazelcastOpsRequest and updates it. Returns the server's representation of the hazelcastOpsRequest, and an error, if there is any.
-func (c *FakeHazelcastOpsRequests) Update(ctx context.Context, hazelcastOpsRequest *v1alpha1.HazelcastOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.HazelcastOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hazelcastopsrequestsResource, c.ns, hazelcastOpsRequest), &v1alpha1.HazelcastOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHazelcastOpsRequests) UpdateStatus(ctx context.Context, hazelcastOpsRequest *v1alpha1.HazelcastOpsRequest, opts v1.UpdateOptions) (*v1alpha1.HazelcastOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hazelcastopsrequestsResource, "status", c.ns, hazelcastOpsRequest), &v1alpha1.HazelcastOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), err
-}
-
-// Delete takes name of the hazelcastOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeHazelcastOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hazelcastopsrequestsResource, c.ns, name, opts), &v1alpha1.HazelcastOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHazelcastOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hazelcastopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HazelcastOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hazelcastOpsRequest.
-func (c *FakeHazelcastOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HazelcastOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hazelcastopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.HazelcastOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), err
 }

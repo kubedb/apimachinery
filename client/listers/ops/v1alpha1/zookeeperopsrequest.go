@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ZooKeeperOpsRequestLister helps list ZooKeeperOpsRequests.
@@ -31,7 +31,7 @@ import (
 type ZooKeeperOpsRequestLister interface {
 	// List lists all ZooKeeperOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.ZooKeeperOpsRequest, err error)
 	// ZooKeeperOpsRequests returns an object that can list and get ZooKeeperOpsRequests.
 	ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestNamespaceLister
 	ZooKeeperOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type ZooKeeperOpsRequestLister interface {
 
 // zooKeeperOpsRequestLister implements the ZooKeeperOpsRequestLister interface.
 type zooKeeperOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.ZooKeeperOpsRequest]
 }
 
 // NewZooKeeperOpsRequestLister returns a new ZooKeeperOpsRequestLister.
 func NewZooKeeperOpsRequestLister(indexer cache.Indexer) ZooKeeperOpsRequestLister {
-	return &zooKeeperOpsRequestLister{indexer: indexer}
-}
-
-// List lists all ZooKeeperOpsRequests in the indexer.
-func (s *zooKeeperOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ZooKeeperOpsRequest))
-	})
-	return ret, err
+	return &zooKeeperOpsRequestLister{listers.New[*opsv1alpha1.ZooKeeperOpsRequest](indexer, opsv1alpha1.Resource("zookeeperopsrequest"))}
 }
 
 // ZooKeeperOpsRequests returns an object that can list and get ZooKeeperOpsRequests.
 func (s *zooKeeperOpsRequestLister) ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestNamespaceLister {
-	return zooKeeperOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return zooKeeperOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.ZooKeeperOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // ZooKeeperOpsRequestNamespaceLister helps list and get ZooKeeperOpsRequests.
@@ -65,36 +57,15 @@ func (s *zooKeeperOpsRequestLister) ZooKeeperOpsRequests(namespace string) ZooKe
 type ZooKeeperOpsRequestNamespaceLister interface {
 	// List lists all ZooKeeperOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.ZooKeeperOpsRequest, err error)
 	// Get retrieves the ZooKeeperOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ZooKeeperOpsRequest, error)
+	Get(name string) (*opsv1alpha1.ZooKeeperOpsRequest, error)
 	ZooKeeperOpsRequestNamespaceListerExpansion
 }
 
 // zooKeeperOpsRequestNamespaceLister implements the ZooKeeperOpsRequestNamespaceLister
 // interface.
 type zooKeeperOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ZooKeeperOpsRequests in the indexer for a given namespace.
-func (s zooKeeperOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ZooKeeperOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the ZooKeeperOpsRequest from the indexer for a given namespace and name.
-func (s zooKeeperOpsRequestNamespaceLister) Get(name string) (*v1alpha1.ZooKeeperOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("zookeeperopsrequest"), name)
-	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.ZooKeeperOpsRequest]
 }

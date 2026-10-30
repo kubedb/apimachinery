@@ -20,9 +20,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
+	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -32,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -44,7 +48,7 @@ import (
 // SetupMilvusServerWebhookWithManager registers the webhook for Milvus in the manager.
 func SetupMilvusWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Milvus{}).
-		WithValidator(&MilvusCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MilvusCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MilvusCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -63,6 +67,9 @@ var milvuslog = logf.Log.WithName("milvus-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (m *MilvusCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Milvus)
 	if !ok {
 		return fmt.Errorf("expected a Milvus object, got a %T", obj)
@@ -78,6 +85,12 @@ var _ webhook.CustomValidator = &MilvusCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (m *MilvusCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, m.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Milvus)
 	if !ok {
 		return nil, fmt.Errorf("expected a Milvus object, got a %T", obj)
@@ -85,15 +98,19 @@ func (m *MilvusCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 	milvuslog.Info("validate create", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	warnings, allErr := m.ValidateCreateOrUpdate(db)
+	allErr = append(allErr, milvusValidateWALOnCreate(db)...)
 	if len(allErr) == 0 {
-		return nil, nil
+		return warnings, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Milvus)
 	if !ok {
 		return nil, fmt.Errorf("expected a Milvus object, got a %T", newObj)
@@ -101,12 +118,15 @@ func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 
 	milvuslog.Info("validate update", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	warnings, allErr := m.ValidateCreateOrUpdate(db)
+	if oldDB, ok := old.(*olddbapi.Milvus); ok {
+		allErr = append(allErr, milvusValidateArchiverImmutability(oldDB, db)...)
+	}
 	if len(allErr) == 0 {
-		return nil, nil
+		return warnings, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -128,12 +148,24 @@ func (m *MilvusCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 	return nil, nil
 }
 
-func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.ErrorList {
+func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admission.Warnings, field.ErrorList) {
 	var allErr field.ErrorList
 
-	err := m.milvusValidateVersion(db)
+	milvusVersion, err := m.milvusValidateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			db.Name,
+			err.Error()))
+	} else if err := milvusValidateGPU(db, milvusVersion); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("gpu"),
+			db.Name,
+			err.Error()))
+	}
+
+	warnings := milvusWarnSRIOVTopology(db)
+
+	if err := milvusValidateNodeGroups(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("distributed"),
 			db.Name,
 			err.Error()))
 	}
@@ -193,11 +225,135 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 		}
 	}
 
-	if len(allErr) == 0 {
-		return nil
+	if meta := db.Spec.MetaStorage; meta != nil {
+		metaPath := field.NewPath("spec").Child("metaStorage")
+		if meta.ExternallyManaged {
+			if meta.TLS != nil {
+				allErr = append(allErr, field.Invalid(metaPath.Child("tls"),
+					db.Name, "spec.metaStorage.tls is only used when metaStorage is not externally managed; use clientTLSSecret for an external etcd"))
+			}
+			if meta.AuthSecret != nil {
+				if meta.AuthSecret.Name == "" {
+					allErr = append(allErr, field.Required(metaPath.Child("authSecret", "name"),
+						"an external etcd's authSecret must name an existing basic-auth Secret"))
+				}
+				if olddbapi.IsVirtualAuthSecretReferred(meta.AuthSecret) {
+					allErr = append(allErr, field.Invalid(metaPath.Child("authSecret"),
+						db.Name, "virtual secrets are not supported for an external meta etcd"))
+				}
+			}
+			if meta.ClientTLSSecret != nil && meta.ClientTLSSecret.Name == "" {
+				allErr = append(allErr, field.Required(metaPath.Child("clientTLSSecret", "name"),
+					"clientTLSSecret must name a Secret"))
+			}
+		} else {
+			if meta.ClientTLSSecret != nil {
+				allErr = append(allErr, field.Invalid(metaPath.Child("clientTLSSecret"),
+					db.Name, "spec.metaStorage.clientTLSSecret is only used when metaStorage is externally managed"))
+			}
+			if meta.TLS != nil && meta.TLS.IssuerRef == nil {
+				allErr = append(allErr, field.Invalid(
+					metaPath.Child("tls", "issuerRef"),
+					db.Name,
+					"spec.metaStorage.tls.issuerRef is required when metaStorage.tls is configured",
+				))
+			}
+		}
+		if strings.TrimSpace(meta.RootPath) != meta.RootPath || strings.Contains(meta.RootPath, "/") {
+			allErr = append(allErr, field.Invalid(metaPath.Child("rootPath"), meta.RootPath,
+				"spec.metaStorage.rootPath must not contain '/' or surrounding whitespace"))
+		}
 	}
 
-	return allErr
+	allErr = append(allErr, milvusValidateArchiver(db)...)
+
+	if len(allErr) == 0 {
+		return warnings, nil
+	}
+
+	return warnings, allErr
+}
+
+func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+	walAnnotation := field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation)
+
+	if v, ok := db.GetAnnotations()[kubedb.MilvusWALAnnotation]; ok {
+		switch {
+		case v != kubedb.MilvusWALWoodpecker && v != kubedb.MilvusWALRocksMQ:
+			errs = append(errs, field.NotSupported(walAnnotation, v, []string{kubedb.MilvusWALWoodpecker, kubedb.MilvusWALRocksMQ}))
+		case v == kubedb.MilvusWALRocksMQ && db.IsDistributed():
+			errs = append(errs, field.Invalid(walAnnotation, v, "a Distributed Milvus always uses the Woodpecker WAL"))
+		}
+	}
+
+	usesArchiver := db.Spec.Archiver != nil || (db.Spec.Init != nil && db.Spec.Init.Archiver != nil)
+	if !usesArchiver {
+		return errs
+	}
+	// the physical backup does not capture the RocksMQ WAL on the data PVC
+	if db.IsLegacyRocksMQ() {
+		errs = append(errs, field.Forbidden(spec.Child("archiver"),
+			"this Standalone Milvus keeps its write-ahead log in RocksMQ (created by an older operator); "+
+				"the archiver needs the Woodpecker WAL. Migrate with a logical backup restored into a new Milvus"))
+	}
+	// Woodpecker keeps its WAL metadata at the etcd root, so the etcd cannot be shared
+	if db.Spec.MetaStorage != nil && db.Spec.MetaStorage.ExternallyManaged {
+		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
+			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
+	}
+	if strings.HasPrefix(db.Spec.Version, "3.") {
+		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
+			"the Milvus archiver is not validated for Milvus 3.x yet"))
+	}
+	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
+		a := ini.Archiver
+		if a.RecoveryTimestamp.IsZero() {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "recoveryTimestamp"), "recoveryTimestamp is required"))
+		}
+		if a.FullDBRepository == nil || a.FullDBRepository.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "fullDBRepository"), "fullDBRepository is required to restore a Milvus"))
+		}
+		if a.EncryptionSecret == nil || a.EncryptionSecret.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "encryptionSecret"), "encryptionSecret is required to read the encrypted backup"))
+		}
+	}
+	return errs
+}
+
+func milvusValidateWALOnCreate(db *olddbapi.Milvus) field.ErrorList {
+	if db.GetAnnotations()[kubedb.MilvusWALAnnotation] == kubedb.MilvusWALRocksMQ {
+		return field.ErrorList{field.Forbidden(field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation),
+			"a new Milvus always uses the Woodpecker write-ahead log; remove this annotation")}
+	}
+	return nil
+}
+
+func milvusValidateArchiverImmutability(oldDB, db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+
+	if oldWAL, ok := oldDB.GetAnnotations()[kubedb.MilvusWALAnnotation]; ok {
+		if newWAL := db.GetAnnotations()[kubedb.MilvusWALAnnotation]; newWAL != oldWAL {
+			errs = append(errs, field.Forbidden(field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation),
+				fmt.Sprintf("the write-ahead log cannot be changed after it was recorded (was %q)", oldWAL)))
+		}
+	}
+	if oldDB.Spec.Init != nil && oldDB.Spec.Init.Initialized {
+		if !reflect.DeepEqual(oldDB.Spec.Init.Archiver, safeInitArchiver(db)) {
+			errs = append(errs, field.Forbidden(spec.Child("init", "archiver"),
+				"init.archiver cannot be changed after the database was initialized"))
+		}
+	}
+	return errs
+}
+
+func safeInitArchiver(db *olddbapi.Milvus) *olddbapi.ArchiverRecovery {
+	if db.Spec.Init == nil {
+		return nil
+	}
+	return db.Spec.Init.Archiver
 }
 
 // reserved volume and volumes mounts for milvus
@@ -212,12 +368,115 @@ var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusConfigVolDir,
 }
 
-func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {
+func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) (*catalog.MilvusVersion, error) {
 	var milvusVersion catalog.MilvusVersion
 
-	return m.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := m.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &milvusVersion)
+	if err != nil {
+		return nil, err
+	}
+	return &milvusVersion, nil
+}
+
+// milvusValidateGPU rejects a Milvus CR that requests a GPU (via the typed
+// spec.gpu/spec.topology.distributed.<role>.gpu field, or a hand-written
+// nvidia.com/gpu resource request/limit on any podTemplate container)
+// against a MilvusVersion that isn't declared GPU-capable. Runs on both
+// CREATE and UPDATE, so downgrading spec.version out from under a live GPU
+// request is caught too.
+func milvusValidateGPU(db *olddbapi.Milvus, milvusVersion *catalog.MilvusVersion) error {
+	if !db.RequestsGPU() {
+		return nil
+	}
+	if milvusVersion.Spec.DB.GPU != nil && milvusVersion.Spec.DB.GPU.Supported {
+		return nil
+	}
+	return fmt.Errorf(
+		"a GPU resource is requested (spec.gpu, a distributed role's .gpu, or a hand-written "+
+			"nvidia.com/gpu podTemplate resource) but MilvusVersion %q does not declare "+
+			"spec.db.gpu.supported: true; use a GPU-capable MilvusVersion instead",
+		db.Spec.Version,
+	)
+}
+
+// milvusWarnSRIOVTopology warns, rather than rejects, if spec.network.sriov
+// is set on some but not all five Distributed roles. Every Distributed role
+// dials, or is dialed by, at least one other role directly by its
+// etcd-advertised address (never through a Service), so a role left off
+// network.sriov may become unreachable from, or unable to reach, whichever
+// roles do have it once their advertise-IP patch applies. This can't be a
+// hard rejection: the webhook has no way to confirm the customer's actual
+// NAD/subnet is (or isn't) routable from a role without network.sriov.
+func milvusWarnSRIOVTopology(db *olddbapi.Milvus) admission.Warnings {
+	if !db.IsDistributed() {
+		return nil
+	}
+	withSRIOV := db.DistributedNodeRolesWithSRIOV()
+	if len(withSRIOV) == 0 || len(withSRIOV) == 5 {
+		return nil
+	}
+
+	allRoles := []olddbapi.MilvusNodeRoleType{
+		olddbapi.MilvusNodeRoleMixCoord, olddbapi.MilvusNodeRoleDataNode, olddbapi.MilvusNodeRoleProxy,
+		olddbapi.MilvusNodeRoleQueryNode, olddbapi.MilvusNodeRoleStreamingNode,
+	}
+	withSet := make(map[olddbapi.MilvusNodeRoleType]bool, len(withSRIOV))
+	for _, r := range withSRIOV {
+		withSet[r] = true
+	}
+	var missing []string
+	for _, r := range allRoles {
+		if !withSet[r] {
+			missing = append(missing, string(r))
+		}
+	}
+
+	return admission.Warnings{fmt.Sprintf(
+		"spec.network.sriov is set on some Distributed roles but not %v; every role dials, or is "+
+			"dialed by, at least one other role directly by its advertised address, so these roles may "+
+			"be unable to reach, or be reached by, the roles that do have it once the advertise-IP patch "+
+			"applies. Set spec.network.sriov on all five Distributed roles (mixcoord, datanode, proxy, "+
+			"querynode, streamingnode), or none.", missing,
+	)}
+}
+
+// milvusValidateNodeGroups rejects duplicate group names within a single
+// Distributed role's spec.topology.distributed.<role>.groups -- the PetSet
+// name and label selector are both derived from (role, group name)
+// (design doc § 13.5), so a collision would mean two groups fighting over
+// the same PetSet/pods.
+func milvusValidateNodeGroups(db *olddbapi.Milvus) error {
+	if !db.IsDistributed() {
+		return nil
+	}
+	for _, nodeType := range []olddbapi.MilvusNodeRoleType{
+		olddbapi.MilvusNodeRoleMixCoord, olddbapi.MilvusNodeRoleDataNode, olddbapi.MilvusNodeRoleProxy,
+		olddbapi.MilvusNodeRoleQueryNode, olddbapi.MilvusNodeRoleStreamingNode,
+	} {
+		seen := map[string]bool{}
+		for _, group := range db.GetNodeGroups(nodeType) {
+			if group.Name == "" {
+				return fmt.Errorf("topology.distributed.%s.groups[]: group name must not be empty", nodeType)
+			}
+			// PetSetNameForGroup feeds group.Name straight into
+			// meta_util.NameWithSuffix to build the child PetSet's name --
+			// unlike a Kubernetes object name, that helper does not itself
+			// reject characters (e.g. "_") that are invalid in a PetSet/pod
+			// name, so an otherwise-valid string here can still produce a
+			// name Kubernetes rejects at PetSet-creation time instead of at
+			// admission.
+			if errs := validation.IsDNS1123Label(group.Name); len(errs) > 0 {
+				return fmt.Errorf("topology.distributed.%s.groups[]: invalid group name %q: %s", nodeType, group.Name, strings.Join(errs, "; "))
+			}
+			if seen[group.Name] {
+				return fmt.Errorf("topology.distributed.%s.groups[]: duplicate group name %q", nodeType, group.Name)
+			}
+			seen[group.Name] = true
+		}
+	}
+	return nil
 }
 
 func milvusValidateVolumes(podTemplate *ofstv2.PodTemplateSpec) error {
@@ -269,6 +528,10 @@ var forbiddenMilvusEnvVars = []string{
 	kubedb.MinioAccessKey,
 	kubedb.MinioSecretKeyName,
 	kubedb.MinioSecretKey,
+	kubedb.MinioBucketName,
+	kubedb.MinioBucketKey,
+	kubedb.MinioPortKey,
+	kubedb.MinioPortName,
 	kubedb.EtcdEndpointsName,
 }
 

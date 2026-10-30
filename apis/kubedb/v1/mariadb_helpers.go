@@ -347,6 +347,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mdVersion.Spec.SecurityContext.RunAsUser
 		}
+		apis.SetDefaultResourceLimits(&m.Spec.Monitor.Prometheus.Exporter.Resources, kubedb.DefaultExporterResource)
 	}
 	if m.IsCluster() && m.IsMariaDBReplication() {
 		m.SetDefaultsMaxscale(mdVersion, m.Spec.Topology.MaxScale)
@@ -534,6 +535,7 @@ func (m *MariaDB) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTempl
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
 		}
 	}
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
 
 func (m *MariaDB) setMaxscaleDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
@@ -546,6 +548,7 @@ func (m *MariaDB) setMaxscaleDefaultContainerResourceLimits(podTemplate *ofstv2.
 	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 	}
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
 
 func (m *MariaDB) SetHealthCheckerDefaults() {
@@ -621,4 +624,8 @@ func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {
 
 func (m *MariaDB) CertFilePath(certAlias MariaDBCertificateAlias, certFileName string) string {
 	return filepath.Join(m.CertMountPath(certAlias), certFileName)
+}
+
+func (m *MariaDB) GetDeletionPolicy() string {
+	return string(m.Spec.DeletionPolicy)
 }

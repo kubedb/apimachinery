@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchSchemaOverviewLister helps list ElasticsearchSchemaOverviews.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchSchemaOverviewLister interface {
 	// List lists all ElasticsearchSchemaOverviews in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchSchemaOverview, err error)
 	// ElasticsearchSchemaOverviews returns an object that can list and get ElasticsearchSchemaOverviews.
 	ElasticsearchSchemaOverviews(namespace string) ElasticsearchSchemaOverviewNamespaceLister
 	ElasticsearchSchemaOverviewListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchSchemaOverviewLister interface {
 
 // elasticsearchSchemaOverviewLister implements the ElasticsearchSchemaOverviewLister interface.
 type elasticsearchSchemaOverviewLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchSchemaOverview]
 }
 
 // NewElasticsearchSchemaOverviewLister returns a new ElasticsearchSchemaOverviewLister.
 func NewElasticsearchSchemaOverviewLister(indexer cache.Indexer) ElasticsearchSchemaOverviewLister {
-	return &elasticsearchSchemaOverviewLister{indexer: indexer}
-}
-
-// List lists all ElasticsearchSchemaOverviews in the indexer.
-func (s *elasticsearchSchemaOverviewLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchSchemaOverview, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchSchemaOverview))
-	})
-	return ret, err
+	return &elasticsearchSchemaOverviewLister{listers.New[*uiv1alpha1.ElasticsearchSchemaOverview](indexer, uiv1alpha1.Resource("elasticsearchschemaoverview"))}
 }
 
 // ElasticsearchSchemaOverviews returns an object that can list and get ElasticsearchSchemaOverviews.
 func (s *elasticsearchSchemaOverviewLister) ElasticsearchSchemaOverviews(namespace string) ElasticsearchSchemaOverviewNamespaceLister {
-	return elasticsearchSchemaOverviewNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchSchemaOverviewNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ElasticsearchSchemaOverview](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchSchemaOverviewNamespaceLister helps list and get ElasticsearchSchemaOverviews.
@@ -65,36 +57,15 @@ func (s *elasticsearchSchemaOverviewLister) ElasticsearchSchemaOverviews(namespa
 type ElasticsearchSchemaOverviewNamespaceLister interface {
 	// List lists all ElasticsearchSchemaOverviews in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchSchemaOverview, err error)
 	// Get retrieves the ElasticsearchSchemaOverview from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ElasticsearchSchemaOverview, error)
+	Get(name string) (*uiv1alpha1.ElasticsearchSchemaOverview, error)
 	ElasticsearchSchemaOverviewNamespaceListerExpansion
 }
 
 // elasticsearchSchemaOverviewNamespaceLister implements the ElasticsearchSchemaOverviewNamespaceLister
 // interface.
 type elasticsearchSchemaOverviewNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ElasticsearchSchemaOverviews in the indexer for a given namespace.
-func (s elasticsearchSchemaOverviewNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchSchemaOverview, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchSchemaOverview))
-	})
-	return ret, err
-}
-
-// Get retrieves the ElasticsearchSchemaOverview from the indexer for a given namespace and name.
-func (s elasticsearchSchemaOverviewNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchSchemaOverview, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("elasticsearchschemaoverview"), name)
-	}
-	return obj.(*v1alpha1.ElasticsearchSchemaOverview), nil
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchSchemaOverview]
 }

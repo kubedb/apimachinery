@@ -93,16 +93,18 @@ const (
 	ReconfigureTLSSucceeded = "ReconfigureTLSSucceeded"
 	ReconfigureTLSFailed    = "ReconfigureTLSFailed"
 
-	RemoveTLS                  = "RemoveTLS"
-	RemoveTLSSucceeded         = "RemoveTLSSucceeded"
-	RemoveTLSFailed            = "RemoveTLSFailed"
-	AddTLS                     = "AddTLS"
-	AddTLSSucceeded            = "AddTLSSucceeded"
-	AddTLSFailed               = "AddTLSFailed"
-	Issuing                    = "Issuing"
-	IssueCertificatesSucceeded = "IssueCertificatesSucceeded"
-	CertificateSynced          = "CertificateSynced"
-	IssueCertificatesFailed    = "IssueCertificatesFailed"
+	RemoveTLS                      = "RemoveTLS"
+	RemoveTLSSucceeded             = "RemoveTLSSucceeded"
+	RemoveTLSFailed                = "RemoveTLSFailed"
+	AddTLS                         = "AddTLS"
+	AddTLSSucceeded                = "AddTLSSucceeded"
+	AddTLSFailed                   = "AddTLSFailed"
+	Issuing                        = "Issuing"
+	IssueCertificatesSucceeded     = "IssueCertificatesSucceeded"
+	CertificateSynced              = "CertificateSynced"
+	IssueCertificatesFailed        = "IssueCertificatesFailed"
+	IssueGrpcCertificatesSucceeded = "IssueGrpcCertificatesSucceeded"
+	GrpcCertificateSynced          = "GrpcCertificateSynced"
 )
 
 // RotateAuth
@@ -331,6 +333,29 @@ const (
 	DBPatchSucceeded             = "DBPatchSucceeded"
 	RestartMaxscale              = "RestartMaxscale"
 	RestartMaxscalePodsSucceeded = "RestartMaxscalePodsSucceeded"
+
+	ArchiverRestoreRetainPV     = "ArchiverRestoreRetainPV"
+	ArchiverRestoreWipeVolumes  = "ArchiverRestoreWipeVolumes"
+	ArchiverRestoreTriggered    = "ArchiverRestoreTriggered"
+	ArchiverRestoreDataRestored = "ArchiverRestoreDataRestored"
+
+	ArchiverRestoreRetainPVSucceeded      = "ArchiverRestoreRetainPVSucceeded"
+	ArchiverRestoreWipeVolumesSucceeded   = "ArchiverRestoreWipeVolumesSucceeded"
+	ArchiverRestoreTriggeredSucceeded     = "ArchiverRestoreTriggeredSucceeded"
+	ArchiverRestoreDataRestoredSucceeded  = "ArchiverRestoreDataRestoredSucceeded"
+	ArchiverRestoreDatabaseReadySucceeded = "ArchiverRestoreDatabaseReadySucceeded"
+
+	ArchiverRestoreRetainPVFailed      = "ArchiverRestoreRetainPVFailed"
+	ArchiverRestoreWipeVolumesFailed   = "ArchiverRestoreWipeVolumesFailed"
+	ArchiverRestoreTriggeredFailed     = "ArchiverRestoreTriggeredFailed"
+	ArchiverRestoreDataRestoredFailed  = "ArchiverRestoreDataRestoredFailed"
+	ArchiverRestoreDatabaseReadyFailed = "ArchiverRestoreDatabaseReadyFailed"
+
+	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
+
+	ArchiverRestoreSuspendArchiver          = "ArchiverRestoreSuspendArchiver"
+	ArchiverRestoreSuspendArchiverSucceeded = "ArchiverRestoreSuspendArchiverSucceeded"
+	ArchiverRestoreSuspendArchiverFailed    = "ArchiverRestoreSuspendArchiverFailed"
 )
 
 // Postgres Constants
@@ -466,4 +491,45 @@ const (
 // Neo4j Constanst
 const (
 	UpdateServerPVCs = "UpdateServerPVCs"
+)
+
+// Etcd Constants
+const (
+	// membership management steps
+	EtcdMemberAdded     = "EtcdMemberAdded"
+	EtcdLearnerPromoted = "EtcdLearnerPromoted"
+	EtcdMemberRemoved   = "EtcdMemberRemoved"
+
+	// maintenance steps
+	EtcdLeaderMoved  = "EtcdLeaderMoved"
+	EtcdDefragmented = "EtcdDefragmented"
+	EtcdCompacted    = "EtcdCompacted"
+	EtcdAlarmCleared = "EtcdAlarmCleared"
+
+	// generic per-db steps
+	ReadyEtcdPod        = "ReadyEtcdPod"
+	UpdateEtcdPetSet    = "UpdateEtcdPetSet"
+	UpdateEtcdNodePVCs  = "UpdateEtcdNodePVCs"
+	MigrateEtcdStorage  = "MigrateEtcdStorage"
+	RestartEtcdPods     = "RestartEtcdPods"
+	EtcdClusterHealthy  = "EtcdClusterHealthy"
+	EtcdMemberListReady = "EtcdMemberListReady"
+
+	// Per-step conditions of a RecoverFromQuorumLoss ops request, in the order they
+	// are reached. Each one is also the resume point: a step whose condition is
+	// already True is skipped when the ops-manager re-enters the request.
+	EtcdQuorumLossSurvivorResolved    = "EtcdQuorumLossSurvivorResolved"
+	EtcdQuorumLossPVCRelocated        = "EtcdQuorumLossPVCRelocated"
+	EtcdQuorumLossStaleMembersRemoved = "EtcdQuorumLossStaleMembersRemoved"
+	EtcdQuorumLossForceNewClusterBoot = "EtcdQuorumLossForceNewClusterBoot"
+	EtcdQuorumLossSingleMemberHealthy = "EtcdQuorumLossSingleMemberHealthy"
+	EtcdQuorumLossFlagRemoved         = "EtcdQuorumLossFlagRemoved"
+	EtcdQuorumLossPetSetRestored      = "EtcdQuorumLossPetSetRestored"
+
+	// Per-step conditions of a Restore ops request (in-place restore into an
+	// existing Etcd), in the order they are reached.
+	EtcdRestorePetSetDeleted   = "EtcdRestorePetSetDeleted"
+	EtcdRestoreSeedPVCWiped    = "EtcdRestoreSeedPVCWiped"
+	EtcdRestoreSnapshotApplied = "EtcdRestoreSnapshotApplied"
+	EtcdRestorePetSetRestored  = "EtcdRestorePetSetRestored"
 )

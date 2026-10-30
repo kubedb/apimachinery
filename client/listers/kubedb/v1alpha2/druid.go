@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DruidLister helps list Druids.
@@ -31,7 +31,7 @@ import (
 type DruidLister interface {
 	// List lists all Druids in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Druid, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Druid, err error)
 	// Druids returns an object that can list and get Druids.
 	Druids(namespace string) DruidNamespaceLister
 	DruidListerExpansion
@@ -39,25 +39,17 @@ type DruidLister interface {
 
 // druidLister implements the DruidLister interface.
 type druidLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Druid]
 }
 
 // NewDruidLister returns a new DruidLister.
 func NewDruidLister(indexer cache.Indexer) DruidLister {
-	return &druidLister{indexer: indexer}
-}
-
-// List lists all Druids in the indexer.
-func (s *druidLister) List(selector labels.Selector) (ret []*v1alpha2.Druid, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Druid))
-	})
-	return ret, err
+	return &druidLister{listers.New[*kubedbv1alpha2.Druid](indexer, kubedbv1alpha2.Resource("druid"))}
 }
 
 // Druids returns an object that can list and get Druids.
 func (s *druidLister) Druids(namespace string) DruidNamespaceLister {
-	return druidNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return druidNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Druid](s.ResourceIndexer, namespace)}
 }
 
 // DruidNamespaceLister helps list and get Druids.
@@ -65,36 +57,15 @@ func (s *druidLister) Druids(namespace string) DruidNamespaceLister {
 type DruidNamespaceLister interface {
 	// List lists all Druids in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Druid, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Druid, err error)
 	// Get retrieves the Druid from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Druid, error)
+	Get(name string) (*kubedbv1alpha2.Druid, error)
 	DruidNamespaceListerExpansion
 }
 
 // druidNamespaceLister implements the DruidNamespaceLister
 // interface.
 type druidNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Druids in the indexer for a given namespace.
-func (s druidNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Druid, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Druid))
-	})
-	return ret, err
-}
-
-// Get retrieves the Druid from the indexer for a given namespace and name.
-func (s druidNamespaceLister) Get(name string) (*v1alpha2.Druid, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("druid"), name)
-	}
-	return obj.(*v1alpha2.Druid), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Druid]
 }

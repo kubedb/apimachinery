@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeElasticsearchSchemaOverviews implements ElasticsearchSchemaOverviewInterface
-type FakeElasticsearchSchemaOverviews struct {
+// fakeElasticsearchSchemaOverviews implements ElasticsearchSchemaOverviewInterface
+type fakeElasticsearchSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.ElasticsearchSchemaOverview, *v1alpha1.ElasticsearchSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var elasticsearchschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("elasticsearchschemaoverviews")
-
-var elasticsearchschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchSchemaOverview")
-
-// Get takes name of the elasticsearchSchemaOverview, and returns the corresponding elasticsearchSchemaOverview object, and an error if there is any.
-func (c *FakeElasticsearchSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(elasticsearchschemaoverviewsResource, c.ns, name), &v1alpha1.ElasticsearchSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakeElasticsearchSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.ElasticsearchSchemaOverviewInterface {
+	return &fakeElasticsearchSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.ElasticsearchSchemaOverview, *v1alpha1.ElasticsearchSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("elasticsearchschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchSchemaOverview"),
+			func() *v1alpha1.ElasticsearchSchemaOverview { return &v1alpha1.ElasticsearchSchemaOverview{} },
+			func() *v1alpha1.ElasticsearchSchemaOverviewList { return &v1alpha1.ElasticsearchSchemaOverviewList{} },
+			func(dst, src *v1alpha1.ElasticsearchSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ElasticsearchSchemaOverviewList) []*v1alpha1.ElasticsearchSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ElasticsearchSchemaOverviewList, items []*v1alpha1.ElasticsearchSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ElasticsearchSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of ElasticsearchSchemaOverviews that match those selectors.
-func (c *FakeElasticsearchSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ElasticsearchSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(elasticsearchschemaoverviewsResource, elasticsearchschemaoverviewsKind, c.ns, opts), &v1alpha1.ElasticsearchSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ElasticsearchSchemaOverviewList{ListMeta: obj.(*v1alpha1.ElasticsearchSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ElasticsearchSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested elasticsearchSchemaOverviews.
-func (c *FakeElasticsearchSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(elasticsearchschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a elasticsearchSchemaOverview and creates it.  Returns the server's representation of the elasticsearchSchemaOverview, and an error, if there is any.
-func (c *FakeElasticsearchSchemaOverviews) Create(ctx context.Context, elasticsearchSchemaOverview *v1alpha1.ElasticsearchSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.ElasticsearchSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(elasticsearchschemaoverviewsResource, c.ns, elasticsearchSchemaOverview), &v1alpha1.ElasticsearchSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchSchemaOverview), err
-}
-
-// Update takes the representation of a elasticsearchSchemaOverview and updates it. Returns the server's representation of the elasticsearchSchemaOverview, and an error, if there is any.
-func (c *FakeElasticsearchSchemaOverviews) Update(ctx context.Context, elasticsearchSchemaOverview *v1alpha1.ElasticsearchSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.ElasticsearchSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(elasticsearchschemaoverviewsResource, c.ns, elasticsearchSchemaOverview), &v1alpha1.ElasticsearchSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchSchemaOverview), err
-}
-
-// Delete takes name of the elasticsearchSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakeElasticsearchSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(elasticsearchschemaoverviewsResource, c.ns, name, opts), &v1alpha1.ElasticsearchSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeElasticsearchSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(elasticsearchschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ElasticsearchSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched elasticsearchSchemaOverview.
-func (c *FakeElasticsearchSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ElasticsearchSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(elasticsearchschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ElasticsearchSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchSchemaOverview), err
 }

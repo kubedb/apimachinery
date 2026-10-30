@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ZooKeeperLister helps list ZooKeepers.
@@ -31,7 +31,7 @@ import (
 type ZooKeeperLister interface {
 	// List lists all ZooKeepers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.ZooKeeper, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.ZooKeeper, err error)
 	// ZooKeepers returns an object that can list and get ZooKeepers.
 	ZooKeepers(namespace string) ZooKeeperNamespaceLister
 	ZooKeeperListerExpansion
@@ -39,25 +39,17 @@ type ZooKeeperLister interface {
 
 // zooKeeperLister implements the ZooKeeperLister interface.
 type zooKeeperLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.ZooKeeper]
 }
 
 // NewZooKeeperLister returns a new ZooKeeperLister.
 func NewZooKeeperLister(indexer cache.Indexer) ZooKeeperLister {
-	return &zooKeeperLister{indexer: indexer}
-}
-
-// List lists all ZooKeepers in the indexer.
-func (s *zooKeeperLister) List(selector labels.Selector) (ret []*v1alpha2.ZooKeeper, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.ZooKeeper))
-	})
-	return ret, err
+	return &zooKeeperLister{listers.New[*kubedbv1alpha2.ZooKeeper](indexer, kubedbv1alpha2.Resource("zookeeper"))}
 }
 
 // ZooKeepers returns an object that can list and get ZooKeepers.
 func (s *zooKeeperLister) ZooKeepers(namespace string) ZooKeeperNamespaceLister {
-	return zooKeeperNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return zooKeeperNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.ZooKeeper](s.ResourceIndexer, namespace)}
 }
 
 // ZooKeeperNamespaceLister helps list and get ZooKeepers.
@@ -65,36 +57,15 @@ func (s *zooKeeperLister) ZooKeepers(namespace string) ZooKeeperNamespaceLister 
 type ZooKeeperNamespaceLister interface {
 	// List lists all ZooKeepers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.ZooKeeper, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.ZooKeeper, err error)
 	// Get retrieves the ZooKeeper from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.ZooKeeper, error)
+	Get(name string) (*kubedbv1alpha2.ZooKeeper, error)
 	ZooKeeperNamespaceListerExpansion
 }
 
 // zooKeeperNamespaceLister implements the ZooKeeperNamespaceLister
 // interface.
 type zooKeeperNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ZooKeepers in the indexer for a given namespace.
-func (s zooKeeperNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.ZooKeeper, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.ZooKeeper))
-	})
-	return ret, err
-}
-
-// Get retrieves the ZooKeeper from the indexer for a given namespace and name.
-func (s zooKeeperNamespaceLister) Get(name string) (*v1alpha2.ZooKeeper, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("zookeeper"), name)
-	}
-	return obj.(*v1alpha2.ZooKeeper), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.ZooKeeper]
 }

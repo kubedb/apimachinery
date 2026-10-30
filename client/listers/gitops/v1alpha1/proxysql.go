@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ProxySQLLister helps list ProxySQLs.
@@ -31,7 +31,7 @@ import (
 type ProxySQLLister interface {
 	// List lists all ProxySQLs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQL, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.ProxySQL, err error)
 	// ProxySQLs returns an object that can list and get ProxySQLs.
 	ProxySQLs(namespace string) ProxySQLNamespaceLister
 	ProxySQLListerExpansion
@@ -39,25 +39,17 @@ type ProxySQLLister interface {
 
 // proxySQLLister implements the ProxySQLLister interface.
 type proxySQLLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.ProxySQL]
 }
 
 // NewProxySQLLister returns a new ProxySQLLister.
 func NewProxySQLLister(indexer cache.Indexer) ProxySQLLister {
-	return &proxySQLLister{indexer: indexer}
-}
-
-// List lists all ProxySQLs in the indexer.
-func (s *proxySQLLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQL, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQL))
-	})
-	return ret, err
+	return &proxySQLLister{listers.New[*gitopsv1alpha1.ProxySQL](indexer, gitopsv1alpha1.Resource("proxysql"))}
 }
 
 // ProxySQLs returns an object that can list and get ProxySQLs.
 func (s *proxySQLLister) ProxySQLs(namespace string) ProxySQLNamespaceLister {
-	return proxySQLNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return proxySQLNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.ProxySQL](s.ResourceIndexer, namespace)}
 }
 
 // ProxySQLNamespaceLister helps list and get ProxySQLs.
@@ -65,36 +57,15 @@ func (s *proxySQLLister) ProxySQLs(namespace string) ProxySQLNamespaceLister {
 type ProxySQLNamespaceLister interface {
 	// List lists all ProxySQLs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQL, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.ProxySQL, err error)
 	// Get retrieves the ProxySQL from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ProxySQL, error)
+	Get(name string) (*gitopsv1alpha1.ProxySQL, error)
 	ProxySQLNamespaceListerExpansion
 }
 
 // proxySQLNamespaceLister implements the ProxySQLNamespaceLister
 // interface.
 type proxySQLNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ProxySQLs in the indexer for a given namespace.
-func (s proxySQLNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQL, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQL))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProxySQL from the indexer for a given namespace and name.
-func (s proxySQLNamespaceLister) Get(name string) (*v1alpha1.ProxySQL, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("proxysql"), name)
-	}
-	return obj.(*v1alpha1.ProxySQL), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.ProxySQL]
 }

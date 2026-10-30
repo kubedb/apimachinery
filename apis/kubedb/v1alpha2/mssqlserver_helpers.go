@@ -76,11 +76,6 @@ func (m *MSSQLServer) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", m.ResourcePlural(), kubedb.GroupName)
 }
 
-// Owner returns owner reference to resources
-func (m *MSSQLServer) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
-}
-
 func (m *MSSQLServer) OffshootName() string {
 	return m.Name
 }
@@ -89,8 +84,8 @@ func (m *MSSQLServer) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m *MSSQLServer) SecondaryServiceName() string {
-	return meta_util.NameWithPrefix(m.ServiceName(), string(SecondaryServiceAlias))
+func (m *MSSQLServer) StandbyServiceName() string {
+	return meta_util.NameWithPrefix(m.ServiceName(), string(StandbyServiceAlias))
 }
 
 func (m *MSSQLServer) GoverningServiceName() string {
@@ -558,6 +553,8 @@ func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTem
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
 		}
 	}
+
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
 
 func (m *MSSQLServer) SetArbiterDefault() {
@@ -666,4 +663,12 @@ func SecondaryAccessSQL(mode SecondaryAccessMode) string {
 		// Fallback to NO if unset or unknown
 		return "NO"
 	}
+}
+
+func (m *MSSQLServer) GetDeletionPolicy() string {
+	return string(m.Spec.DeletionPolicy)
+}
+
+func (m *MSSQLServer) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
 }

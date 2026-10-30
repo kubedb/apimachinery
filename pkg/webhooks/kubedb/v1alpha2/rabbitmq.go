@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,7 +43,7 @@ import (
 // SetupRabbitMQWebhookWithManager registers the webhook for RabbitMQ in the manager.
 func SetupRabbitMQWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.RabbitMQ{}).
-		WithValidator(&RabbitMQCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RabbitMQCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.DashboardServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RabbitMQCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +62,9 @@ var rabbitmqlog = logf.Log.WithName("rabbitmq-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *RabbitMQCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return fmt.Errorf("expected an RabbitMQ object but got %T", obj)
@@ -76,6 +81,12 @@ var _ webhook.CustomValidator = &RabbitMQCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", obj)
@@ -86,6 +97,9 @@ func (w *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *RabbitMQCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", newObj)

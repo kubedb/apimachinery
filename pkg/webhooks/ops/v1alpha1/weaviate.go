@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -165,6 +166,13 @@ func (w *WeaviateOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Wea
 				err.Error()))
 		}
 
+	case opsapi.WeaviateOpsRequestTypeUpdateVersion:
+		if err := w.validateWeaviateUpdateVersionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+
 	case opsapi.WeaviateOpsRequestTypeVerticalScaling:
 		if err := w.validateWeaviateVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -252,7 +260,8 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateReconfigurationOpsRequ
 		}, &secret)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced backup config secret %s/%s not found",
+				return fmt.Errorf(
+					"referenced backup config secret %s/%s not found",
 					req.Namespace,
 					reconfigureSpec.BackupConfigSecret.Name,
 				)
@@ -299,17 +308,7 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateRotateAuthOpsRequest(d
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}
@@ -368,6 +367,23 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateVerticalScalingOpsRequ
 
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateUpdateVersionOpsRequest(db *dbapi.Weaviate, req *opsapi.WeaviateOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindWeaviateVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil

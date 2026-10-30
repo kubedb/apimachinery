@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // HanaDBVersions.
 type HanaDBVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.HanaDBVersionLister
+	Lister() catalogv1alpha1.HanaDBVersionLister
 }
 
 type hanaDBVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredHanaDBVersionInformer(client versioned.Interface, resyncPeriod t
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().HanaDBVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().HanaDBVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().HanaDBVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().HanaDBVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().HanaDBVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().HanaDBVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.HanaDBVersion{},
+		&apiscatalogv1alpha1.HanaDBVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *hanaDBVersionInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *hanaDBVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.HanaDBVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.HanaDBVersion{}, f.defaultInformer)
 }
 
-func (f *hanaDBVersionInformer) Lister() v1alpha1.HanaDBVersionLister {
-	return v1alpha1.NewHanaDBVersionLister(f.Informer().GetIndexer())
+func (f *hanaDBVersionInformer) Lister() catalogv1alpha1.HanaDBVersionLister {
+	return catalogv1alpha1.NewHanaDBVersionLister(f.Informer().GetIndexer())
 }

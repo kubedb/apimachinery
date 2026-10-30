@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMilvusAutoscalers implements MilvusAutoscalerInterface
-type FakeMilvusAutoscalers struct {
+// fakeMilvusAutoscalers implements MilvusAutoscalerInterface
+type fakeMilvusAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MilvusAutoscaler, *v1alpha1.MilvusAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var milvusautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("milvusautoscalers")
-
-var milvusautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MilvusAutoscaler")
-
-// Get takes name of the milvusAutoscaler, and returns the corresponding milvusAutoscaler object, and an error if there is any.
-func (c *FakeMilvusAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MilvusAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(milvusautoscalersResource, c.ns, name), &v1alpha1.MilvusAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMilvusAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.MilvusAutoscalerInterface {
+	return &fakeMilvusAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.MilvusAutoscaler, *v1alpha1.MilvusAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("milvusautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MilvusAutoscaler"),
+			func() *v1alpha1.MilvusAutoscaler { return &v1alpha1.MilvusAutoscaler{} },
+			func() *v1alpha1.MilvusAutoscalerList { return &v1alpha1.MilvusAutoscalerList{} },
+			func(dst, src *v1alpha1.MilvusAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MilvusAutoscalerList) []*v1alpha1.MilvusAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MilvusAutoscalerList, items []*v1alpha1.MilvusAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MilvusAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of MilvusAutoscalers that match those selectors.
-func (c *FakeMilvusAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MilvusAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(milvusautoscalersResource, milvusautoscalersKind, c.ns, opts), &v1alpha1.MilvusAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MilvusAutoscalerList{ListMeta: obj.(*v1alpha1.MilvusAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MilvusAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested milvusAutoscalers.
-func (c *FakeMilvusAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(milvusautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a milvusAutoscaler and creates it.  Returns the server's representation of the milvusAutoscaler, and an error, if there is any.
-func (c *FakeMilvusAutoscalers) Create(ctx context.Context, milvusAutoscaler *v1alpha1.MilvusAutoscaler, opts v1.CreateOptions) (result *v1alpha1.MilvusAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(milvusautoscalersResource, c.ns, milvusAutoscaler), &v1alpha1.MilvusAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusAutoscaler), err
-}
-
-// Update takes the representation of a milvusAutoscaler and updates it. Returns the server's representation of the milvusAutoscaler, and an error, if there is any.
-func (c *FakeMilvusAutoscalers) Update(ctx context.Context, milvusAutoscaler *v1alpha1.MilvusAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.MilvusAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(milvusautoscalersResource, c.ns, milvusAutoscaler), &v1alpha1.MilvusAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMilvusAutoscalers) UpdateStatus(ctx context.Context, milvusAutoscaler *v1alpha1.MilvusAutoscaler, opts v1.UpdateOptions) (*v1alpha1.MilvusAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(milvusautoscalersResource, "status", c.ns, milvusAutoscaler), &v1alpha1.MilvusAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusAutoscaler), err
-}
-
-// Delete takes name of the milvusAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeMilvusAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(milvusautoscalersResource, c.ns, name, opts), &v1alpha1.MilvusAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMilvusAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(milvusautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MilvusAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched milvusAutoscaler.
-func (c *FakeMilvusAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MilvusAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(milvusautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.MilvusAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusAutoscaler), err
 }

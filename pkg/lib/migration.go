@@ -123,7 +123,8 @@ func CreatePVCMounterPod(client kubernetes.Interface, dbPod *core.Pod, objMeta m
 						else
 							echo "PVC is NOT mounted!";
 							exit 1;
-						fi`, pvcMounterMountPath),
+						fi`, pvcMounterMountPath,
+						),
 					},
 					VolumeMounts: []core.VolumeMount{
 						{
@@ -182,7 +183,8 @@ func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMet
 								 else
 								   echo "Rsync failed!"
 								   exit 1
-								 fi`, migratorJobSourceMountPath, migratorJobDestinationMountPath),
+								 fi`, migratorJobSourceMountPath, migratorJobDestinationMountPath,
+								),
 							},
 							VolumeMounts: []core.VolumeMount{
 								{

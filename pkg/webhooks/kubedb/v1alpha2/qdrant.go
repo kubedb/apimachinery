@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,7 +43,7 @@ import (
 // SetupQdrantWebhookWithManager registers the webhook for Qdrant in the manager.
 func SetupQdrantWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Qdrant{}).
-		WithValidator(&QdrantCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&QdrantCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&QdrantCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -60,6 +62,9 @@ var qdrantlog = logf.Log.WithName("qdrant-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Qdrant)
 	if !ok {
 		return fmt.Errorf("expected a Qdrant object, got a %T", obj)
@@ -75,6 +80,12 @@ var _ webhook.CustomValidator = &QdrantCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Qdrant)
 	if !ok {
 		return nil, fmt.Errorf("expected a Qdrant object, got a %T", obj)
@@ -91,6 +102,9 @@ func (w *QdrantCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Qdrant)
 	if !ok {
 		return nil, fmt.Errorf("expected a Qdrant object, got a %T", newObj)
@@ -163,7 +177,8 @@ func (w *QdrantCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Qdrant) field.
 
 	if db.Spec.TLS != nil && db.Spec.TLS.P2P != nil && *db.Spec.TLS.P2P {
 		if db.Spec.Mode == "" || db.Spec.Mode == olddbapi.QdrantStandalone {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("tls").Child("p2p"),
 					db.Spec.TLS.P2P,
@@ -171,6 +186,17 @@ func (w *QdrantCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Qdrant) field.
 				),
 			)
 		}
+	}
+
+	if db.Spec.DisableSecurity && db.Spec.JWTRBAC {
+		allErr = append(
+			allErr,
+			field.Invalid(
+				field.NewPath("spec").Child("jwtRbac"),
+				db.Spec.JWTRBAC,
+				"JWT RBAC requires disable security to be false",
+			),
+		)
 	}
 
 	if len(allErr) == 0 {

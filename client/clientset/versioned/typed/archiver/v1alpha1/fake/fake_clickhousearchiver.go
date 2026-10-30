@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeClickHouseArchivers implements ClickHouseArchiverInterface
-type FakeClickHouseArchivers struct {
+// fakeClickHouseArchivers implements ClickHouseArchiverInterface
+type fakeClickHouseArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.ClickHouseArchiver, *v1alpha1.ClickHouseArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var clickhousearchiversResource = v1alpha1.SchemeGroupVersion.WithResource("clickhousearchivers")
-
-var clickhousearchiversKind = v1alpha1.SchemeGroupVersion.WithKind("ClickHouseArchiver")
-
-// Get takes name of the clickHouseArchiver, and returns the corresponding clickHouseArchiver object, and an error if there is any.
-func (c *FakeClickHouseArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ClickHouseArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(clickhousearchiversResource, c.ns, name), &v1alpha1.ClickHouseArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeClickHouseArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.ClickHouseArchiverInterface {
+	return &fakeClickHouseArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.ClickHouseArchiver, *v1alpha1.ClickHouseArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("clickhousearchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("ClickHouseArchiver"),
+			func() *v1alpha1.ClickHouseArchiver { return &v1alpha1.ClickHouseArchiver{} },
+			func() *v1alpha1.ClickHouseArchiverList { return &v1alpha1.ClickHouseArchiverList{} },
+			func(dst, src *v1alpha1.ClickHouseArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ClickHouseArchiverList) []*v1alpha1.ClickHouseArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ClickHouseArchiverList, items []*v1alpha1.ClickHouseArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ClickHouseArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of ClickHouseArchivers that match those selectors.
-func (c *FakeClickHouseArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ClickHouseArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(clickhousearchiversResource, clickhousearchiversKind, c.ns, opts), &v1alpha1.ClickHouseArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ClickHouseArchiverList{ListMeta: obj.(*v1alpha1.ClickHouseArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ClickHouseArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested clickHouseArchivers.
-func (c *FakeClickHouseArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(clickhousearchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a clickHouseArchiver and creates it.  Returns the server's representation of the clickHouseArchiver, and an error, if there is any.
-func (c *FakeClickHouseArchivers) Create(ctx context.Context, clickHouseArchiver *v1alpha1.ClickHouseArchiver, opts v1.CreateOptions) (result *v1alpha1.ClickHouseArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(clickhousearchiversResource, c.ns, clickHouseArchiver), &v1alpha1.ClickHouseArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseArchiver), err
-}
-
-// Update takes the representation of a clickHouseArchiver and updates it. Returns the server's representation of the clickHouseArchiver, and an error, if there is any.
-func (c *FakeClickHouseArchivers) Update(ctx context.Context, clickHouseArchiver *v1alpha1.ClickHouseArchiver, opts v1.UpdateOptions) (result *v1alpha1.ClickHouseArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(clickhousearchiversResource, c.ns, clickHouseArchiver), &v1alpha1.ClickHouseArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeClickHouseArchivers) UpdateStatus(ctx context.Context, clickHouseArchiver *v1alpha1.ClickHouseArchiver, opts v1.UpdateOptions) (*v1alpha1.ClickHouseArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(clickhousearchiversResource, "status", c.ns, clickHouseArchiver), &v1alpha1.ClickHouseArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseArchiver), err
-}
-
-// Delete takes name of the clickHouseArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeClickHouseArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(clickhousearchiversResource, c.ns, name, opts), &v1alpha1.ClickHouseArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeClickHouseArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(clickhousearchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ClickHouseArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched clickHouseArchiver.
-func (c *FakeClickHouseArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ClickHouseArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(clickhousearchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.ClickHouseArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseArchiver), err
 }

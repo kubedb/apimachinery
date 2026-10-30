@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PerconaXtraDBVersions.
 type PerconaXtraDBVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PerconaXtraDBVersionLister
+	Lister() catalogv1alpha1.PerconaXtraDBVersionLister
 }
 
 type perconaXtraDBVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredPerconaXtraDBVersionInformer(client versioned.Interface, resyncP
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PerconaXtraDBVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PerconaXtraDBVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.PerconaXtraDBVersion{},
+		&apiscatalogv1alpha1.PerconaXtraDBVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *perconaXtraDBVersionInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *perconaXtraDBVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.PerconaXtraDBVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.PerconaXtraDBVersion{}, f.defaultInformer)
 }
 
-func (f *perconaXtraDBVersionInformer) Lister() v1alpha1.PerconaXtraDBVersionLister {
-	return v1alpha1.NewPerconaXtraDBVersionLister(f.Informer().GetIndexer())
+func (f *perconaXtraDBVersionInformer) Lister() catalogv1alpha1.PerconaXtraDBVersionLister {
+	return catalogv1alpha1.NewPerconaXtraDBVersionLister(f.Informer().GetIndexer())
 }

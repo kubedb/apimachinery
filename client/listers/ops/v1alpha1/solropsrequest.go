@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SolrOpsRequestLister helps list SolrOpsRequests.
@@ -31,7 +31,7 @@ import (
 type SolrOpsRequestLister interface {
 	// List lists all SolrOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SolrOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.SolrOpsRequest, err error)
 	// SolrOpsRequests returns an object that can list and get SolrOpsRequests.
 	SolrOpsRequests(namespace string) SolrOpsRequestNamespaceLister
 	SolrOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type SolrOpsRequestLister interface {
 
 // solrOpsRequestLister implements the SolrOpsRequestLister interface.
 type solrOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.SolrOpsRequest]
 }
 
 // NewSolrOpsRequestLister returns a new SolrOpsRequestLister.
 func NewSolrOpsRequestLister(indexer cache.Indexer) SolrOpsRequestLister {
-	return &solrOpsRequestLister{indexer: indexer}
-}
-
-// List lists all SolrOpsRequests in the indexer.
-func (s *solrOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.SolrOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SolrOpsRequest))
-	})
-	return ret, err
+	return &solrOpsRequestLister{listers.New[*opsv1alpha1.SolrOpsRequest](indexer, opsv1alpha1.Resource("solropsrequest"))}
 }
 
 // SolrOpsRequests returns an object that can list and get SolrOpsRequests.
 func (s *solrOpsRequestLister) SolrOpsRequests(namespace string) SolrOpsRequestNamespaceLister {
-	return solrOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return solrOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.SolrOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // SolrOpsRequestNamespaceLister helps list and get SolrOpsRequests.
@@ -65,36 +57,15 @@ func (s *solrOpsRequestLister) SolrOpsRequests(namespace string) SolrOpsRequestN
 type SolrOpsRequestNamespaceLister interface {
 	// List lists all SolrOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SolrOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.SolrOpsRequest, err error)
 	// Get retrieves the SolrOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SolrOpsRequest, error)
+	Get(name string) (*opsv1alpha1.SolrOpsRequest, error)
 	SolrOpsRequestNamespaceListerExpansion
 }
 
 // solrOpsRequestNamespaceLister implements the SolrOpsRequestNamespaceLister
 // interface.
 type solrOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all SolrOpsRequests in the indexer for a given namespace.
-func (s solrOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.SolrOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SolrOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the SolrOpsRequest from the indexer for a given namespace and name.
-func (s solrOpsRequestNamespaceLister) Get(name string) (*v1alpha1.SolrOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("solropsrequest"), name)
-	}
-	return obj.(*v1alpha1.SolrOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.SolrOpsRequest]
 }

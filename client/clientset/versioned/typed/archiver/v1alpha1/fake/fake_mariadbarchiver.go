@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBArchivers implements MariaDBArchiverInterface
-type FakeMariaDBArchivers struct {
+// fakeMariaDBArchivers implements MariaDBArchiverInterface
+type fakeMariaDBArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBArchiver, *v1alpha1.MariaDBArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var mariadbarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbarchivers")
-
-var mariadbarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBArchiver")
-
-// Get takes name of the mariaDBArchiver, and returns the corresponding mariaDBArchiver object, and an error if there is any.
-func (c *FakeMariaDBArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbarchiversResource, c.ns, name), &v1alpha1.MariaDBArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.MariaDBArchiverInterface {
+	return &fakeMariaDBArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBArchiver, *v1alpha1.MariaDBArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBArchiver"),
+			func() *v1alpha1.MariaDBArchiver { return &v1alpha1.MariaDBArchiver{} },
+			func() *v1alpha1.MariaDBArchiverList { return &v1alpha1.MariaDBArchiverList{} },
+			func(dst, src *v1alpha1.MariaDBArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBArchiverList) []*v1alpha1.MariaDBArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBArchiverList, items []*v1alpha1.MariaDBArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBArchivers that match those selectors.
-func (c *FakeMariaDBArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbarchiversResource, mariadbarchiversKind, c.ns, opts), &v1alpha1.MariaDBArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBArchiverList{ListMeta: obj.(*v1alpha1.MariaDBArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBArchivers.
-func (c *FakeMariaDBArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBArchiver and creates it.  Returns the server's representation of the mariaDBArchiver, and an error, if there is any.
-func (c *FakeMariaDBArchivers) Create(ctx context.Context, mariaDBArchiver *v1alpha1.MariaDBArchiver, opts v1.CreateOptions) (result *v1alpha1.MariaDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbarchiversResource, c.ns, mariaDBArchiver), &v1alpha1.MariaDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBArchiver), err
-}
-
-// Update takes the representation of a mariaDBArchiver and updates it. Returns the server's representation of the mariaDBArchiver, and an error, if there is any.
-func (c *FakeMariaDBArchivers) Update(ctx context.Context, mariaDBArchiver *v1alpha1.MariaDBArchiver, opts v1.UpdateOptions) (result *v1alpha1.MariaDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbarchiversResource, c.ns, mariaDBArchiver), &v1alpha1.MariaDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMariaDBArchivers) UpdateStatus(ctx context.Context, mariaDBArchiver *v1alpha1.MariaDBArchiver, opts v1.UpdateOptions) (*v1alpha1.MariaDBArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mariadbarchiversResource, "status", c.ns, mariaDBArchiver), &v1alpha1.MariaDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBArchiver), err
-}
-
-// Delete takes name of the mariaDBArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbarchiversResource, c.ns, name, opts), &v1alpha1.MariaDBArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBArchiver.
-func (c *FakeMariaDBArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBArchiver), err
 }

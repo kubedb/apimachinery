@@ -213,14 +213,14 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if reconfigureSpec.ReconfigurationSpec != nil && applyConfigExists(reconfigureSpec.ApplyConfig) {
+	if applyConfigExists(reconfigureSpec.ApplyConfig) {
 		_, ok := reconfigureSpec.ApplyConfig[kubedb.PgpoolCustomConfigFile]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile)
 		}
 	}
 
-	if (reconfigureSpec.ReconfigurationSpec == nil || (!reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig))) &&
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig) &&
 		reconfigureSpec.Backend == nil {
 		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` or `Backend` must be specified")
 	}
@@ -229,7 +229,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		return nil
 	}
 
-	removeCustomConfig := reconfigureSpec.ReconfigurationSpec != nil && reconfigureSpec.RemoveCustomConfig
+	removeCustomConfig := reconfigureSpec.RemoveCustomConfig
 
 	if removeCustomConfig && reconfigureSpec.Backend.Delete != nil {
 		return errors.New("`spec.configuration.backend.delete` cannot be specified when `spec.configuration.removeCustomConfig` is true")
