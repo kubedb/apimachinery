@@ -589,6 +589,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Database":                                            schema_apimachinery_apis_kubedb_v1_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Elasticsearch":                                       schema_apimachinery_apis_kubedb_v1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology":                        schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDCStatus":                               schema_apimachinery_apis_kubedb_v1_ElasticsearchDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDRPromotion":                            schema_apimachinery_apis_kubedb_v1_ElasticsearchDRPromotion(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDisasterRecoveryStatus":                 schema_apimachinery_apis_kubedb_v1_ElasticsearchDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec":                            schema_apimachinery_apis_kubedb_v1_ElasticsearchLicenseSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchList":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchNode":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchNode(ref),
@@ -34047,6 +34050,219 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref common.
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_ElasticsearchDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchDCStatus is one data center's local view inside a distributed Elasticsearch.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster (the same clusterName used in the PlacementPolicy distributionRule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd member and no Elasticsearch.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Writable is true when this DC is the active write cluster (it holds the leader indices).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nodesReady": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodesReady is the number of ready nodes in this DC's local Elasticsearch cluster.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"followLagOps": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FollowLagOps is this DC's cross-DC CCR follow lag behind the active DC, in operations (the leader_global_checkpoint minus follower_global_checkpoint gap from the CCR follow stats, taken as the max across this DC's follower indices). Nil when this DC is the active write cluster.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"healthy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Healthy reflects whether this DC's health Lease is fresh.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"writableObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WritableObservedAt is when Writable was last established by an actual write probe of this DC's cluster, as opposed to assumed from the Lease. Anything that reads Writable as evidence must pair it with a fresh stamp here.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"clusterUUID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterUUID is the Elasticsearch cluster UUID observed in this DC. Each Member DC runs an independent cluster, so the UUIDs differ.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedAt is when the hub last read this DC's cluster over REST. FollowLagOps, NodesReady and ClusterUUID are only as fresh as this stamp.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains the observation, for example a follower read error.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_ElasticsearchDRPromotion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchDRPromotion is the durable journal of a follower-index promotion.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetDC is the data center whose follower indices are being promoted.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the promotion phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"promotedIndices": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PromotedIndices lists the indices already converted to writable leader indices.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains a Blocked phase or the last error.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"startedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StartedAt is when this promotion started.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"targetDC"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_ElasticsearchDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchDisasterRecoveryStatus reports the per data center DC-DR view of a distributed Elasticsearch. Elasticsearch DC-DR is active/passive: exactly one data center is the write cluster, chosen by the dr-controlplane primary-DC Lease, and Cross-Cluster Replication (CCR) asynchronously follows its leader indices from the standby. This status reflects that decision on the single Elasticsearch object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that currently holds the primary DC Lease and takes client writes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member DC.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"protected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protected reports whether the active data center's protected indices currently have a complete, freshly observed CCR copy in a standby data center: every leader user index has an active follower and every follower shard has read from the leader recently.\n\nnil means unknown, which is NOT the same as false: the hub could not establish the protection state this cycle. Treat unknown as unprotected before a planned operation.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"protectionMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProtectionMessage explains the current value of Protected, for example which index has no follower or which standby has not read from the leader recently.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"promotion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Promotion records the progress of the most recent follower promotion, so a promotion that is interrupted (operator restart, timeout) resumes from the last completed step instead of repeating irreversible calls.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDRPromotion"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDCStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDRPromotion"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_ElasticsearchLicenseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34291,6 +34507,19 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 							Format:      "int32",
 						},
 					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed if set true, manifestwork objects will be created instead of raw resources. A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch cluster per Member data center for cross data center disaster recovery (DC-DR). The active cluster holds the leader indices and takes writes; every standby cluster follows it with Cross-Cluster Replication (CCR).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"podPlacementPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data center Elasticsearch clusters across data centers for DC-DR.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Elasticsearch topology for node specification",
@@ -34510,11 +34739,17 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchStatus(ref common.Reference
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed Elasticsearch.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDisasterRecoveryStatus"},
 	}
 }
 

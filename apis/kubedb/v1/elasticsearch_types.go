@@ -444,6 +444,61 @@ type ElasticsearchDisasterRecoveryStatus struct {
 	// LastTransitionTime is when ActiveDC last changed.
 	// +optional
 	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	// Protected reports whether the active data center's protected indices currently have a
+	// complete, freshly observed CCR copy in a standby data center: every leader user index has
+	// an active follower and every follower shard has read from the leader recently.
+	//
+	// nil means unknown, which is NOT the same as false: the hub could not establish the
+	// protection state this cycle. Treat unknown as unprotected before a planned operation.
+	// +optional
+	Protected *bool `json:"protected,omitempty"`
+
+	// ProtectionMessage explains the current value of Protected, for example which index has no
+	// follower or which standby has not read from the leader recently.
+	// +optional
+	ProtectionMessage string `json:"protectionMessage,omitempty"`
+
+	// Promotion records the progress of the most recent follower promotion, so a promotion that
+	// is interrupted (operator restart, timeout) resumes from the last completed step instead of
+	// repeating irreversible calls.
+	// +optional
+	Promotion *ElasticsearchDRPromotion `json:"promotion,omitempty"`
+}
+
+// ElasticsearchDRPromotionPhase is the phase of a follower-index promotion.
+type ElasticsearchDRPromotionPhase string
+
+const (
+	// ElasticsearchDRPromotionBlocked means promotion is waiting on a safety gate, such as an
+	// unverified data-loss window that needs an explicit acceptance.
+	ElasticsearchDRPromotionBlocked ElasticsearchDRPromotionPhase = "Blocked"
+	// ElasticsearchDRPromotionInProgress means the follower indices are being converted.
+	ElasticsearchDRPromotionInProgress ElasticsearchDRPromotionPhase = "InProgress"
+	// ElasticsearchDRPromotionSucceeded means every follower index was converted and verified.
+	ElasticsearchDRPromotionSucceeded ElasticsearchDRPromotionPhase = "Succeeded"
+)
+
+// ElasticsearchDRPromotion is the durable journal of a follower-index promotion.
+type ElasticsearchDRPromotion struct {
+	// TargetDC is the data center whose follower indices are being promoted.
+	TargetDC string `json:"targetDC"`
+
+	// Phase is the promotion phase.
+	// +optional
+	Phase ElasticsearchDRPromotionPhase `json:"phase,omitempty"`
+
+	// PromotedIndices lists the indices already converted to writable leader indices.
+	// +optional
+	PromotedIndices []string `json:"promotedIndices,omitempty"`
+
+	// Message explains a Blocked phase or the last error.
+	// +optional
+	Message string `json:"message,omitempty"`
+
+	// StartedAt is when this promotion started.
+	// +optional
+	StartedAt *metav1.Time `json:"startedAt,omitempty"`
 }
 
 // ElasticsearchDCStatus is one data center's local view inside a distributed Elasticsearch.
@@ -475,6 +530,26 @@ type ElasticsearchDCStatus struct {
 	// Healthy reflects whether this DC's health Lease is fresh.
 	// +optional
 	Healthy bool `json:"healthy,omitempty"`
+
+	// WritableObservedAt is when Writable was last established by an actual write probe of this
+	// DC's cluster, as opposed to assumed from the Lease. Anything that reads Writable as evidence
+	// must pair it with a fresh stamp here.
+	// +optional
+	WritableObservedAt *metav1.Time `json:"writableObservedAt,omitempty"`
+
+	// ClusterUUID is the Elasticsearch cluster UUID observed in this DC. Each Member DC runs an
+	// independent cluster, so the UUIDs differ.
+	// +optional
+	ClusterUUID string `json:"clusterUUID,omitempty"`
+
+	// ObservedAt is when the hub last read this DC's cluster over REST. FollowLagOps, NodesReady
+	// and ClusterUUID are only as fresh as this stamp.
+	// +optional
+	ObservedAt *metav1.Time `json:"observedAt,omitempty"`
+
+	// Message explains the observation, for example a follower read error.
+	// +optional
+	Message string `json:"message,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
