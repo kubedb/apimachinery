@@ -186,6 +186,11 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 		return err
 	}
 
+	err = w.validateDistributed(db, &esVersion)
+	if err != nil {
+		return err
+	}
+
 	err = w.validateLicense(db, &esVersion)
 	if err != nil {
 		return err
@@ -541,6 +546,33 @@ func (w *ElasticsearchCustomWebhook) validateSecureConfig(db *dbapi.Elasticsearc
 		if dbVersion.Major() < 7 || (dbVersion.Major() == 7 && dbVersion.Minor() < 9) {
 			return errors.Errorf("secureConfigSecret is not supported for ElasticsearchVersion %s, try with latest versions", esVersion.Name)
 		}
+	}
+	return nil
+}
+
+// validateDistributed checks the cross data center (DC-DR) settings of a distributed
+// Elasticsearch. DC-DR expands the CR into one Elasticsearch cluster per Member DC linked by
+// Elastic cross-cluster replication (CCR), which is an Elastic Stack feature that needs a
+// CCR-capable license on every cluster. OpenSearch replicates through a different plugin API and
+// is not supported here.
+func (w *ElasticsearchCustomWebhook) validateDistributed(db *dbapi.Elasticsearch, esVersion *catalogapi.ElasticsearchVersion) error {
+	if !db.Spec.Distributed {
+		return nil
+	}
+	if esVersion.Spec.Distribution != catalogapi.ElasticsearchDistroElasticStack {
+		return fmt.Errorf("'spec.distributed' is only supported for ElasticsearchVersion with distribution %s, ElasticsearchVersion %s uses %s",
+			catalogapi.ElasticsearchDistroElasticStack, esVersion.Name, esVersion.Spec.Distribution)
+	}
+	if db.Spec.PodPlacementPolicy == nil || db.Spec.PodPlacementPolicy.Name == "" {
+		return errors.New(`'spec.podPlacementPolicy' is required when 'spec.distributed' is true`)
+	}
+	if db.Spec.License == nil {
+		return errors.New(`'spec.license' is required when 'spec.distributed' is true: cross-cluster replication needs a CCR-capable license on every data center`)
+	}
+	// Per-DC child names are <db>-<dc>; their PetSet pods are <db>-<dc>[-<role>]-<ordinal>, which
+	// must stay a valid DNS label. Reserve room for the DC name, role suffix and ordinal.
+	if len(db.Name) > 30 {
+		return fmt.Errorf("distributed Elasticsearch name %q is too long: at most 30 characters, so per data center names stay valid DNS labels", db.Name)
 	}
 	return nil
 }
