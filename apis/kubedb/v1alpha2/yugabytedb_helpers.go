@@ -630,8 +630,27 @@ func (r yugabyteDBStatsService) Scheme() string {
 	return r.GetWebserverScheme()
 }
 
+// TLSConfig verifies the metrics endpoints when they serve HTTPS: the CA of the client certificate
+// Secret, and a serverName that every server certificate lists as a SAN, because the targets are
+// scraped by pod IP. Nil when webserver TLS is off.
 func (r yugabyteDBStatsService) TLSConfig() *promapi.TLSConfig {
-	return nil
+	if !r.IsWebserverTLS() {
+		return nil
+	}
+	serverName := r.GoverningServiceName() + "." + r.GetNamespace() + ".svc"
+	return &promapi.TLSConfig{
+		SafeTLSConfig: promapi.SafeTLSConfig{
+			CA: promapi.SecretOrConfigMap{
+				Secret: &core.SecretKeySelector{
+					LocalObjectReference: core.LocalObjectReference{
+						Name: r.GetCertSecretName(YugabyteDBCertificateTypeClient),
+					},
+					Key: kubedb.CACert,
+				},
+			},
+			ServerName: &serverName,
+		},
+	}
 }
 
 func (r *YugabyteDB) StatsService() mona.StatsAccessor {
