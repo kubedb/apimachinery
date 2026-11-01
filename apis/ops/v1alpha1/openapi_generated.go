@@ -40453,6 +40453,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
+					"existingSecrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExistingSecrets names certificates that already exist, for example when a running Milvus is adopted. KubeDB uses them as they are: it does not issue, renew or take ownership of them. Any other certificate that is needed is issued from issuerRef.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets"),
+						},
+					},
 					"rotateCertificates": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RotateCertificates tells operator to initiate certificate rotation",
@@ -40471,7 +40477,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
 	}
 }
 

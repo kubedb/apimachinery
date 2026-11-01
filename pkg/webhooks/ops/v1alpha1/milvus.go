@@ -182,7 +182,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Milvu
 		}
 
 	case opsapi.MilvusOpsRequestTypeReconfigureTLS:
-		if err := w.validateMilvusReconfigureTLSOpsRequest(req); err != nil {
+		if err := w.validateMilvusReconfigureTLSOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
@@ -403,10 +403,14 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigurationOpsRequest(
 	return nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(req *opsapi.MilvusOpsRequest) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(db *dbapi.Milvus, req *opsapi.MilvusOpsRequest) error {
 	tlsSpec := req.Spec.TLS
 	if tlsSpec == nil {
 		return errors.New("spec.tls nil not supported in ReconfigureTLS type")
+	}
+
+	if tlsSpec.ExistingSecrets != nil {
+		return errors.New("spec.tls.existingSecrets is not supported in ReconfigureTLS type; set it on the Milvus")
 	}
 
 	configCount := 0
@@ -425,6 +429,9 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(r
 	}
 	if configCount > 1 {
 		return errors.New("more than 1 field have assigned to spec.tls but at a time only one operation is allowed")
+	}
+	if tlsSpec.RotateCertificates && db.Spec.TLS != nil && db.Spec.TLS.ExistingSecrets != nil {
+		return errors.New("spec.tls.rotateCertificates does not apply: the certificates in spec.tls.existingSecrets are managed by the user")
 	}
 
 	return nil
