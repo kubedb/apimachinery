@@ -138,6 +138,29 @@ type RedisHorizontalScalingSpec struct {
 	// cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port
 	// While scaling up shard or replica just provide the missing announces.
 	Announce *Announce `json:"announce,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR Redis. Each
+	// entry sets that data center's local node count (and, for Cluster mode, its shard
+	// count); data centers not listed are left unchanged. Use this instead of the
+	// top-level Shards/Replicas for a DC-DR cluster, where each data center is a
+	// self-contained Redis scaled independently.
+	// +optional
+	DataCenters []RedisHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// RedisHorizontalScalingDC is a per data center scaling target for a distributed
+// DC-DR Redis.
+type RedisHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the Redis PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local node count for this data center (Sentinel and
+	// Standalone), or the desired replicas per shard for Cluster mode.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+	// Shards is the desired shard count for this data center in Cluster mode.
+	// +optional
+	Shards *int32 `json:"shards,omitempty"`
 }
 
 // RedisVerticalScalingSpec is the spec for Redis vertical scaling
