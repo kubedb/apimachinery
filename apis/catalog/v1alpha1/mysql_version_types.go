@@ -100,6 +100,26 @@ type MySQLVersionSpec struct {
 	// Courier defines the courier related CLI/Tools images for this MySQL version
 	// +optional
 	Courier v1alpha1.DBCourierImages `json:"courier,omitempty"`
+	// License describes whether this version's image is gated behind a
+	// commercial license (e.g. Oracle's MySQL Enterprise Edition, distributed
+	// via Oracle Container Registry under a bring-your-own-license
+	// subscription). Unlike AppsCode's Postgres Enterprise build, mysqld
+	// itself does not enforce a license file at runtime; access is gated at
+	// the image registry level. This field exists so KubeDB can require the
+	// user to explicitly reference their license/subscription via
+	// spec.license on every MySQL using this version.
+	// +optional
+	License *MySQLVersionLicense `json:"license,omitempty"`
+}
+
+// MySQLVersionLicense describes whether a MySQLVersion's image is only
+// accessible under a commercial license/subscription (e.g. Oracle MySQL
+// Enterprise Edition via Oracle Container Registry BYOL).
+type MySQLVersionLicense struct {
+	// Required is true when this version's image is gated behind a
+	// commercial license/subscription. When true, spec.license must be set
+	// on every MySQL using this version.
+	Required bool `json:"required"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
