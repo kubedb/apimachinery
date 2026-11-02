@@ -81,3 +81,31 @@ func TestRestrictedSCCSkipsUserDefaults(t *testing.T) {
 		t.Fatal("an explicit uid must win")
 	}
 }
+
+func TestStreamingNodeStorageDefault(t *testing.T) {
+	mv := &catalog.MilvusVersion{}
+	mv.Spec.SecurityContext.RunAsUser = ptr.To[int64](1000)
+
+	// The role is set (replicas, podTemplate) but storage is not: it must still get the default.
+	m := &Milvus{}
+	sn := &MilvusDataNode{MilvusNode: MilvusNode{Replicas: ptr.To[int32](2)}}
+	m.setComponentDefaults(mv, &sn)
+	if sn.StorageType != StorageTypeDurable || sn.Storage == nil {
+		t.Fatalf("Durable StreamingNode without storage: got storageType=%q storage=%v", sn.StorageType, sn.Storage)
+	}
+	if got := sn.Storage.Resources.Requests[core.ResourceStorage]; got.String() != "1Gi" {
+		t.Fatalf("default storage = %s, want 1Gi", got.String())
+	}
+
+	// A user's storage is kept, and Ephemeral gets none.
+	own := &MilvusDataNode{Storage: &core.PersistentVolumeClaimSpec{StorageClassName: ptr.To("fast")}}
+	m.setComponentDefaults(mv, &own)
+	if own.Storage.StorageClassName == nil || *own.Storage.StorageClassName != "fast" {
+		t.Fatal("user storage was replaced")
+	}
+	eph := &MilvusDataNode{StorageType: StorageTypeEphemeral}
+	m.setComponentDefaults(mv, &eph)
+	if eph.Storage != nil {
+		t.Fatal("Ephemeral StreamingNode got a PVC")
+	}
+}
