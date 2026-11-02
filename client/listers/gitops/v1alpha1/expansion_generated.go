@@ -274,6 +274,14 @@ type WeaviateListerExpansion interface{}
 // WeaviateNamespaceLister.
 type WeaviateNamespaceListerExpansion interface{}
 
+// YugabyteDBListerExpansion allows custom methods to be added to
+// YugabyteDBLister.
+type YugabyteDBListerExpansion interface{}
+
+// YugabyteDBNamespaceListerExpansion allows custom methods to be added to
+// YugabyteDBNamespaceLister.
+type YugabyteDBNamespaceListerExpansion interface{}
+
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.
 type ZooKeeperListerExpansion interface{}

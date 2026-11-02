@@ -150,6 +150,10 @@ type SolrVersionListerExpansion interface{}
 // WeaviateVersionLister.
 type WeaviateVersionListerExpansion interface{}
 
+// YugabyteDBVersionListerExpansion allows custom methods to be added to
+// YugabyteDBVersionLister.
+type YugabyteDBVersionListerExpansion interface{}
+
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.
 type ZooKeeperVersionListerExpansion interface{}

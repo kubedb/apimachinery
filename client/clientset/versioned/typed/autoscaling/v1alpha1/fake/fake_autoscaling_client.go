@@ -157,6 +157,10 @@ func (c *FakeAutoscalingV1alpha1) WeaviateAutoscalers(namespace string) v1alpha1
 	return newFakeWeaviateAutoscalers(c, namespace)
 }
 
+func (c *FakeAutoscalingV1alpha1) YugabyteDBAutoscalers(namespace string) v1alpha1.YugabyteDBAutoscalerInterface {
+	return newFakeYugabyteDBAutoscalers(c, namespace)
+}
+
 func (c *FakeAutoscalingV1alpha1) ZooKeeperAutoscalers(namespace string) v1alpha1.ZooKeeperAutoscalerInterface {
 	return newFakeZooKeeperAutoscalers(c, namespace)
 }

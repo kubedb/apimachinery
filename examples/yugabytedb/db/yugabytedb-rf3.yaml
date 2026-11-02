@@ -1,0 +1,55 @@
+apiVersion: kubedb.com/v1alpha2
+kind: YugabyteDB
+metadata:
+  name: yb-demo
+  namespace: demo
+spec:
+  version: 2025.2.8
+  replicationFactor: 3
+  topology:
+    master:
+      podTemplate:
+        spec:
+          podPlacementPolicy:
+            name: default
+          containers:
+          - name: yb-master
+            resources:
+              requests:
+                cpu: "1"
+                memory: 2Gi
+              limits:
+                cpu: "1"
+                memory: 2Gi
+      storage:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+    tserver:
+      replicas: 3
+      podTemplate:
+        spec:
+          podPlacementPolicy:
+            name: default
+          containers:
+          - name: yb-tserver
+            resources:
+              requests:
+                cpu: "2"
+                memory: 4Gi
+              limits:
+                cpu: "2"
+                memory: 4Gi
+      storage:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi
+  ysql:
+    enabled: true
+  ycql:
+    enabled: false
+  deletionPolicy: Delete

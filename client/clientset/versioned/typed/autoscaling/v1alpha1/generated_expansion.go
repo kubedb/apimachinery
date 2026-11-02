@@ -82,4 +82,6 @@ type SolrAutoscalerExpansion interface{}
 
 type WeaviateAutoscalerExpansion interface{}
 
+type YugabyteDBAutoscalerExpansion interface{}
+
 type ZooKeeperAutoscalerExpansion interface{}
