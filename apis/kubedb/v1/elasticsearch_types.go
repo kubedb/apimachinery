@@ -64,6 +64,19 @@ type ElasticsearchSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources.
+	// A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch
+	// cluster per Member data center for cross data center disaster recovery (DC-DR). The active
+	// cluster holds the leader indices and takes writes; every standby cluster follows it with
+	// Cross-Cluster Replication (CCR).
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data
+	// center Elasticsearch clusters across data centers for DC-DR.
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+
 	// Elasticsearch topology for node specification
 	// +optional
 	Topology *ElasticsearchClusterTopology `json:"topology,omitempty"`
@@ -395,6 +408,148 @@ type ElasticsearchStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Elasticsearch.
+	// +optional
+	DisasterRecovery *ElasticsearchDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// ElasticsearchDRPhase is the cross data center DR phase of a distributed Elasticsearch.
+type ElasticsearchDRPhase string
+
+const (
+	ElasticsearchDRPhaseSteady      ElasticsearchDRPhase = "Steady"
+	ElasticsearchDRPhaseFailingOver ElasticsearchDRPhase = "FailingOver"
+	ElasticsearchDRPhaseFailingBack ElasticsearchDRPhase = "FailingBack"
+	ElasticsearchDRPhaseDegraded    ElasticsearchDRPhase = "Degraded"
+)
+
+// ElasticsearchDisasterRecoveryStatus reports the per data center DC-DR view of a distributed
+// Elasticsearch. Elasticsearch DC-DR is active/passive: exactly one data center is the write
+// cluster, chosen by the dr-controlplane primary-DC Lease, and Cross-Cluster Replication (CCR)
+// asynchronously follows its leader indices from the standby. This status reflects that decision
+// on the single Elasticsearch object.
+type ElasticsearchDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and takes client writes.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase ElasticsearchDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []ElasticsearchDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	// Protected reports whether the active data center's protected indices currently have a
+	// complete, freshly observed CCR copy in a standby data center: every leader user index has
+	// an active follower and every follower shard has read from the leader recently.
+	//
+	// nil means unknown, which is NOT the same as false: the hub could not establish the
+	// protection state this cycle. Treat unknown as unprotected before a planned operation.
+	// +optional
+	Protected *bool `json:"protected,omitempty"`
+
+	// ProtectionMessage explains the current value of Protected, for example which index has no
+	// follower or which standby has not read from the leader recently.
+	// +optional
+	ProtectionMessage string `json:"protectionMessage,omitempty"`
+
+	// Promotion records the progress of the most recent follower promotion, so a promotion that
+	// is interrupted (operator restart, timeout) resumes from the last completed step instead of
+	// repeating irreversible calls.
+	// +optional
+	Promotion *ElasticsearchDRPromotion `json:"promotion,omitempty"`
+}
+
+// ElasticsearchDRPromotionPhase is the phase of a follower-index promotion.
+type ElasticsearchDRPromotionPhase string
+
+const (
+	// ElasticsearchDRPromotionBlocked means promotion is waiting on a safety gate, such as an
+	// unverified data-loss window that needs an explicit acceptance.
+	ElasticsearchDRPromotionBlocked ElasticsearchDRPromotionPhase = "Blocked"
+	// ElasticsearchDRPromotionInProgress means the follower indices are being converted.
+	ElasticsearchDRPromotionInProgress ElasticsearchDRPromotionPhase = "InProgress"
+	// ElasticsearchDRPromotionSucceeded means every follower index was converted and verified.
+	ElasticsearchDRPromotionSucceeded ElasticsearchDRPromotionPhase = "Succeeded"
+)
+
+// ElasticsearchDRPromotion is the durable journal of a follower-index promotion.
+type ElasticsearchDRPromotion struct {
+	// TargetDC is the data center whose follower indices are being promoted.
+	TargetDC string `json:"targetDC"`
+
+	// Phase is the promotion phase.
+	// +optional
+	Phase ElasticsearchDRPromotionPhase `json:"phase,omitempty"`
+
+	// PromotedIndices lists the indices already converted to writable leader indices.
+	// +optional
+	PromotedIndices []string `json:"promotedIndices,omitempty"`
+
+	// Message explains a Blocked phase or the last error.
+	// +optional
+	Message string `json:"message,omitempty"`
+
+	// StartedAt is when this promotion started.
+	// +optional
+	StartedAt *metav1.Time `json:"startedAt,omitempty"`
+}
+
+// ElasticsearchDCStatus is one data center's local view inside a distributed Elasticsearch.
+type ElasticsearchDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd member
+	// and no Elasticsearch.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Writable is true when this DC is the active write cluster (it holds the leader indices).
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// NodesReady is the number of ready nodes in this DC's local Elasticsearch cluster.
+	// +optional
+	NodesReady *int32 `json:"nodesReady,omitempty"`
+
+	// FollowLagOps is this DC's cross-DC CCR follow lag behind the active DC, in operations
+	// (the leader_global_checkpoint minus follower_global_checkpoint gap from the CCR follow
+	// stats, taken as the max across this DC's follower indices). Nil when this DC is the active
+	// write cluster.
+	// +optional
+	FollowLagOps *int64 `json:"followLagOps,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
+
+	// WritableObservedAt is when Writable was last established by an actual write probe of this
+	// DC's cluster, as opposed to assumed from the Lease. Anything that reads Writable as evidence
+	// must pair it with a fresh stamp here.
+	// +optional
+	WritableObservedAt *metav1.Time `json:"writableObservedAt,omitempty"`
+
+	// ClusterUUID is the Elasticsearch cluster UUID observed in this DC. Each Member DC runs an
+	// independent cluster, so the UUIDs differ.
+	// +optional
+	ClusterUUID string `json:"clusterUUID,omitempty"`
+
+	// ObservedAt is when the hub last read this DC's cluster over REST. FollowLagOps, NodesReady
+	// and ClusterUUID are only as fresh as this stamp.
+	// +optional
+	ObservedAt *metav1.Time `json:"observedAt,omitempty"`
+
+	// Message explains the observation, for example a follower read error.
+	// +optional
+	Message string `json:"message,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
