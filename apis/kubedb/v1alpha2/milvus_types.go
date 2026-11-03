@@ -448,6 +448,26 @@ type ObjectStorageSpec struct {
 	// ConfigSecret should contain the necessary data to connect to external MinIO
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
+	// TLS configures how Milvus verifies the object storage server certificate.
+	// +optional
+	TLS *ObjectStorageTLS `json:"tls,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+// ObjectStorageTLS names the CA bundle that signed the object storage server certificate.
+// Set exactly one of CASecret or CAConfigMap. KubeDB mounts it into every Milvus pod,
+// enables minio.useSSL and sets minio.ssl.tlsCACert; the endpoint and port still come
+// from the object storage config secret.
+type ObjectStorageTLS struct {
+	// CASecret selects a key of a Secret in this namespace that holds the PEM CA bundle.
+	// +optional
+	CASecret *core.SecretKeySelector `json:"caSecret,omitempty"`
+
+	// CAConfigMap selects a key of a ConfigMap in this namespace that holds the PEM CA
+	// bundle, e.g. the OpenShift service CA: openshift-service-ca.crt / service-ca.crt.
+	// +optional
+	CAConfigMap *core.ConfigMapKeySelector `json:"caConfigMap,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
