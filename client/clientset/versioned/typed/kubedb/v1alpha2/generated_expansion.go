@@ -30,6 +30,8 @@ type DocumentDBExpansion interface{}
 
 type DruidExpansion interface{}
 
+type DurableWorkflowExpansion interface{}
+
 type ElasticsearchExpansion interface{}
 
 type EtcdExpansion interface{}
@@ -81,5 +83,7 @@ type SinglestoreExpansion interface{}
 type SolrExpansion interface{}
 
 type WeaviateExpansion interface{}
+
+type WorkflowNamespaceExpansion interface{}
 
 type ZooKeeperExpansion interface{}

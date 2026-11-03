@@ -53,6 +53,10 @@ func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRe
 	return newFakeDruidOpsRequests(c, namespace)
 }
 
+func (c *FakeOpsV1alpha1) DurableWorkflowOpsRequests(namespace string) v1alpha1.DurableWorkflowOpsRequestInterface {
+	return newFakeDurableWorkflowOpsRequests(c, namespace)
+}
+
 func (c *FakeOpsV1alpha1) ElasticsearchOpsRequests(namespace string) v1alpha1.ElasticsearchOpsRequestInterface {
 	return newFakeElasticsearchOpsRequests(c, namespace)
 }

@@ -36,6 +36,8 @@ type Interface interface {
 	DocumentDBAutoscalers() DocumentDBAutoscalerInformer
 	// DruidAutoscalers returns a DruidAutoscalerInformer.
 	DruidAutoscalers() DruidAutoscalerInformer
+	// DurableWorkflowAutoscalers returns a DurableWorkflowAutoscalerInformer.
+	DurableWorkflowAutoscalers() DurableWorkflowAutoscalerInformer
 	// ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.
 	ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer
 	// EtcdAutoscalers returns a EtcdAutoscalerInformer.
@@ -131,6 +133,11 @@ func (v *version) DocumentDBAutoscalers() DocumentDBAutoscalerInformer {
 // DruidAutoscalers returns a DruidAutoscalerInformer.
 func (v *version) DruidAutoscalers() DruidAutoscalerInformer {
 	return &druidAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DurableWorkflowAutoscalers returns a DurableWorkflowAutoscalerInformer.
+func (v *version) DurableWorkflowAutoscalers() DurableWorkflowAutoscalerInformer {
+	return &durableWorkflowAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.

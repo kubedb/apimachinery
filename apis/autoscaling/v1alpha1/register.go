@@ -67,6 +67,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&DocumentDBAutoscalerList{},
 		&DruidAutoscaler{},
 		&DruidAutoscalerList{},
+		&DurableWorkflowAutoscaler{},
+		&DurableWorkflowAutoscalerList{},
 		&ElasticsearchAutoscaler{},
 		&ElasticsearchAutoscalerList{},
 		&EtcdAutoscaler{},

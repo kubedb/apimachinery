@@ -30,6 +30,8 @@ type DocumentDBExpansion interface{}
 
 type DruidExpansion interface{}
 
+type DurableWorkflowExpansion interface{}
+
 type ElasticsearchExpansion interface{}
 
 type EtcdExpansion interface{}
