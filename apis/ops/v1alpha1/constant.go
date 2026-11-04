@@ -85,6 +85,9 @@ const (
 	Reconfigure          = "Reconfigure"
 	ReconfigureSucceeded = "ReconfigureSucceeded"
 	ReconfigureFailed    = "ReconfigureFailed"
+
+	DynamicConfigApplied          = "DynamicConfigApplied"
+	DynamicConfigAppliedSucceeded = "DynamicConfigAppliedSucceeded"
 )
 
 // ReconfigureTLS
