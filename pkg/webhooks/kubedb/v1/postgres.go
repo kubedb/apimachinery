@@ -29,6 +29,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -63,7 +64,17 @@ var pgLog = logf.Log.WithName("postgres-resource")
 
 var _ webhook.CustomDefaulter = &PostgresCustomWebhook{}
 
-func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+// namespaceSecurityIDs returns the IDs OpenShift assigned to the namespace, or nil when the
+// namespace carries no SCC annotations (any non-OpenShift cluster).
+func (wh *PostgresCustomWebhook) namespaceSecurityIDs(ctx context.Context, namespace string) (*dbapi.NamespaceSecurityIDs, error) {
+	var ns core.Namespace
+	if err := wh.DefaultClient.Get(ctx, types.NamespacedName{Name: namespace}, &ns); err != nil {
+		return nil, errors.Wrapf(err, "failed to get namespace %s", namespace)
+	}
+	return dbapi.GetNamespaceSecurityIDs(&ns)
+}
+
+func (wh *PostgresCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	if isDeletionInProgress(obj) {
 		return nil
 	}
@@ -102,7 +113,11 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 		return errors.Wrapf(err, "failed to get PostgresVersion: %s", db.Spec.Version)
 	}
 
-	db.SetDefaults(&postgresVersion)
+	nsIDs, err := wh.namespaceSecurityIDs(ctx, db.Namespace)
+	if err != nil {
+		return err
+	}
+	db.SetDefaultsWithSecurityIDs(&postgresVersion, nsIDs)
 
 	if db.Spec.TDE != nil {
 		if db.Spec.TDE.Cipher == "" {
@@ -676,7 +691,11 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
 		}
-		oldPostgres.SetDefaults(&postgresVersion)
+		nsIDs, err := wh.namespaceSecurityIDs(ctx, oldPostgres.Namespace)
+		if err != nil {
+			return nil, err
+		}
+		oldPostgres.SetDefaultsWithSecurityIDs(&postgresVersion, nsIDs)
 	}
 	if oldPostgres.Spec.AuthSecret == nil {
 		oldPostgres.Spec.AuthSecret = postgres.Spec.AuthSecret

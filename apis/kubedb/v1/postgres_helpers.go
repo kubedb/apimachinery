@@ -340,6 +340,15 @@ func (p Postgres) StatsServiceLabels() map[string]string {
 }
 
 func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
+	p.SetDefaultsWithSecurityIDs(postgresVersion, nil)
+}
+
+// SetDefaultsWithSecurityIDs is SetDefaults for a namespace that dictates the pod's IDs, which
+// is how OpenShift's restricted-v2 SCC works (see GetNamespaceSecurityIDs). When nsIDs is
+// non-nil it replaces the catalog's runAsUser as the default for every runAsUser, runAsGroup
+// and fsGroup the user left empty. Values the user did set are never touched, and neither
+// are values already stored on an existing database.
+func (p *Postgres) SetDefaultsWithSecurityIDs(postgresVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
 	if p == nil {
 		return
 	}
@@ -454,10 +463,10 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 	}
 
 	p.updateConfigurationFieldIfNeeded()
-	p.SetDefaultPodSecurityContext(&p.Spec.PodTemplate, postgresVersion)
-	p.SetPostgresContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
-	p.SetCoordinatorContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
-	p.SetInitContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
+	p.SetDefaultPodSecurityContext(&p.Spec.PodTemplate, postgresVersion, nsIDs)
+	p.SetPostgresContainerDefaults(&p.Spec.PodTemplate, postgresVersion, nsIDs)
+	p.SetCoordinatorContainerDefaults(&p.Spec.PodTemplate, postgresVersion, nsIDs)
+	p.SetInitContainerDefaults(&p.Spec.PodTemplate, postgresVersion, nsIDs)
 	apis.SetDefaultResizePolicy(p.Spec.PodTemplate.Spec.Containers, p.Spec.PodTemplate.Spec.InitContainers)
 
 	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
@@ -470,11 +479,12 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
+		ids := newPostgresSecurityIDs(postgresVersion, nsIDs)
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = postgresVersion.Spec.SecurityContext.RunAsUser
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = ids.runAsUser
 		}
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = postgresVersion.Spec.SecurityContext.RunAsUser
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = ids.runAsGroup
 		}
 	}
 	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil && p.Spec.Init.Archiver.ReplicationStrategy == nil {
@@ -577,64 +587,89 @@ func (p *Postgres) SetArbiterDefault() {
 	}
 }
 
-func (p *Postgres) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+// postgresSecurityIDs are the IDs SetDefaults writes into the securityContext fields the user
+// left empty.
+// +k8s:deepcopy-gen=false
+// +k8s:openapi-gen=false
+type postgresSecurityIDs struct {
+	runAsUser  *int64
+	runAsGroup *int64
+	fsGroup    *int64
+}
+
+// newPostgresSecurityIDs prefers the namespace's IDs over the catalog's. Without them every ID
+// is the catalog's runAsUser, which is what SetDefaults has always used.
+func newPostgresSecurityIDs(pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) postgresSecurityIDs {
+	if nsIDs != nil {
+		return postgresSecurityIDs{
+			runAsUser:  ptr.To(nsIDs.RunAsUser),
+			runAsGroup: ptr.To(nsIDs.RunAsGroup),
+			fsGroup:    ptr.To(nsIDs.FSGroup),
+		}
+	}
+	uid := pgVersion.Spec.SecurityContext.RunAsUser
+	return postgresSecurityIDs{runAsUser: uid, runAsGroup: uid, fsGroup: uid}
+}
+
+func (p *Postgres) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
 	if podTemplate == nil {
 		return
 	}
+	ids := newPostgresSecurityIDs(pgVersion, nsIDs)
 
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = pgVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = ids.fsGroup
 	}
 	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
-		podTemplate.Spec.SecurityContext.RunAsUser = pgVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.RunAsUser = ids.runAsUser
 	}
 	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
-		podTemplate.Spec.SecurityContext.RunAsGroup = pgVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.RunAsGroup = ids.runAsGroup
 	}
 }
 
-func (p *Postgres) SetInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) SetInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofst_util.EnsureInitContainerExists(podTemplate, kubedb.PostgresInitContainerName)
-	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultSecurityContext(container, newPostgresSecurityIDs(pgVersion, nsIDs))
 	p.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
 }
 
-func (p *Postgres) SetPostgresContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) SetPostgresContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
-	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultSecurityContext(container, newPostgresSecurityIDs(pgVersion, nsIDs))
 	p.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
 }
 
-func (p *Postgres) SetCoordinatorContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) SetCoordinatorContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.PostgresCoordinatorContainerName)
-	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultSecurityContext(container, newPostgresSecurityIDs(pgVersion, nsIDs))
 	p.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
 }
 
-func (p *Postgres) setContainerDefaultSecurityContext(container *core.Container, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) setContainerDefaultSecurityContext(container *core.Container, ids postgresSecurityIDs) {
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	p.assignDefaultContainerSecurityContext(container.SecurityContext, pgVersion)
+	p.assignDefaultContainerSecurityContext(container.SecurityContext, ids)
 }
 
 func (p *Postgres) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
 	apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
 }
 
-func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContext, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContext, ids postgresSecurityIDs) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -647,10 +682,10 @@ func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContex
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
-		sc.RunAsUser = pgVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsUser = ids.runAsUser
 	}
 	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = pgVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsGroup = ids.runAsGroup
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
