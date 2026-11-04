@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -181,7 +182,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Milvu
 		}
 
 	case opsapi.MilvusOpsRequestTypeReconfigureTLS:
-		if err := w.validateMilvusReconfigureTLSOpsRequest(req); err != nil {
+		if err := w.validateMilvusReconfigureTLSOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
@@ -226,7 +227,30 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusUpdateVersionOpsRequest(db
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, updateVersionSpec.TargetVersion)
 	}
 
-	return nil
+	if !db.RequestsGPU() {
+		return nil
+	}
+	target := &catalog.MilvusVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updateVersionSpec.TargetVersion}, target); err != nil {
+		return err
+	}
+	return milvusUpdateVersionGPUError(db, target)
+}
+
+// milvusUpdateVersionGPUError rejects moving a database that requests a GPU to a MilvusVersion
+// that is not a GPU build. The ops request rolls every pod onto the new image before
+// spec.version is patched, so without this check the Milvus webhook's own GPU rule would only
+// fire after the whole cluster already runs a CPU-only image.
+func milvusUpdateVersionGPUError(db *dbapi.Milvus, target *catalog.MilvusVersion) error {
+	if !db.RequestsGPU() {
+		return nil
+	}
+	if target.Spec.DB.GPU != nil && target.Spec.DB.GPU.Supported {
+		return nil
+	}
+	return fmt.Errorf("milvus %s/%s requests a GPU, but target MilvusVersion %q does not declare spec.db.gpu.supported: true; "+
+		"choose a GPU build (for example a -gpu version) as spec.updateVersion.targetVersion",
+		db.Namespace, db.Name, target.Name)
 }
 
 func (w *MilvusOpsRequestCustomWebhook) validateMilvusHorizontalScalingOpsRequest(req *opsapi.MilvusOpsRequest, milvus *dbapi.Milvus) error {
@@ -379,10 +403,14 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigurationOpsRequest(
 	return nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(req *opsapi.MilvusOpsRequest) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(db *dbapi.Milvus, req *opsapi.MilvusOpsRequest) error {
 	tlsSpec := req.Spec.TLS
 	if tlsSpec == nil {
 		return errors.New("spec.tls nil not supported in ReconfigureTLS type")
+	}
+
+	if tlsSpec.ExistingSecrets != nil {
+		return errors.New("spec.tls.existingSecrets is not supported in ReconfigureTLS type; set it on the Milvus")
 	}
 
 	configCount := 0
@@ -401,6 +429,9 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusReconfigureTLSOpsRequest(r
 	}
 	if configCount > 1 {
 		return errors.New("more than 1 field have assigned to spec.tls but at a time only one operation is allowed")
+	}
+	if tlsSpec.RotateCertificates && db.Spec.TLS != nil && db.Spec.TLS.ExistingSecrets != nil {
+		return errors.New("spec.tls.rotateCertificates does not apply: the certificates in spec.tls.existingSecrets are managed by the user")
 	}
 
 	return nil

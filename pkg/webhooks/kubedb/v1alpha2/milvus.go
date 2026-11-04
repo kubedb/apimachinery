@@ -211,12 +211,22 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 	}
 
 	if db.Spec.TLS != nil {
-		if db.Spec.TLS.IssuerRef == nil {
+		needsIssuer := db.CertificateIssued(olddbapi.MilvusCertificateTypeServer) || db.CertificateIssued(olddbapi.MilvusCertificateTypeClient)
+		if db.Spec.TLS.IssuerRef == nil && needsIssuer {
 			allErr = append(allErr, field.Invalid(
 				field.NewPath("spec").Child("tls").Child("issuerRef"),
 				db.Name,
-				"spec.tls.issuerRef is required when TLS is configured",
+				"spec.tls.issuerRef is required for any certificate not listed in spec.tls.existingSecrets",
 			))
+		}
+		if existing := db.Spec.TLS.ExistingSecrets; existing != nil {
+			path := field.NewPath("spec").Child("tls").Child("existingSecrets")
+			if existing.Server != nil && existing.Server.Name == "" {
+				allErr = append(allErr, field.Required(path.Child("server", "name"), "server must name a Secret"))
+			}
+			if existing.Client != nil && existing.Client.Name == "" {
+				allErr = append(allErr, field.Required(path.Child("client", "name"), "client must name a Secret"))
+			}
 		}
 
 		if db.Spec.TLS.Internal != nil && db.Spec.TLS.Internal.Mode == olddbapi.TLSModeMTLS {
@@ -263,6 +273,10 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 			allErr = append(allErr, field.Invalid(metaPath.Child("rootPath"), meta.RootPath,
 				"spec.metaStorage.rootPath must not contain '/' or surrounding whitespace"))
 		}
+	}
+
+	if objStore := db.Spec.ObjectStorage; objStore != nil && objStore.TLS != nil {
+		allErr = append(allErr, milvusValidateObjectStorageTLS(objStore.TLS, field.NewPath("spec").Child("objectStorage").Child("tls"))...)
 	}
 
 	allErr = append(allErr, milvusValidateArchiver(db)...)
@@ -552,4 +566,21 @@ func ValidateMilvusEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceTy
 		}
 	}
 	return nil
+}
+
+func milvusValidateObjectStorageTLS(tls *olddbapi.ObjectStorageTLS, path *field.Path) field.ErrorList {
+	var errs field.ErrorList
+	switch {
+	case tls.CASecret == nil && tls.CAConfigMap == nil:
+		errs = append(errs, field.Required(path, "set one of caSecret or caConfigMap"))
+	case tls.CASecret != nil && tls.CAConfigMap != nil:
+		errs = append(errs, field.Invalid(path, "caSecret and caConfigMap", "set only one of caSecret or caConfigMap"))
+	}
+	if s := tls.CASecret; s != nil && (s.Name == "" || s.Key == "") {
+		errs = append(errs, field.Required(path.Child("caSecret"), "name and key are required"))
+	}
+	if c := tls.CAConfigMap; c != nil && (c.Name == "" || c.Key == "") {
+		errs = append(errs, field.Required(path.Child("caConfigMap"), "name and key are required"))
+	}
+	return errs
 }
