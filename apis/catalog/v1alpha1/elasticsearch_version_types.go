@@ -104,6 +104,17 @@ type ElasticsearchVersionSpec struct {
 
 	// +optional
 	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
+
+	// Coordinator is the DC-DR coordinator image (es-coordinator). It runs as a sidecar in the
+	// master-eligible pods of a distributed DC-DR Elasticsearch and fences the data center
+	// unless the dr-controlplane marker and the hub's write permit both name it.
+	// +optional
+	Coordinator ElasticsearchVersionCoordinator `json:"coordinator,omitempty"`
+}
+
+// ElasticsearchVersionCoordinator is the Elasticsearch DC-DR coordinator image
+type ElasticsearchVersionCoordinator struct {
+	Image string `json:"image"`
 }
 
 // ElasticsearchVersionDatabase is the Elasticsearch Database image

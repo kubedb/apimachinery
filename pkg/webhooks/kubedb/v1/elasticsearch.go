@@ -578,6 +578,11 @@ func (w *ElasticsearchCustomWebhook) validateDistributed(db *dbapi.Elasticsearch
 	if db.Spec.PodPlacementPolicy == nil || db.Spec.PodPlacementPolicy.Name == "" {
 		return errors.New(`'spec.podPlacementPolicy' is required when 'spec.distributed' is true`)
 	}
+	// Every per-DC child runs the es-coordinator sidecar, which fences its data center. External
+	// members are clusters the operator does not create, so they bring their own.
+	if db.Annotations["dr.kubedb.com/external-members"] != "true" && esVersion.Spec.Coordinator.Image == "" {
+		return fmt.Errorf("'spec.distributed' needs a DC-DR coordinator: ElasticsearchVersion %s has no spec.coordinator.image", esVersion.Name)
+	}
 	// Per-DC child names are <db>-<dc>; their PetSet pods are <db>-<dc>[-<role>]-<ordinal>, which
 	// must stay a valid DNS label. Reserve room for the DC name, role suffix and ordinal.
 	if len(db.Name) > 30 {
