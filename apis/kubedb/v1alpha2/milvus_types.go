@@ -109,6 +109,10 @@ type MilvusSpec struct {
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
@@ -254,6 +258,27 @@ type MilvusTLSConfig struct {
 	// Internal enables TLS for inter-component communication (one-way only)
 	// +optional
 	Internal *ProtocolTLSConfig `json:"internal,omitempty"`
+
+	// ExistingSecrets names certificates that already exist, for example when a
+	// running Milvus is adopted. KubeDB uses them as they are: it does not issue,
+	// renew or take ownership of them. Any other certificate that is needed is
+	// issued from issuerRef.
+	// +optional
+	ExistingSecrets *MilvusExistingTLSSecrets `json:"existingSecrets,omitempty"`
+}
+
+// MilvusExistingTLSSecrets lists Secrets in the Milvus namespace with the keys
+// "tls.crt", "tls.key" and "ca.crt".
+type MilvusExistingTLSSecrets struct {
+	// Server is the certificate the Milvus pods serve.
+	// +optional
+	Server *core.LocalObjectReference `json:"server,omitempty"`
+
+	// Client is the certificate KubeDB presents to Milvus when
+	// spec.tls.external.mode is mTLS. Without mTLS it is not needed: KubeDB reads
+	// the CA from the server Secret.
+	// +optional
+	Client *core.LocalObjectReference `json:"client,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client

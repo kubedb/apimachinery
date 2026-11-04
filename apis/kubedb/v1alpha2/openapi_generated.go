@@ -713,6 +713,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets":                      schema_apimachinery_apis_kubedb_v1alpha2_MilvusExistingTLSSecrets(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MilvusGPUSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_MilvusNetworkSpec(ref),
@@ -40983,6 +40984,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusExistingTLSSecrets(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusExistingTLSSecrets lists Secrets in the Milvus namespace with the keys \"tls.crt\", \"tls.key\" and \"ca.crt\".",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Server is the certificate the Milvus pods serve.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"client": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Client is the certificate KubeDB presents to Milvus when spec.tls.external.mode is mTLS. Without mTLS it is not needed: KubeDB reads the CA from the server Secret.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusGPUSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41420,6 +41448,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"autoOps": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
+						},
+					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Monitor is used monitor database instance",
@@ -41468,7 +41503,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -41553,11 +41588,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusTLSConfig(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
+					"existingSecrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExistingSecrets names certificates that already exist, for example when a running Milvus is adopted. KubeDB uses them as they are: it does not issue, renew or take ownership of them. Any other certificate that is needed is issued from issuerRef.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
 	}
 }
 
