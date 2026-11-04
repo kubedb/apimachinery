@@ -62,6 +62,31 @@ type FullBackupOptions struct {
 	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
 }
 
+type PostgresIncrementalBackupOptions struct {
+	// +optional
+	Task *Task `json:"task,omitempty"`
+	// +optional
+	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
+	// +optional
+	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+	// +optional
+	RetryConfig *stashcoreapi.RetryConfig `json:"retryConfig,omitempty"`
+	// +optional
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([0-9]+(ns|us|ms|s|m|h))+$')",message="must be a Go duration such as 30s, 5m or 1h30m"
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+	// MaxChainLength is the number of backups (the full one included) a chain may hold before
+	// the incremental session takes a new full backup instead. Restoring a long chain needs
+	// every backup in it, so keep this small enough for the restore to stay fast.
+	// +kubebuilder:default:=24
+	// +kubebuilder:validation:Minimum:=2
+	// +optional
+	MaxChainLength *int32 `json:"maxChainLength,omitempty"`
+}
+
 type ManifestBackupOptions struct {
 	// +optional
 	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
