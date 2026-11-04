@@ -209,11 +209,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.ElasticsearchStatus)(nil), (*ElasticsearchStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(a.(*v1.ElasticsearchStatus), b.(*ElasticsearchStatus), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ElasticsearchUserSpec)(nil), (*v1.ElasticsearchUserSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_ElasticsearchUserSpec_To_v1_ElasticsearchUserSpec(a.(*ElasticsearchUserSpec), b.(*v1.ElasticsearchUserSpec), scope)
 	}); err != nil {
@@ -856,6 +851,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*v1.ElasticsearchSpec)(nil), (*ElasticsearchSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(a.(*v1.ElasticsearchSpec), b.(*ElasticsearchSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.ElasticsearchStatus)(nil), (*ElasticsearchStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(a.(*v1.ElasticsearchStatus), b.(*ElasticsearchStatus), scope)
 	}); err != nil {
 		return err
 	}

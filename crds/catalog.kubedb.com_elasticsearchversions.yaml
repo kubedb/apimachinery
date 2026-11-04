@@ -54,6 +54,13 @@ spec:
                 - X-Pack
                 - OpenSearch
                 type: string
+              coordinator:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               dashboard:
                 properties:
                   image:
