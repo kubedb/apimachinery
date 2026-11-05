@@ -93,6 +93,74 @@ message PrimaryAliveResponse {
   bool Alive = 1 [ json_name = "alive" ];
 }
 
+// Major version upgrade.
+//
+// Each step runs a fixed command, chosen by the coordinator, in its own pod's postgres
+// container; the caller only names the step, never a command or a path. A step runs in
+// the background and records its progress under the data volume, so a dropped call, an
+// ops-manager restart or a coordinator restart neither loses nor repeats it. Used by the
+// distributed ops path, where the hub cannot exec into a spoke pod.
+enum UpgradeStep {
+  UPGRADE_STEP_UNSPECIFIED = 0;
+  // Copy the running (old) server's binaries, libraries and config under /var/pv/old.
+  // Runs on the pod while it still runs the old image.
+  UPGRADE_STEP_COPY_OLD_BINARIES = 1;
+  // initdb a new data directory /var/pv/data.new with the new image's binaries.
+  UPGRADE_STEP_INIT_NEW_DATA_DIR = 2;
+  // pg_upgrade --check: the compatibility checks only; changes nothing.
+  UPGRADE_STEP_PG_UPGRADE_CHECK = 3;
+  // pg_upgrade --link into /var/pv/data.new.
+  UPGRADE_STEP_PG_UPGRADE = 4;
+  // Remove the old cluster files and move /var/pv/data.new to /var/pv/data.
+  UPGRADE_STEP_SWAP_DATA_DIR = 5;
+}
+
+enum UpgradeStepPhase {
+  UPGRADE_STEP_PHASE_UNSPECIFIED = 0;
+  // Never started for this ops request.
+  UPGRADE_STEP_PHASE_NOT_STARTED = 1;
+  UPGRADE_STEP_PHASE_RUNNING = 2;
+  UPGRADE_STEP_PHASE_SUCCEEDED = 3;
+  UPGRADE_STEP_PHASE_FAILED = 4;
+}
+
+message UpgradeCapabilities {
+  // Steps this coordinator can run.
+  repeated UpgradeStep Steps = 1 [ json_name = "steps" ];
+}
+
+message UpgradeEnv {
+  // "alpine" or "debian", from /etc/os-release ID.
+  string Distro = 1 [ json_name = "distro" ];
+  // `postgres --version` of the image the pod runs.
+  string ServerVersion = 2 [ json_name = "serverVersion" ];
+  // pg_config --bindir, --sharedir, --pkglibdir of that image.
+  string BinDir = 3 [ json_name = "binDir" ];
+  string ShareDir = 4 [ json_name = "shareDir" ];
+  string PkgLibDir = 5 [ json_name = "pkgLibDir" ];
+  // Whether the human-placed authorization file /var/pv/UPGRADE_PG_VERSION exists.
+  bool AuthorizationFile = 6 [ json_name = "authorizationFile" ];
+  // Free and used bytes of the data volume.
+  int64 DataVolumeFreeBytes = 7 [ json_name = "dataVolumeFreeBytes" ];
+  int64 DataVolumeUsedBytes = 8 [ json_name = "dataVolumeUsedBytes" ];
+}
+
+message UpgradeStepRequest {
+  // UID of the ops request driving the upgrade; a step's state is kept per UID, so a
+  // later upgrade never reads an earlier one's result.
+  string OpsRequestUID = 1 [ json_name = "opsRequestUID" ];
+  UpgradeStep Step = 2 [ json_name = "step" ];
+}
+
+message UpgradeStepStatus {
+  UpgradeStep Step = 1 [ json_name = "step" ];
+  UpgradeStepPhase Phase = 2 [ json_name = "phase" ];
+  // Why it failed, or what it is doing.
+  string Message = 3 [ json_name = "message" ];
+  // The last lines of the step's output.
+  string OutputTail = 4 [ json_name = "outputTail" ];
+}
+
 service CoordinatorManager {
   rpc GetPodInfo(Pod) returns (PodInfo) {}
   rpc RemoveRecoveryConf(RRC) returns(Empty) {}
@@ -113,6 +181,14 @@ service CoordinatorManager {
   // cluster (a fixed touch, no caller supplied command). Used by the distributed ops
   // path where the hub cannot exec into the spoke pod.
   rpc CreateFailOverFile(FFOF) returns (ACK) {}
+  // Major version upgrade (see UpgradeStep): what this coordinator supports, the
+  // pod's upgrade environment, and the background steps.
+  rpc GetUpgradeCapabilities(Empty) returns (UpgradeCapabilities) {}
+  rpc GetUpgradeEnv(Empty) returns (UpgradeEnv) {}
+  // StartUpgradeStep starts the step in the background, or reports it when it is
+  // already running or done for this ops request; it never runs a step twice.
+  rpc StartUpgradeStep(UpgradeStepRequest) returns (UpgradeStepStatus) {}
+  rpc GetUpgradeStepStatus(UpgradeStepRequest) returns (UpgradeStepStatus) {}
 }
 
 // Generated from the repo root so the descriptor registers under its full path

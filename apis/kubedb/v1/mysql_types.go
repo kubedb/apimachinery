@@ -74,6 +74,10 @@ type MySQLSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Version of MySQL to be deployed.
 	Version string `json:"version"`
 
@@ -109,6 +113,11 @@ type MySQLSpec struct {
 
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
+	// DisasterRecovery holds the cross data center DR options (used with spec.distributed and
+	// the dr.kubedb.com/enabled annotation).
+	// +optional
+	DisasterRecovery *MySQLDCDRSpec `json:"disasterRecovery,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -263,6 +272,9 @@ type MySQLStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MySQL.
+	// +optional
+	DisasterRecovery *MySQLDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

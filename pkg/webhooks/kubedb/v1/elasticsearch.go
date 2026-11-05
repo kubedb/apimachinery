@@ -186,6 +186,11 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 		return err
 	}
 
+	err = w.validateDistributed(db, &esVersion)
+	if err != nil {
+		return err
+	}
+
 	err = w.validateLicense(db, &esVersion)
 	if err != nil {
 		return err
@@ -541,6 +546,47 @@ func (w *ElasticsearchCustomWebhook) validateSecureConfig(db *dbapi.Elasticsearc
 		if dbVersion.Major() < 7 || (dbVersion.Major() == 7 && dbVersion.Minor() < 9) {
 			return errors.Errorf("secureConfigSecret is not supported for ElasticsearchVersion %s, try with latest versions", esVersion.Name)
 		}
+	}
+	return nil
+}
+
+// validateDistributed checks the cross data center (DC-DR) settings of a distributed
+// Elasticsearch. DC-DR expands the CR into one cluster per Member DC linked by cross-cluster
+// replication: Elastic CCR on Elastic Stack, which needs a CCR-capable license on every
+// cluster, or the Apache-licensed cross-cluster-replication plugin on OpenSearch 2.x and later.
+func (w *ElasticsearchCustomWebhook) validateDistributed(db *dbapi.Elasticsearch, esVersion *catalogapi.ElasticsearchVersion) error {
+	if !db.Spec.Distributed {
+		return nil
+	}
+	switch esVersion.Spec.Distribution {
+	case catalogapi.ElasticsearchDistroElasticStack:
+		if db.Spec.License == nil {
+			return errors.New(`'spec.license' is required when 'spec.distributed' is true: cross-cluster replication needs a CCR-capable license on every data center`)
+		}
+	case catalogapi.ElasticsearchDistroOpenSearch:
+		v, err := semver.NewVersion(esVersion.Spec.Version)
+		if err != nil {
+			return fmt.Errorf("ElasticsearchVersion %s: invalid version %q: %w", esVersion.Name, esVersion.Spec.Version, err)
+		}
+		if v.Major() < 2 {
+			return fmt.Errorf("'spec.distributed' needs OpenSearch 2.x or later, ElasticsearchVersion %s is %s", esVersion.Name, esVersion.Spec.Version)
+		}
+	default:
+		return fmt.Errorf("'spec.distributed' is only supported for ElasticsearchVersion with distribution %s or %s, ElasticsearchVersion %s uses %s",
+			catalogapi.ElasticsearchDistroElasticStack, catalogapi.ElasticsearchDistroOpenSearch, esVersion.Name, esVersion.Spec.Distribution)
+	}
+	if db.Spec.PodPlacementPolicy == nil || db.Spec.PodPlacementPolicy.Name == "" {
+		return errors.New(`'spec.podPlacementPolicy' is required when 'spec.distributed' is true`)
+	}
+	// Every per-DC child runs the es-coordinator sidecar, which fences its data center. External
+	// members are clusters the operator does not create, so they bring their own.
+	if db.Annotations["dr.kubedb.com/external-members"] != "true" && esVersion.Spec.Coordinator.Image == "" {
+		return fmt.Errorf("'spec.distributed' needs a DC-DR coordinator: ElasticsearchVersion %s has no spec.coordinator.image", esVersion.Name)
+	}
+	// Per-DC child names are <db>-<dc>; their PetSet pods are <db>-<dc>[-<role>]-<ordinal>, which
+	// must stay a valid DNS label. Reserve room for the DC name, role suffix and ordinal.
+	if len(db.Name) > 30 {
+		return fmt.Errorf("distributed Elasticsearch name %q is too long: at most 30 characters, so per data center names stay valid DNS labels", db.Name)
 	}
 	return nil
 }

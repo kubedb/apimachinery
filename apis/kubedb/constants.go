@@ -118,6 +118,7 @@ const (
 	ElasticsearchInitSysctlContainerName         = "init-sysctl"
 	ElasticsearchInitConfigMergerContainerName   = "config-merger"
 	ElasticsearchContainerName                   = "elasticsearch"
+	ElasticsearchCoordinatorContainerName        = "es-coordinator"
 	ElasticsearchExporterContainerName           = "exporter"
 	ElasticsearchSearchGuardRolesMappingFileName = "sg_roles_mapping.yml"
 	ElasticsearchSearchGuardInternalUserFileName = "sg_internal_users.yml"
