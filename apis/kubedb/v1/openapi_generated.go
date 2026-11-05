@@ -635,6 +635,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBStatus":                                       schema_apimachinery_apis_kubedb_v1_MongoDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MongoHiddenNode":                                     schema_apimachinery_apis_kubedb_v1_MongoHiddenNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQL":                                               schema_apimachinery_apis_kubedb_v1_MySQL(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCDRSpec":                                       schema_apimachinery_apis_kubedb_v1_MySQLDCDRSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCStatus":                                       schema_apimachinery_apis_kubedb_v1_MySQLDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDisasterRecoveryStatus":                         schema_apimachinery_apis_kubedb_v1_MySQLDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLGroupSpec":                                      schema_apimachinery_apis_kubedb_v1_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLInnoDBClusterSpec":                              schema_apimachinery_apis_kubedb_v1_MySQLInnoDBClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLList":                                           schema_apimachinery_apis_kubedb_v1_MySQLList(ref),
@@ -36786,6 +36789,196 @@ func schema_apimachinery_apis_kubedb_v1_MySQL(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_MySQLDCDRSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLDCDRSpec holds the cross data center disaster recovery (DC-DR) options of a distributed MySQL. It only has an effect when spec.distributed is true and the DC-DR annotation (dr.kubedb.com/enabled=true) is set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bestEffortCrossDCLagTransactions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BestEffortCrossDCLagTransactions is the largest number of transactions (GTIDs) a passive data center may be behind the active one for an automatic failover to be allowed. A failover that would exceed it is held back until the operator overrides it with an annotation. nil means no budget is enforced.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"channelRetryCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelRetryCount is SOURCE_RETRY_COUNT of the cross-DC replication channel. The channel source is the active DC's primary Service, so a primary change on the active side is followed by retrying, not by reconfiguring. Defaults to 60.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"channelConnectRetrySeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelConnectRetrySeconds is SOURCE_CONNECT_RETRY of the cross-DC replication channel. Defaults to 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_MySQLDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLDCStatus is one data center's local view inside a distributed MySQL.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster (the same clusterName used in the PlacementPolicy distributionRule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role is Member or Arbiter.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"primary": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Primary is this DC's Group Replication primary pod.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Writable is true when this DC's primary has super_read_only=OFF. It is only evidence when WritableObservedAt is fresh.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"writableObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WritableObservedAt is when Writable was last established by probing the primary.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"onlineMembers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OnlineMembers is the number of ONLINE members of this DC's group.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"channelState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelState is the state of the cross-DC replication channel on this DC's primary: \"Running\" (IO and SQL threads ON), \"Stopped\", \"Connecting\", \"Error\" or \"None\" (the active DC has no channel).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notReadyPods": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NotReadyPods names the pods in this data center that are not participating.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"gtidLag": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GTIDLag is this DC's cross-DC lag behind the active DC, in transactions.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"lagObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LagObservedAt is when GTIDLag was last measured.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_MySQLDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLDisasterRecoveryStatus reports the per data center DC-DR view of a distributed MySQL. The cross-DC decision is owned by the dr-controlplane primary-DC Lease; this status reflects it on the single MySQL object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that currently holds the primary DC Lease and runs the writable Group Replication primary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member DC.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"protected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protected reports whether at least one Member data center other than the active one has its replication channel running (IO and SQL threads ON) within the lag budget, as of a fresh observation. nil means unknown, which must be treated as unprotected.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"protectionMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProtectionMessage explains the current value of Protected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCStatus"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_MySQLGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36925,6 +37118,13 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec"),
 						},
 					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed if set true, manifestwork objects will be created instead of raw resources",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version of MySQL to be deployed.",
@@ -36986,6 +37186,12 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec"),
+						},
+					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery holds the cross data center DR options (used with spec.distributed and the dr.kubedb.com/enabled annotation).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCDRSpec"),
 						},
 					},
 					"podTemplate": {
@@ -37074,7 +37280,7 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDCDRSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -37117,11 +37323,17 @@ func schema_apimachinery_apis_kubedb_v1_MySQLStatus(ref common.ReferenceCallback
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed MySQL.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDisasterRecoveryStatus"},
 	}
 }
 

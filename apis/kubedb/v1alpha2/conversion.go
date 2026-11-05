@@ -221,6 +221,12 @@ func Convert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in *v1.PostgresStatus,
 	return autoConvert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in, out, s)
 }
 
+// Convert_v1_MySQLStatus_To_v1alpha2_MySQLStatus is lossy: DisasterRecovery is reported only
+// in v1.
+func Convert_v1_MySQLStatus_To_v1alpha2_MySQLStatus(in *v1.MySQLStatus, out *MySQLStatus, s conversion.Scope) error {
+	return autoConvert_v1_MySQLStatus_To_v1alpha2_MySQLStatus(in, out, s)
+}
+
 func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.PostgresSpec, s conversion.Scope) error {
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
