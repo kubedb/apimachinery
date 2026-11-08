@@ -298,15 +298,9 @@ func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
 			"this Standalone Milvus keeps its write-ahead log in RocksMQ (created by an older operator); "+
 				"the archiver needs the Woodpecker WAL. Migrate with a logical backup restored into a new Milvus"))
 	}
-	// Woodpecker keeps its WAL metadata at the etcd root, so the etcd cannot be shared
-	if db.Spec.MetaStorage != nil && db.Spec.MetaStorage.ExternallyManaged {
-		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
-			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
-	}
-	if strings.HasPrefix(db.Spec.Version, "3.") {
-		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
-			"the Milvus archiver is not validated for Milvus 3.x yet"))
-	}
+	// Woodpecker keeps its WAL metadata at the etcd root, the backup dumps the whole keyspace and a restore needs
+	// an empty etcd: an externally managed etcd is accepted, but it must be dedicated to this Milvus (documented,
+	// the webhook cannot tell whether an etcd is shared)
 	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
 		a := ini.Archiver
 		if a.RecoveryTimestamp.IsZero() {
