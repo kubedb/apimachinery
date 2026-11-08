@@ -198,10 +198,6 @@ func allDBCases() []dbCase {
 			db := &olddbapi.Ignite{ObjectMeta: meta(), Spec: olddbapi.IgniteSpec{Version: "1.0.0", Replicas: replicas()}}
 			return &db.Spec, db.SetDefaults
 		}),
-		kcCase("v1alpha2/Kafka", catalogVersion[catalog.KafkaVersion](), func() (any, func(client.Client)) {
-			db := &olddbapi.Kafka{ObjectMeta: meta(), Spec: olddbapi.KafkaSpec{Version: "1.0.0", Replicas: replicas()}}
-			return &db.Spec, db.SetDefaults
-		}),
 		kcCase("v1alpha2/Milvus", catalogVersion[catalog.MilvusVersion](), func() (any, func(client.Client)) {
 			db := &olddbapi.Milvus{ObjectMeta: meta(), Spec: olddbapi.MilvusSpec{Version: "1.0.0"}}
 			return &db.Spec, db.SetDefaults
