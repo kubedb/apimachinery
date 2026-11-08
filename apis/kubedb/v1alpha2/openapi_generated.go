@@ -758,6 +758,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_Neo4jStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig":                                schema_apimachinery_apis_kubedb_v1alpha2_Neo4jTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageTLS":                              schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageTLS(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObserverSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ObserverSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Oracle":                                        schema_apimachinery_apis_kubedb_v1alpha2_Oracle(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleConfiguration":                           schema_apimachinery_apis_kubedb_v1alpha2_OracleConfiguration(ref),
@@ -43366,11 +43367,44 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures how Milvus verifies the object storage server certificate.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageTLS"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageTLS"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageTLS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectStorageTLS names the CA bundle that signed the object storage server certificate. Set exactly one of CASecret or CAConfigMap. KubeDB mounts it into every Milvus pod, enables minio.useSSL and sets minio.ssl.tlsCACert; the endpoint and port still come from the object storage config secret.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CASecret selects a key of a Secret in this namespace that holds the PEM CA bundle.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"caConfigMap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CAConfigMap selects a key of a ConfigMap in this namespace that holds the PEM CA bundle, e.g. the OpenShift service CA: openshift-service-ca.crt / service-ca.crt.",
+							Ref:         ref("k8s.io/api/core/v1.ConfigMapKeySelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.SecretKeySelector"},
 	}
 }
 

@@ -962,6 +962,11 @@ const (
 	MilvusMetaEtcdTLSVolName   = "meta-etcd-tls"
 	MilvusMetaEtcdTLSMountPath = "/milvus/etcd-tls"
 
+	// MilvusObjectStorageCAVolName / MilvusObjectStorageCAMountPath mount the CA
+	// bundle of spec.objectStorage.tls; the file is always named MilvusTLSCACert.
+	MilvusObjectStorageCAVolName   = "object-storage-ca"
+	MilvusObjectStorageCAMountPath = "/milvus/object-storage-ca"
+
 	// VirtualSecretsMetaEtcdVolume / VirtualSecretsMetaEtcdVolumeMountPath surface
 	// the internally managed meta etcd's virtual auth secret (when
 	// spec.metaStorage.authSecret is a virtual secret) as files, mirroring

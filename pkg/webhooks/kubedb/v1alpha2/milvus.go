@@ -275,6 +275,10 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 		}
 	}
 
+	if objStore := db.Spec.ObjectStorage; objStore != nil && objStore.TLS != nil {
+		allErr = append(allErr, milvusValidateObjectStorageTLS(objStore.TLS, field.NewPath("spec").Child("objectStorage").Child("tls"))...)
+	}
+
 	allErr = append(allErr, milvusValidateArchiver(db)...)
 
 	if len(allErr) == 0 {
@@ -556,4 +560,21 @@ func ValidateMilvusEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceTy
 		}
 	}
 	return nil
+}
+
+func milvusValidateObjectStorageTLS(tls *olddbapi.ObjectStorageTLS, path *field.Path) field.ErrorList {
+	var errs field.ErrorList
+	switch {
+	case tls.CASecret == nil && tls.CAConfigMap == nil:
+		errs = append(errs, field.Required(path, "set one of caSecret or caConfigMap"))
+	case tls.CASecret != nil && tls.CAConfigMap != nil:
+		errs = append(errs, field.Invalid(path, "caSecret and caConfigMap", "set only one of caSecret or caConfigMap"))
+	}
+	if s := tls.CASecret; s != nil && (s.Name == "" || s.Key == "") {
+		errs = append(errs, field.Required(path.Child("caSecret"), "name and key are required"))
+	}
+	if c := tls.CAConfigMap; c != nil && (c.Name == "" || c.Key == "") {
+		errs = append(errs, field.Required(path.Child("caConfigMap"), "name and key are required"))
+	}
+	return errs
 }
