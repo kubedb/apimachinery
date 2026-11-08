@@ -77,7 +77,7 @@ var _ webhook.CustomDefaulter = &MemcachedCustomWebhook{}
 // log is for logging in this package.
 var memLog = logf.Log.WithName("memcached-resource")
 
-func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+func (mv *MemcachedCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	if isDeletionInProgress(obj) {
 		return nil
 	}
@@ -109,7 +109,9 @@ func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object)
 		return errors.Wrapf(err, "failed to get MemcachedVersion: %s", db.Spec.Version)
 	}
 
-	db.SetDefaults(&memcachedVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, mv.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&memcachedVersion); return nil }); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -316,7 +318,9 @@ func (mv MemcachedCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		return nil, errors.Wrapf(err, "failed to get MemcachedVersion: %s", oldMemcached.Spec.Version)
 	}
 
-	oldMemcached.SetDefaults(&memcachedVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, mv.DefaultClient, oldMemcached.Namespace, &oldMemcached.Spec, func() error { oldMemcached.SetDefaults(&memcachedVersion); return nil }); err != nil {
+		return nil, err
+	}
 
 	if oldMemcached.Spec.AuthSecret == nil {
 		oldMemcached.Spec.AuthSecret = memcached.Spec.AuthSecret

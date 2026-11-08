@@ -77,7 +77,9 @@ func (m *MilvusCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 
 	milvuslog.Info("default", "name", db.Name)
 
-	db.SetDefaults(m.DefaultClient)
+	if err := dbapi.SetDefaultsInNamespace(ctx, m.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(m.DefaultClient); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 

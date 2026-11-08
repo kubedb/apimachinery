@@ -17,11 +17,16 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/utils/ptr"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // OpenShift assigns every namespace a block of UIDs and supplemental groups and records them
@@ -110,4 +115,155 @@ func firstIDOfSCCRange(value string) (int64, error) {
 		return 0, fmt.Errorf("end %d is before start %d", rest, start)
 	}
 	return start, nil
+}
+
+// GetNamespaceSecurityIDsFor reads a namespace and returns its OpenShift SCC IDs, or nil when it
+// carries no SCC annotations.
+func GetNamespaceSecurityIDsFor(ctx context.Context, kc client.Reader, namespace string) (*NamespaceSecurityIDs, error) {
+	var ns core.Namespace
+	if err := kc.Get(ctx, types.NamespacedName{Name: namespace}, &ns); err != nil {
+		return nil, fmt.Errorf("failed to get namespace %s: %w", namespace, err)
+	}
+	return GetNamespaceSecurityIDs(&ns)
+}
+
+// SetDefaultsInNamespace reads the namespace's OpenShift SCC IDs and runs
+// SetDefaultsWithNamespaceSecurityIDs with them. It is what the mutating webhooks call in place
+// of a database's plain SetDefaults; setDefaults's error, if any, is returned.
+func SetDefaultsInNamespace(ctx context.Context, kc client.Reader, namespace string, spec any, setDefaults func() error) error {
+	nsIDs, err := GetNamespaceSecurityIDsFor(ctx, kc, namespace)
+	if err != nil {
+		return err
+	}
+	SetDefaultsWithNamespaceSecurityIDs(spec, nsIDs, func() { err = setDefaults() })
+	return err
+}
+
+// SetDefaultsWithNamespaceSecurityIDs runs a database's own SetDefaults and then makes the
+// namespace IDs replace the catalog IDs it filled in. spec must be a pointer to the database's
+// spec; setDefaults is the database's usual defaulting call, e.g.
+//
+//	SetDefaultsWithNamespaceSecurityIDs(&db.Spec, nsIDs, func() { db.SetDefaults(version) })
+//
+// Every pod and container securityContext reachable from spec is covered: pod templates,
+// topology nodes, sidecars, the exporter and so on. A runAsUser, runAsGroup or fsGroup is
+// replaced only when all of these hold:
+//
+//   - it was unset before setDefaults ran, so values the user set (or that an earlier
+//     defaulting already stored on an existing database) are never changed;
+//   - setDefaults filled it in, so a field left empty stays empty and the SCC assigns it;
+//   - it is not 0 and the container is not privileged, since root is a deliberate choice that
+//     only a privileged SCC can admit anyway.
+//
+// With nil nsIDs (any namespace without the annotations) this is exactly setDefaults().
+func SetDefaultsWithNamespaceSecurityIDs(spec any, nsIDs *NamespaceSecurityIDs, setDefaults func()) {
+	if nsIDs == nil {
+		setDefaults()
+		return
+	}
+
+	userSet := map[string]bool{}
+	for path, f := range securityIDFields(spec) {
+		if *f.ptr != nil {
+			userSet[path] = true
+		}
+	}
+
+	setDefaults()
+
+	for path, f := range securityIDFields(spec) {
+		if userSet[path] || *f.ptr == nil || **f.ptr == 0 {
+			continue
+		}
+		id := nsIDs.RunAsUser
+		switch f.kind {
+		case securityIDGroup:
+			id = nsIDs.RunAsGroup
+		case securityIDFSGroup:
+			id = nsIDs.FSGroup
+		}
+		// Assign a new pointer: defaulting often shares the catalog's own pointer, which must
+		// not be modified.
+		*f.ptr = ptr.To(id)
+	}
+}
+
+type securityIDKind int
+
+const (
+	securityIDUser securityIDKind = iota
+	securityIDGroup
+	securityIDFSGroup
+)
+
+// securityIDField points at one runAsUser, runAsGroup or fsGroup field inside a spec.
+// +k8s:deepcopy-gen=false
+// +k8s:openapi-gen=false
+type securityIDField struct {
+	ptr  **int64
+	kind securityIDKind
+}
+
+var (
+	podSecurityContextType = reflect.TypeOf(core.PodSecurityContext{})
+	securityContextType    = reflect.TypeOf(core.SecurityContext{})
+	containerType          = reflect.TypeOf(core.Container{})
+)
+
+// securityIDFields returns the security ID fields reachable from spec, keyed by a path that
+// stays the same across defaulting. Containers are keyed by name, because defaulting may add
+// or reorder them.
+func securityIDFields(spec any) map[string]securityIDField {
+	out := map[string]securityIDField{}
+	walkSecurityIDFields(reflect.ValueOf(spec), "", out)
+	return out
+}
+
+func walkSecurityIDFields(v reflect.Value, path string, out map[string]securityIDField) {
+	switch v.Kind() {
+	case reflect.Pointer:
+		if !v.IsNil() {
+			walkSecurityIDFields(v.Elem(), path, out)
+		}
+	case reflect.Struct:
+		if !v.CanAddr() {
+			return
+		}
+		switch v.Type() {
+		case podSecurityContextType:
+			sc := v.Addr().Interface().(*core.PodSecurityContext)
+			out[path+".runAsUser"] = securityIDField{&sc.RunAsUser, securityIDUser}
+			out[path+".runAsGroup"] = securityIDField{&sc.RunAsGroup, securityIDGroup}
+			out[path+".fsGroup"] = securityIDField{&sc.FSGroup, securityIDFSGroup}
+			return
+		case securityContextType:
+			sc := v.Addr().Interface().(*core.SecurityContext)
+			if ptr.Deref(sc.Privileged, false) {
+				return
+			}
+			out[path+".runAsUser"] = securityIDField{&sc.RunAsUser, securityIDUser}
+			out[path+".runAsGroup"] = securityIDField{&sc.RunAsGroup, securityIDGroup}
+			return
+		}
+		t := v.Type()
+		for i := 0; i < t.NumField(); i++ {
+			if f := t.Field(i); f.IsExported() {
+				walkSecurityIDFields(v.Field(i), path+"."+f.Name, out)
+			}
+		}
+	case reflect.Slice, reflect.Array:
+		switch v.Type().Elem().Kind() {
+		case reflect.Struct, reflect.Pointer, reflect.Slice, reflect.Array:
+		default:
+			return // []byte, []string and the like hold no security contexts
+		}
+		isContainer := v.Type().Elem() == containerType
+		for i := 0; i < v.Len(); i++ {
+			key := strconv.Itoa(i)
+			if isContainer {
+				key = v.Index(i).Interface().(core.Container).Name
+			}
+			walkSecurityIDFields(v.Index(i), path+"["+key+"]", out)
+		}
+	}
 }

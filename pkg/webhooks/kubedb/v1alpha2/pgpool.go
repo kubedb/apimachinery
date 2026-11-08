@@ -76,7 +76,9 @@ func (w *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 		return fmt.Errorf("expected an pgpool object but got %T", obj)
 	}
 	pgpoollog.Info("default", "name", pp.Name)
-	pp.SetDefaults(w.DefaultClient)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, pp.Namespace, &pp.Spec, func() error { pp.SetDefaults(w.DefaultClient); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 

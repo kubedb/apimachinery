@@ -63,7 +63,7 @@ var eslog = logf.Log.WithName("elasticsearch-resource")
 
 var _ webhook.CustomDefaulter = &ElasticsearchCustomWebhook{}
 
-func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+func (w *ElasticsearchCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	if isDeletionInProgress(obj) {
 		return nil
 	}
@@ -93,7 +93,9 @@ func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Obje
 		return errors.Wrapf(err, "failed to get ElasticsearchVersion: %s", db.Spec.Version)
 	}
 
-	db.SetDefaults(&esVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&esVersion); return nil }); err != nil {
+		return err
+	}
 	db.SetHealthCheckerDefaults()
 
 	return nil
@@ -350,7 +352,9 @@ func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj,
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get ElasticsearchVersion: %s", oldElasticsearch.Spec.Version)
 	}
-	oldElasticsearch.SetDefaults(&esVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldElasticsearch.Namespace, &oldElasticsearch.Spec, func() error { oldElasticsearch.SetDefaults(&esVersion); return nil }); err != nil {
+		return nil, err
+	}
 	if oldElasticsearch.Spec.AuthSecret == nil {
 		oldElasticsearch.Spec.AuthSecret = elasticsearch.Spec.AuthSecret
 	}

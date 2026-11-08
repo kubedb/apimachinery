@@ -119,12 +119,16 @@ func seen(p *Postgres) securityIDsSeen {
 	}
 }
 
-func TestSetDefaultsWithSecurityIDs(t *testing.T) {
+func defaultPostgres(p *Postgres, pgVersion *catalog.PostgresVersion, nsIDs *NamespaceSecurityIDs) {
+	SetDefaultsWithNamespaceSecurityIDs(&p.Spec, nsIDs, func() { p.SetDefaults(pgVersion) })
+}
+
+func TestSetDefaultsWithNamespaceSecurityIDs(t *testing.T) {
 	nsIDs := &NamespaceSecurityIDs{RunAsUser: 1001880000, RunAsGroup: 1001880000, FSGroup: 1001890000}
 
 	t.Run("no namespace IDs keeps the catalog UID", func(t *testing.T) {
 		p := &Postgres{Spec: PostgresSpec{Replicas: ptr.To(int32(3))}}
-		p.SetDefaults(testPgVersion())
+		defaultPostgres(p, testPgVersion(), nil)
 		want := securityIDsSeen{70, 70, 70, 70, 70, 70, 70}
 		if got := seen(p); got != want {
 			t.Fatalf("got %+v, want %+v", got, want)
@@ -132,11 +136,15 @@ func TestSetDefaultsWithSecurityIDs(t *testing.T) {
 	})
 
 	t.Run("namespace IDs replace the catalog UID", func(t *testing.T) {
+		pgVersion := testPgVersion()
 		p := &Postgres{Spec: PostgresSpec{Replicas: ptr.To(int32(3))}}
-		p.SetDefaultsWithSecurityIDs(testPgVersion(), nsIDs)
+		defaultPostgres(p, pgVersion, nsIDs)
 		want := securityIDsSeen{1001880000, 1001880000, 1001890000, 1001880000, 1001880000, 1001880000, 1001880000}
 		if got := seen(p); got != want {
 			t.Fatalf("got %+v, want %+v", got, want)
+		}
+		if got := *pgVersion.Spec.SecurityContext.RunAsUser; got != 70 {
+			t.Fatalf("catalog object was modified: runAsUser = %d", got)
 		}
 	})
 
@@ -151,10 +159,63 @@ func TestSetDefaultsWithSecurityIDs(t *testing.T) {
 				}},
 			}},
 		}}
-		p.SetDefaultsWithSecurityIDs(testPgVersion(), nsIDs)
+		defaultPostgres(p, testPgVersion(), nsIDs)
 		want := securityIDsSeen{1001880000, 1001880000, 4242, 4343, 1001880000, 1001880000, 1001880000}
 		if got := seen(p); got != want {
 			t.Fatalf("got %+v, want %+v", got, want)
 		}
 	})
+}
+
+func TestSetDefaultsWithNamespaceSecurityIDsGeneric(t *testing.T) {
+	type sidecarSpec struct {
+		PodTemplate ofstv2.PodTemplateSpec
+		Exporter    *core.SecurityContext
+		Raw         []byte
+	}
+	type spec struct {
+		Nodes []sidecarSpec
+	}
+	catalogUID := ptr.To(int64(999))
+	nsIDs := &NamespaceSecurityIDs{RunAsUser: 5000, RunAsGroup: 5000, FSGroup: 6000}
+
+	s := &spec{Nodes: []sidecarSpec{{
+		PodTemplate: ofstv2.PodTemplateSpec{Spec: ofstv2.PodSpec{
+			Containers: []core.Container{{Name: "user", SecurityContext: &core.SecurityContext{RunAsGroup: ptr.To(int64(7))}}},
+		}},
+		Raw: []byte("x"),
+	}}}
+	setDefaults := func() {
+		n := &s.Nodes[0]
+		n.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{FSGroup: catalogUID}
+		n.PodTemplate.Spec.InitContainers = []core.Container{
+			{Name: "sysctl", SecurityContext: &core.SecurityContext{Privileged: ptr.To(true), RunAsUser: catalogUID}},
+			{Name: "root", SecurityContext: &core.SecurityContext{RunAsUser: ptr.To(int64(0))}},
+		}
+		// a new container inserted before the user's one must not shift the user's values
+		n.PodTemplate.Spec.Containers = append([]core.Container{{Name: "db", SecurityContext: &core.SecurityContext{RunAsUser: catalogUID, RunAsGroup: catalogUID}}}, n.PodTemplate.Spec.Containers...)
+		n.PodTemplate.Spec.Containers[1].SecurityContext.RunAsUser = catalogUID
+		n.Exporter = &core.SecurityContext{RunAsUser: catalogUID}
+	}
+	SetDefaultsWithNamespaceSecurityIDs(s, nsIDs, setDefaults)
+
+	n := s.Nodes[0]
+	check := func(what string, got *int64, want int64) {
+		t.Helper()
+		if got == nil || *got != want {
+			t.Errorf("%s = %v, want %d", what, got, want)
+		}
+	}
+	check("pod fsGroup", n.PodTemplate.Spec.SecurityContext.FSGroup, 6000)
+	check("privileged init runAsUser", n.PodTemplate.Spec.InitContainers[0].SecurityContext.RunAsUser, 999)
+	check("root init runAsUser", n.PodTemplate.Spec.InitContainers[1].SecurityContext.RunAsUser, 0)
+	check("db runAsUser", n.PodTemplate.Spec.Containers[0].SecurityContext.RunAsUser, 5000)
+	check("db runAsGroup", n.PodTemplate.Spec.Containers[0].SecurityContext.RunAsGroup, 5000)
+	check("user runAsUser", n.PodTemplate.Spec.Containers[1].SecurityContext.RunAsUser, 5000)
+	check("user runAsGroup", n.PodTemplate.Spec.Containers[1].SecurityContext.RunAsGroup, 7)
+	check("exporter runAsUser", n.Exporter.RunAsUser, 5000)
+	if n.Exporter.RunAsGroup != nil {
+		t.Errorf("exporter runAsGroup = %d, want unset", *n.Exporter.RunAsGroup)
+	}
+	check("catalog UID", catalogUID, 999)
 }
