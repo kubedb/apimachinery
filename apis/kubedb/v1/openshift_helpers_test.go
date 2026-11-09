@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	"context"
+	"errors"
 	"testing"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -27,6 +29,7 @@ import (
 	"k8s.io/utils/ptr"
 	core_util "kmodules.xyz/client-go/core/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func nsWith(annotations map[string]string) *core.Namespace {
@@ -218,4 +221,67 @@ func TestSetDefaultsWithNamespaceSecurityIDsGeneric(t *testing.T) {
 		t.Errorf("exporter runAsGroup = %d, want unset", *n.Exporter.RunAsGroup)
 	}
 	check("catalog UID", catalogUID, 999)
+}
+
+// namespaceReader serves one Namespace and counts the reads. Any other call panics on the nil
+// embedded Reader.
+type namespaceReader struct {
+	client.Reader
+	ns    *core.Namespace
+	reads int
+}
+
+func (r *namespaceReader) Get(_ context.Context, key client.ObjectKey, obj client.Object, _ ...client.GetOption) error {
+	r.reads++
+	ns, ok := obj.(*core.Namespace)
+	if !ok || key.Name != r.ns.Name {
+		return errors.New("unexpected Get")
+	}
+	*ns = *r.ns.DeepCopy()
+	return nil
+}
+
+func TestSetDefaultsInNamespaceForVersion(t *testing.T) {
+	ns := nsWith(map[string]string{
+		OpenShiftSCCUIDRangeAnnotation:           "1000650000/10000",
+		OpenShiftSCCSupplementalGroupsAnnotation: "1000650000/10000",
+	})
+
+	t.Run("version pins the UID: catalog kept, namespace not read", func(t *testing.T) {
+		kc := &namespaceReader{ns: ns}
+		p := &Postgres{Spec: PostgresSpec{Replicas: ptr.To(int32(3))}}
+		err := SetDefaultsInNamespaceForVersion(context.TODO(), kc, "demo", false, &p.Spec, func() error { p.SetDefaults(testPgVersion()); return nil })
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := (securityIDsSeen{70, 70, 70, 70, 70, 70, 70}); seen(p) != want {
+			t.Fatalf("got %+v, want %+v", seen(p), want)
+		}
+		if kc.reads != 0 {
+			t.Fatalf("namespace read %d times, want 0", kc.reads)
+		}
+	})
+
+	t.Run("any non-root UID allowed: namespace IDs applied", func(t *testing.T) {
+		kc := &namespaceReader{ns: ns}
+		p := &Postgres{Spec: PostgresSpec{Replicas: ptr.To(int32(3))}}
+		err := SetDefaultsInNamespaceForVersion(context.TODO(), kc, "demo", true, &p.Spec, func() error { p.SetDefaults(testPgVersion()); return nil })
+		if err != nil {
+			t.Fatal(err)
+		}
+		id := int64(1000650000)
+		if want := (securityIDsSeen{id, id, id, id, id, id, id}); seen(p) != want {
+			t.Fatalf("got %+v, want %+v", seen(p), want)
+		}
+	})
+
+	t.Run("setDefaults error is returned", func(t *testing.T) {
+		boom := errors.New("boom")
+		for _, anyUID := range []bool{false, true} {
+			err := SetDefaultsInNamespaceForVersion(context.TODO(), &namespaceReader{ns: ns}, "demo", anyUID, &PostgresSpec{}, func() error { return boom })
+			if !errors.Is(err, boom) {
+				t.Fatalf("runAsAnyNonRoot=%v: err = %v, want %v", anyUID, err, boom)
+			}
+		}
+	})
 }

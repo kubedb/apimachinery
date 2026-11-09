@@ -139,6 +139,18 @@ func SetDefaultsInNamespace(ctx context.Context, kc client.Reader, namespace str
 	return err
 }
 
+// SetDefaultsInNamespaceForVersion is SetDefaultsInNamespace for databases whose catalog
+// version can pin the UID (the RunAsAnyNonRoot field of Postgres, Elasticsearch, PgBouncer,
+// Pgpool and Etcd versions). When runAsAnyNonRoot is false the image only works as the catalog
+// UID and the validating webhooks reject any other, so the catalog defaults are kept exactly as
+// before and the namespace is not read. Such a version still cannot run under restricted-v2.
+func SetDefaultsInNamespaceForVersion(ctx context.Context, kc client.Reader, namespace string, runAsAnyNonRoot bool, spec any, setDefaults func() error) error {
+	if !runAsAnyNonRoot {
+		return setDefaults()
+	}
+	return SetDefaultsInNamespace(ctx, kc, namespace, spec, setDefaults)
+}
+
 // SetDefaultsWithNamespaceSecurityIDs runs a database's own SetDefaults and then makes the
 // namespace IDs replace the catalog IDs it filled in. spec must be a pointer to the database's
 // spec; setDefaults is the database's usual defaulting call, e.g.

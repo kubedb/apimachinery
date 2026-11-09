@@ -76,7 +76,12 @@ func (w *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 		return fmt.Errorf("expected an pgpool object but got %T", obj)
 	}
 	pgpoollog.Info("default", "name", pp.Name)
-	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, pp.Namespace, &pp.Spec, func() error { pp.SetDefaults(w.DefaultClient); return nil }); err != nil {
+	// SetDefaults looks the version up itself and only logs when it is missing; keep that
+	// behaviour here and fall back to the plain catalog defaults if the lookup fails.
+	var ppVersion catalog.PgpoolVersion
+	runAsAnyNonRoot := w.DefaultClient.Get(ctx, types.NamespacedName{Name: pp.Spec.Version}, &ppVersion) == nil &&
+		ppVersion.Spec.SecurityContext.RunAsAnyNonRoot
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, w.DefaultClient, pp.Namespace, runAsAnyNonRoot, &pp.Spec, func() error { pp.SetDefaults(w.DefaultClient); return nil }); err != nil {
 		return err
 	}
 	return nil

@@ -95,7 +95,7 @@ func (pw PgBouncerCustomWebhook) Default(ctx context.Context, obj runtime.Object
 		}
 	}
 
-	if err := dbapi.SetDefaultsInNamespace(ctx, pw.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, pw.DefaultClient, db.Namespace, pgBouncerVersion.Spec.SecurityContext.RunAsAnyNonRoot, &db.Spec, func() error { db.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
 		return err
 	}
 
@@ -173,7 +173,7 @@ func (pw PgBouncerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		}
 	}
 
-	if err := dbapi.SetDefaultsInNamespace(ctx, pw.DefaultClient, oldPgBouncer.Namespace, &oldPgBouncer.Spec, func() error { oldPgBouncer.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, pw.DefaultClient, oldPgBouncer.Namespace, pgBouncerVersion.Spec.SecurityContext.RunAsAnyNonRoot, &oldPgBouncer.Spec, func() error { oldPgBouncer.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
 		return nil, err
 	}
 

@@ -102,7 +102,7 @@ func (wh *PostgresCustomWebhook) Default(ctx context.Context, obj runtime.Object
 		return errors.Wrapf(err, "failed to get PostgresVersion: %s", db.Spec.Version)
 	}
 
-	if err := dbapi.SetDefaultsInNamespace(ctx, wh.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&postgresVersion); return nil }); err != nil {
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, wh.DefaultClient, db.Namespace, postgresVersion.Spec.SecurityContext.RunAsAnyNonRoot, &db.Spec, func() error { db.SetDefaults(&postgresVersion); return nil }); err != nil {
 		return err
 	}
 
@@ -678,7 +678,7 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
 		}
-		if err := dbapi.SetDefaultsInNamespace(ctx, wh.DefaultClient, oldPostgres.Namespace, &oldPostgres.Spec, func() error { oldPostgres.SetDefaults(&postgresVersion); return nil }); err != nil {
+		if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, wh.DefaultClient, oldPostgres.Namespace, postgresVersion.Spec.SecurityContext.RunAsAnyNonRoot, &oldPostgres.Spec, func() error { oldPostgres.SetDefaults(&postgresVersion); return nil }); err != nil {
 			return nil, err
 		}
 	}

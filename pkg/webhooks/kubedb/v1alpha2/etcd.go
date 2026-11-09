@@ -103,7 +103,7 @@ func (w *EtcdCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 		return errors.Wrapf(err, "failed to get EtcdVersion %q", db.Spec.Version)
 	}
 
-	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&etcdVersion); return nil }); err != nil {
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, w.DefaultClient, db.Namespace, etcdVersion.Spec.SecurityContext.RunAsAnyNonRoot, &db.Spec, func() error { db.SetDefaults(&etcdVersion); return nil }); err != nil {
 		return err
 	}
 	return nil
