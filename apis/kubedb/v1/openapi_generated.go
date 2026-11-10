@@ -616,6 +616,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings":                                      schema_apimachinery_apis_kubedb_v1_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions":                                     schema_apimachinery_apis_kubedb_v1_ManifestOptions(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDB":                                             schema_apimachinery_apis_kubedb_v1_MariaDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCDRSpec":                                     schema_apimachinery_apis_kubedb_v1_MariaDBDCDRSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCStatus":                                     schema_apimachinery_apis_kubedb_v1_MariaDBDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDisasterRecoveryStatus":                       schema_apimachinery_apis_kubedb_v1_MariaDBDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBList":                                         schema_apimachinery_apis_kubedb_v1_MariaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBSpec":                                         schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBStatus":                                       schema_apimachinery_apis_kubedb_v1_MariaDBStatus(ref),
@@ -35686,6 +35689,196 @@ func schema_apimachinery_apis_kubedb_v1_MariaDB(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_MariaDBDCDRSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBDCDRSpec holds the cross data center disaster recovery (DC-DR) options of a distributed MariaDB Galera cluster. It only has an effect when spec.distributed is true and the DC-DR annotation (dr.kubedb.com/enabled=true) is set. Each Member data center then runs its own Galera cluster; one node of a passive data center pulls from the active one through an asynchronous GTID channel.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bestEffortCrossDCLagTransactions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BestEffortCrossDCLagTransactions is the largest number of transactions a passive data center may be behind the active one for an automatic failover to be allowed. A failover that would exceed it is held back until it is overridden with an annotation. nil means no budget is enforced.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"channelConnectRetrySeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelConnectRetrySeconds is MASTER_CONNECT_RETRY of the cross-DC replication channel. Defaults to 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_MariaDBDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBDCStatus is one data center's local view inside a distributed MariaDB.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster (the same clusterName used in the PlacementPolicy distributionRule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role is Member or Arbiter.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"channelHolder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelHolder is the node of this data center that runs the cross-DC channel. Empty in the active data center.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the node of the active data center the channel pulls from.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Writable is true when the nodes of this data center have read_only=OFF. It is only evidence when WritableObservedAt is fresh.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"writableObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WritableObservedAt is when Writable was last established by probing the nodes.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"syncedNodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncedNodes is the number of nodes of this data center that are Synced members of its Primary Galera component.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"channelState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ChannelState is the state of the cross-DC replication channel on the channel holder: \"Running\" (IO and SQL threads ON), \"Stopped\", \"Connecting\", \"Error\" or \"None\" (the active DC has no channel).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notReadyPods": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NotReadyPods names the pods in this data center that are not Synced.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"gtidLag": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GTIDLag is this DC's cross-DC lag behind the active DC, in transactions of the active DC's GTID domain.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"lagObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LagObservedAt is when GTIDLag was last measured.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_MariaDBDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBDisasterRecoveryStatus reports the per data center DC-DR view of a distributed MariaDB. The cross-DC decision is owned by the dr-controlplane primary-DC Lease; this status reflects it on the single MariaDB object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that currently holds the primary DC Lease and runs the writable Galera cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member DC.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"protected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protected reports whether at least one Member data center other than the active one has its replication channel running (IO and SQL threads ON) within the lag budget, as of a fresh observation. nil means unknown, which must be treated as unprotected.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"protectionMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProtectionMessage explains the current value of Protected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCStatus"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_MariaDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35891,12 +36084,18 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery holds the cross data center DR options (used with spec.distributed and the dr.kubedb.com/enabled annotation).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCDRSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDCDRSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -35939,11 +36138,17 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBStatus(ref common.ReferenceCallba
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed MariaDB.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDisasterRecoveryStatus"},
 	}
 }
 

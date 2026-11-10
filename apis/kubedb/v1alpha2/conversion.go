@@ -221,6 +221,12 @@ func Convert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in *v1.PostgresStatus,
 	return autoConvert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in, out, s)
 }
 
+// Convert_v1_MariaDBStatus_To_v1alpha2_MariaDBStatus is lossy: DisasterRecovery is reported
+// only in v1.
+func Convert_v1_MariaDBStatus_To_v1alpha2_MariaDBStatus(in *v1.MariaDBStatus, out *MariaDBStatus, s conversion.Scope) error {
+	return autoConvert_v1_MariaDBStatus_To_v1alpha2_MariaDBStatus(in, out, s)
+}
+
 // Convert_v1_MySQLStatus_To_v1alpha2_MySQLStatus is lossy: DisasterRecovery is reported only
 // in v1.
 func Convert_v1_MySQLStatus_To_v1alpha2_MySQLStatus(in *v1.MySQLStatus, out *MySQLStatus, s conversion.Scope) error {
