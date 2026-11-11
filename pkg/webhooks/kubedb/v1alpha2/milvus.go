@@ -77,7 +77,9 @@ func (m *MilvusCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 
 	milvuslog.Info("default", "name", db.Name)
 
-	db.SetDefaults(m.DefaultClient)
+	if err := dbapi.SetDefaultsInNamespace(ctx, m.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(m.DefaultClient); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -211,12 +213,22 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 	}
 
 	if db.Spec.TLS != nil {
-		if db.Spec.TLS.IssuerRef == nil {
+		needsIssuer := db.CertificateIssued(olddbapi.MilvusCertificateTypeServer) || db.CertificateIssued(olddbapi.MilvusCertificateTypeClient)
+		if db.Spec.TLS.IssuerRef == nil && needsIssuer {
 			allErr = append(allErr, field.Invalid(
 				field.NewPath("spec").Child("tls").Child("issuerRef"),
 				db.Name,
-				"spec.tls.issuerRef is required when TLS is configured",
+				"spec.tls.issuerRef is required for any certificate not listed in spec.tls.existingSecrets",
 			))
+		}
+		if existing := db.Spec.TLS.ExistingSecrets; existing != nil {
+			path := field.NewPath("spec").Child("tls").Child("existingSecrets")
+			if existing.Server != nil && existing.Server.Name == "" {
+				allErr = append(allErr, field.Required(path.Child("server", "name"), "server must name a Secret"))
+			}
+			if existing.Client != nil && existing.Client.Name == "" {
+				allErr = append(allErr, field.Required(path.Child("client", "name"), "client must name a Secret"))
+			}
 		}
 
 		if db.Spec.TLS.Internal != nil && db.Spec.TLS.Internal.Mode == olddbapi.TLSModeMTLS {
@@ -265,6 +277,10 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 		}
 	}
 
+	if objStore := db.Spec.ObjectStorage; objStore != nil && objStore.TLS != nil {
+		allErr = append(allErr, milvusValidateObjectStorageTLS(objStore.TLS, field.NewPath("spec").Child("objectStorage").Child("tls"))...)
+	}
+
 	allErr = append(allErr, milvusValidateArchiver(db)...)
 
 	if len(allErr) == 0 {
@@ -298,15 +314,9 @@ func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
 			"this Standalone Milvus keeps its write-ahead log in RocksMQ (created by an older operator); "+
 				"the archiver needs the Woodpecker WAL. Migrate with a logical backup restored into a new Milvus"))
 	}
-	// Woodpecker keeps its WAL metadata at the etcd root, so the etcd cannot be shared
-	if db.Spec.MetaStorage != nil && db.Spec.MetaStorage.ExternallyManaged {
-		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
-			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
-	}
-	if strings.HasPrefix(db.Spec.Version, "3.") {
-		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
-			"the Milvus archiver is not validated for Milvus 3.x yet"))
-	}
+	// Woodpecker keeps its WAL metadata at the etcd root, the backup dumps the whole keyspace and a restore needs
+	// an empty etcd: an externally managed etcd is accepted, but it must be dedicated to this Milvus (documented,
+	// the webhook cannot tell whether an etcd is shared)
 	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
 		a := ini.Archiver
 		if a.RecoveryTimestamp.IsZero() {
@@ -552,4 +562,21 @@ func ValidateMilvusEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceTy
 		}
 	}
 	return nil
+}
+
+func milvusValidateObjectStorageTLS(tls *olddbapi.ObjectStorageTLS, path *field.Path) field.ErrorList {
+	var errs field.ErrorList
+	switch {
+	case tls.CASecret == nil && tls.CAConfigMap == nil:
+		errs = append(errs, field.Required(path, "set one of caSecret or caConfigMap"))
+	case tls.CASecret != nil && tls.CAConfigMap != nil:
+		errs = append(errs, field.Invalid(path, "caSecret and caConfigMap", "set only one of caSecret or caConfigMap"))
+	}
+	if s := tls.CASecret; s != nil && (s.Name == "" || s.Key == "") {
+		errs = append(errs, field.Required(path.Child("caSecret"), "name and key are required"))
+	}
+	if c := tls.CAConfigMap; c != nil && (c.Name == "" || c.Key == "") {
+		errs = append(errs, field.Required(path.Child("caConfigMap"), "name and key are required"))
+	}
+	return errs
 }

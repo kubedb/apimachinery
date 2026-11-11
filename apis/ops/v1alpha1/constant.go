@@ -85,6 +85,12 @@ const (
 	Reconfigure          = "Reconfigure"
 	ReconfigureSucceeded = "ReconfigureSucceeded"
 	ReconfigureFailed    = "ReconfigureFailed"
+
+	DynamicConfigTried             = "DynamicConfigTried"
+	DynamicConfigTriedSucceeded    = "DynamicConfigTriedSucceeded"
+	DynamicConfigApplied           = "DynamicConfigApplied"
+	DynamicConfigAppliedSucceeded  = "DynamicConfigAppliedSucceeded"
+	DynamicConfigFallbackToRestart = "DynamicConfigFallbackToRestart"
 )
 
 // ReconfigureTLS
@@ -396,6 +402,8 @@ const (
 	OpsRequestProgressing                   = "OpsRequestProgressing"
 	SetRaftKeyOpsRequestProgressing         = "SetRaftKeyOpsRequestProgressing"
 	UnsetRaftKeyOpsRequestProgressing       = "UnsetRaftKeyOpsRequestProgressing"
+	SetRaftKeyMajorUpgradeInProgress        = "SetRaftKeyMajorUpgradeInProgress"
+	UnsetRaftKeyMajorUpgradeInProgress      = "UnsetRaftKeyMajorUpgradeInProgress"
 	NotReadyReplicas                        = "NotReadyReplicas"
 	RestartNotReadyStandby                  = "RestartNotReadyStandby"
 	StandbyReadyCheck                       = "StandbyReadyCheck"

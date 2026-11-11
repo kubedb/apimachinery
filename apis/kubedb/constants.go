@@ -589,6 +589,12 @@ const (
 	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
+	// PostgresRaftKeyMajorUpgradeInProgress is set in the pg-coordinator raft KV, to the
+	// ops request's UID, for the length of a major-version UpdateVersion. While it is set,
+	// a standby whose data directory is from the old major version re-seeds without
+	// keeping a copy of that data, which its new binaries cannot start.
+	PostgresRaftKeyMajorUpgradeInProgress = "MajorUpgradeInProgress"
+
 	SharedBuffersGbAsByte = 1024 * 1024 * 1024
 	SharedBuffersMbAsByte = 1024 * 1024
 
@@ -962,6 +968,11 @@ const (
 	MilvusMetaEtcdTLSVolName   = "meta-etcd-tls"
 	MilvusMetaEtcdTLSMountPath = "/milvus/etcd-tls"
 
+	// MilvusObjectStorageCAVolName / MilvusObjectStorageCAMountPath mount the CA
+	// bundle of spec.objectStorage.tls; the file is always named MilvusTLSCACert.
+	MilvusObjectStorageCAVolName   = "object-storage-ca"
+	MilvusObjectStorageCAMountPath = "/milvus/object-storage-ca"
+
 	// VirtualSecretsMetaEtcdVolume / VirtualSecretsMetaEtcdVolumeMountPath surface
 	// the internally managed meta etcd's virtual auth secret (when
 	// spec.metaStorage.authSecret is a virtual secret) as files, mirroring
@@ -1009,6 +1020,7 @@ const (
 	KafkaBrokerClientPortName          = "broker"
 	KafkaControllerClientPortName      = "controller"
 	KafkaPortNameLocal                 = "local"
+	KafkaPortNameExternal              = "external"
 	KafkaTopicNameHealth               = "kafka-health"
 	KafkaTopicDeletionThresholdOffset  = 1000
 	KafkaBrokerMaxID                   = 1000
@@ -1017,6 +1029,7 @@ const (
 	KafkaLocalRESTPort                 = 29092
 	KafkaCruiseControlRESTPort         = 9090
 	KafkaCruiseControlListenerPort     = 9094
+	KafkaExternalPort                  = 9095
 	KafkaCCDefaultInNetwork            = 500000
 	KafkaCCDefaultOutNetwork           = 500000
 
@@ -2427,6 +2440,9 @@ const (
 
 	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
 	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
+
+	OracleOSBWSVirtualHostAnnotation = "oracle.kubedb.com/osbws-virtual-host"
+	OracleOSBWSVirtualHostKey        = "OSB_WS_VIRTUAL_HOST"
 )
 
 // =========================== DB2 Constants ============================
