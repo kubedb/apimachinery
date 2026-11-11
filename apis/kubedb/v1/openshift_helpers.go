@@ -26,6 +26,7 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/ptr"
+	clustermeta "kmodules.xyz/client-go/cluster"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -130,7 +131,12 @@ func GetNamespaceSecurityIDsFor(ctx context.Context, kc client.Reader, namespace
 // SetDefaultsInNamespace reads the namespace's OpenShift SCC IDs and runs
 // SetDefaultsWithNamespaceSecurityIDs with them. It is what the mutating webhooks call in place
 // of a database's plain SetDefaults; setDefaults's error, if any, is returned.
-func SetDefaultsInNamespace(ctx context.Context, kc client.Reader, namespace string, spec any, setDefaults func() error) error {
+//
+// On a cluster that is not OpenShift it is exactly setDefaults(): the namespace is not read.
+func SetDefaultsInNamespace(ctx context.Context, kc client.Client, namespace string, spec any, setDefaults func() error) error {
+	if !clustermeta.IsOpenShiftManaged(kc.RESTMapper()) {
+		return setDefaults()
+	}
 	nsIDs, err := GetNamespaceSecurityIDsFor(ctx, kc, namespace)
 	if err != nil {
 		return err
@@ -144,7 +150,7 @@ func SetDefaultsInNamespace(ctx context.Context, kc client.Reader, namespace str
 // Pgpool and Etcd versions). When runAsAnyNonRoot is false the image only works as the catalog
 // UID and the validating webhooks reject any other, so the catalog defaults are kept exactly as
 // before and the namespace is not read. Such a version still cannot run under restricted-v2.
-func SetDefaultsInNamespaceForVersion(ctx context.Context, kc client.Reader, namespace string, runAsAnyNonRoot bool, spec any, setDefaults func() error) error {
+func SetDefaultsInNamespaceForVersion(ctx context.Context, kc client.Client, namespace string, runAsAnyNonRoot bool, spec any, setDefaults func() error) error {
 	if !runAsAnyNonRoot {
 		return setDefaults()
 	}

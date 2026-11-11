@@ -25,7 +25,9 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/utils/ptr"
 	core_util "kmodules.xyz/client-go/core/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
@@ -223,12 +225,22 @@ func TestSetDefaultsWithNamespaceSecurityIDsGeneric(t *testing.T) {
 	check("catalog UID", catalogUID, 999)
 }
 
-// namespaceReader serves one Namespace and counts the reads. Any other call panics on the nil
-// embedded Reader.
+// namespaceReader serves one Namespace and counts the reads. Its RESTMapper knows OpenShift's
+// Project kind unless notOpenShift is set. Any other call panics on the nil embedded Client.
 type namespaceReader struct {
-	client.Reader
-	ns    *core.Namespace
-	reads int
+	client.Client
+	ns           *core.Namespace
+	reads        int
+	notOpenShift bool
+}
+
+func (r *namespaceReader) RESTMapper() meta.RESTMapper {
+	gv := schema.GroupVersion{Group: "project.openshift.io", Version: "v1"}
+	m := meta.NewDefaultRESTMapper([]schema.GroupVersion{gv})
+	if !r.notOpenShift {
+		m.Add(gv.WithKind("Project"), meta.RESTScopeRoot)
+	}
+	return m
 }
 
 func (r *namespaceReader) Get(_ context.Context, key client.ObjectKey, obj client.Object, _ ...client.GetOption) error {
@@ -275,12 +287,29 @@ func TestSetDefaultsInNamespaceForVersion(t *testing.T) {
 		}
 	})
 
+	t.Run("not OpenShift: catalog kept, namespace not read", func(t *testing.T) {
+		kc := &namespaceReader{ns: ns, notOpenShift: true}
+		p := &Postgres{Spec: PostgresSpec{Replicas: ptr.To(int32(3))}}
+		err := SetDefaultsInNamespaceForVersion(context.TODO(), kc, "demo", true, &p.Spec, func() error { p.SetDefaults(testPgVersion()); return nil })
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := (securityIDsSeen{70, 70, 70, 70, 70, 70, 70}); seen(p) != want {
+			t.Fatalf("got %+v, want %+v", seen(p), want)
+		}
+		if kc.reads != 0 {
+			t.Fatalf("namespace read %d times, want 0", kc.reads)
+		}
+	})
+
 	t.Run("setDefaults error is returned", func(t *testing.T) {
 		boom := errors.New("boom")
-		for _, anyUID := range []bool{false, true} {
-			err := SetDefaultsInNamespaceForVersion(context.TODO(), &namespaceReader{ns: ns}, "demo", anyUID, &PostgresSpec{}, func() error { return boom })
-			if !errors.Is(err, boom) {
-				t.Fatalf("runAsAnyNonRoot=%v: err = %v, want %v", anyUID, err, boom)
+		for _, notOpenShift := range []bool{false, true} {
+			for _, anyUID := range []bool{false, true} {
+				err := SetDefaultsInNamespaceForVersion(context.TODO(), &namespaceReader{ns: ns, notOpenShift: notOpenShift}, "demo", anyUID, &PostgresSpec{}, func() error { return boom })
+				if !errors.Is(err, boom) {
+					t.Fatalf("notOpenShift=%v runAsAnyNonRoot=%v: err = %v, want %v", notOpenShift, anyUID, err, boom)
+				}
 			}
 		}
 	})
