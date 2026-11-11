@@ -83,6 +83,14 @@ func (r Redis) PodControllerLabels(extraLabels ...map[string]string) map[string]
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Controller.Labels)
 }
 
+func (r Redis) SidekickLabels(skName string) map[string]string {
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.InstanceLabelKey: skName,
+		kubedb.SidekickOwnerName:   r.Name,
+		kubedb.SidekickOwnerKind:   r.ResourceFQN(),
+	})
+}
+
 func (r Redis) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), svcTemplate.Labels)

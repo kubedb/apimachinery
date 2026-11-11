@@ -44,6 +44,8 @@ type Interface interface {
 	Neo4jArchivers() Neo4jArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
+	// RedisArchivers returns a RedisArchiverInformer.
+	RedisArchivers() RedisArchiverInformer
 }
 
 type version struct {
@@ -105,4 +107,9 @@ func (v *version) Neo4jArchivers() Neo4jArchiverInformer {
 // PostgresArchivers returns a PostgresArchiverInformer.
 func (v *version) PostgresArchivers() PostgresArchiverInformer {
 	return &postgresArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RedisArchivers returns a RedisArchiverInformer.
+func (v *version) RedisArchivers() RedisArchiverInformer {
+	return &redisArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

@@ -70,6 +70,10 @@ func (DocumentDBArchiver) CustomResourceDefinition() *apiextensions.CustomResour
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDocumentDBArchiver))
 }
 
+func (RedisArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRedisArchiver))
+}
+
 func SetDefaultLogBackupOptions(log *LogBackupOptions) *LogBackupOptions {
 	if log == nil {
 		log = &LogBackupOptions{
