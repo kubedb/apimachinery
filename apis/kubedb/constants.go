@@ -589,6 +589,12 @@ const (
 	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
+	// PostgresRaftKeyMajorUpgradeInProgress is set in the pg-coordinator raft KV, to the
+	// ops request's UID, for the length of a major-version UpdateVersion. While it is set,
+	// a standby whose data directory is from the old major version re-seeds without
+	// keeping a copy of that data, which its new binaries cannot start.
+	PostgresRaftKeyMajorUpgradeInProgress = "MajorUpgradeInProgress"
+
 	SharedBuffersGbAsByte = 1024 * 1024 * 1024
 	SharedBuffersMbAsByte = 1024 * 1024
 
