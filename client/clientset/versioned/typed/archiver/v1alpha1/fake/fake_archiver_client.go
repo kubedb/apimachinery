@@ -69,6 +69,10 @@ func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.Post
 	return newFakePostgresArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) RedisArchivers(namespace string) v1alpha1.RedisArchiverInterface {
+	return newFakeRedisArchivers(c, namespace)
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeArchiverV1alpha1) RESTClient() rest.Interface {

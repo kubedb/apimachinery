@@ -84,6 +84,9 @@ type RedisVersionSpec struct {
 	SecurityContext SecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+	// Archiver defines the archiver & kubestash-addon related specifications
+	// +optional
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 }
 
 // RedisVersionInitContainer is the Redis init container image

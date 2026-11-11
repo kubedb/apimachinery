@@ -4387,6 +4387,7 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
+	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
 }
 
@@ -4425,6 +4426,7 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
+	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
 }
 

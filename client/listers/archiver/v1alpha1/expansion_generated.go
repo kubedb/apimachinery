@@ -97,3 +97,11 @@ type PostgresArchiverListerExpansion interface{}
 // PostgresArchiverNamespaceListerExpansion allows custom methods to be added to
 // PostgresArchiverNamespaceLister.
 type PostgresArchiverNamespaceListerExpansion interface{}
+
+// RedisArchiverListerExpansion allows custom methods to be added to
+// RedisArchiverLister.
+type RedisArchiverListerExpansion interface{}
+
+// RedisArchiverNamespaceListerExpansion allows custom methods to be added to
+// RedisArchiverNamespaceLister.
+type RedisArchiverNamespaceListerExpansion interface{}

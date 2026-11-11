@@ -3821,6 +3821,11 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	return
 }
 
