@@ -2434,6 +2434,9 @@ const (
 
 	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
 	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
+
+	OracleOSBWSVirtualHostAnnotation = "oracle.kubedb.com/osbws-virtual-host"
+	OracleOSBWSVirtualHostKey        = "OSB_WS_VIRTUAL_HOST"
 )
 
 // =========================== DB2 Constants ============================
