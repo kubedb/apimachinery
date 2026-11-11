@@ -6112,6 +6112,11 @@ func (in *OracleSpec) DeepCopyInto(out *OracleSpec) {
 		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(v1.AgentSpec)

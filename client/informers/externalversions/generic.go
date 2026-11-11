@@ -84,6 +84,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MySQLArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("neo4jarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().Neo4jArchivers().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("oraclearchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().OracleArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().PostgresArchivers().Informer()}, nil
 

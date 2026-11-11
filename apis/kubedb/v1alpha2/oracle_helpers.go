@@ -306,6 +306,7 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	}
 
 	o.SetListenerDefaults()
+	o.setArchiverDefaults()
 	o.initializePodTemplates()
 
 	oraVersion := &catalog.OracleVersion{}
@@ -342,6 +343,50 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 		if o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
 		}
+	}
+}
+
+// SidekickName is the sidekick that runs the archiver's incremental-backup loop.
+func (o *Oracle) SidekickName() string {
+	return o.OffshootName() + "-" + kubedb.OracleArchiverSidekickSuffix
+}
+
+func (o *Oracle) SidekickLabels(skName string) map[string]string {
+	return metautil.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		metautil.ComponentLabelKey: skName,
+		kubedb.SidekickOwnerName:   o.Name,
+		kubedb.SidekickOwnerKind:   o.ResourceFQN(),
+	})
+}
+
+// ArchiverBackupConfigName is the BackupConfiguration the archiver creates for
+// the database's full (LEVEL 0) and manifest backups.
+func (o *Oracle) ArchiverBackupConfigName() string {
+	return o.OffshootName() + "-" + kubedb.OracleArchiverBackupConfigSuffix
+}
+
+// IncrementalSnapshotName is the monitoring Snapshot the incremental-backup
+// loop records its cycles and the restorable window in.
+func (o *Oracle) IncrementalSnapshotName() string {
+	return o.OffshootName() + "-" + kubedb.OracleArchiverIncrementalSnapshotSuffix
+}
+
+func (o *Oracle) setArchiverDefaults() {
+	if o.Spec.Archiver != nil && o.Spec.Archiver.Ref.Namespace == "" {
+		o.Spec.Archiver.Ref.Namespace = o.GetNamespace()
+	}
+	if o.Spec.Init == nil || o.Spec.Init.Archiver == nil {
+		return
+	}
+	a := o.Spec.Init.Archiver
+	if a.EncryptionSecret != nil && a.EncryptionSecret.Namespace == "" {
+		a.EncryptionSecret.Namespace = o.GetNamespace()
+	}
+	if a.FullDBRepository != nil && a.FullDBRepository.Namespace == "" {
+		a.FullDBRepository.Namespace = o.GetNamespace()
+	}
+	if a.ManifestRepository != nil && a.ManifestRepository.Namespace == "" {
+		a.ManifestRepository.Namespace = o.GetNamespace()
 	}
 }
 

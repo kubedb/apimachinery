@@ -36,4 +36,6 @@ type MySQLArchiverExpansion interface{}
 
 type Neo4jArchiverExpansion interface{}
 
+type OracleArchiverExpansion interface{}
+
 type PostgresArchiverExpansion interface{}

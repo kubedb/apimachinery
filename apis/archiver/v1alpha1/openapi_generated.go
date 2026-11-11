@@ -621,6 +621,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverStatus":                         schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jDifferentialBackupOptions":              schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jFullBackupOptions":                      schema_apimachinery_apis_archiver_v1alpha1_Neo4jFullBackupOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiver":                              schema_apimachinery_apis_archiver_v1alpha1_OracleArchiver(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverList":                          schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverList(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverSpec":                          schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverStatus":                        schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions":                     schema_apimachinery_apis_archiver_v1alpha1_OracleFullBackupOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions":              schema_apimachinery_apis_archiver_v1alpha1_OracleIncrementalBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver":                            schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverList":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
@@ -35630,6 +35636,353 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jFullBackupOptions(ref commo
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverStatus"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiver"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OracleArchiverSpec defines the desired state of OracleArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Databases define which Oracle databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"),
+						},
+					},
+					"pause": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend. It also bounds the point-in-time recovery window: the LEVEL 1 and archived log backups of a full backup are deleted together with it.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullBackup defines the sessionConfig of the full (LEVEL 0) backup. This options will eventually go to the full-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions"),
+						},
+					},
+					"incrementalBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IncrementalBackup configures the incremental-backup loop that takes RMAN LEVEL 1 backups and ships the archived redo logs between full backups.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions"),
+						},
+					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"backupStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OracleArchiverStatus defines the observed state of OracleArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRefs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the information of all the databases managed by this archiver",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleFullBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"driver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Driver specifies the mechanism used to perform a full backup.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"task": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Task specifies the task configuration for a full backup.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+						},
+					},
+					"scheduler": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Scheduler specifies the scheduling configuration for full backups.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
+						},
+					},
+					"containerRuntimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ContainerRuntimeSettings specifies the runtime settings for the full backup containers.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies the pod template for a full backup job.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"retryConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryConfig specifies the retry policy for a failed full backup.",
+							Ref:         ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout specifies the maximum duration allowed for a full backup.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"sessionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SessionHistoryLimit specifies the number of full backup session histories to retain.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"driver"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleIncrementalBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OracleIncrementalBackupOptions configures the incremental-backup loop.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"backupInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupInterval is the time between RMAN LEVEL 1 backups. A LEVEL 1 only shortens how much redo a restore replays; the archived logs are what make any second restorable.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"archivelogInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ArchivelogInterval is the time between archived log cycles, each of which ships the archived logs written since the last cycle and a control file. Zero disables them, leaving only LEVEL 1 boundaries restorable.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"archiveLagTarget": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ArchiveLagTarget sets the database's ARCHIVE_LAG_TARGET, so it switches logs at least this often while it writes redo. With ArchivelogInterval it bounds how much data a restore can lose. Zero leaves the database setting alone; otherwise 60s to 2h. Ignored on DataGuard, set it on the primary.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"forceLogging": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ForceLogging turns on FORCE LOGGING, so NOLOGGING writes still produce redo; without it those blocks are corrupt after a point-in-time restore.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"minControlFileRecordKeepDays": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MinControlFileRecordKeepDays raises CONTROL_FILE_RECORD_KEEP_TIME to at least this many days; it is never lowered. Keep it above the retention window, or the control file forgets backups a restore needs. Zero leaves the database setting alone.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"cumulative": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cumulative makes every LEVEL 1 cover all changes since the LEVEL 0 instead of since the previous LEVEL 1.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"blockChangeTracking": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BlockChangeTracking enables Oracle Block Change Tracking, so a LEVEL 1 reads a bitmap instead of scanning every datafile. Enterprise Edition only; ignored on DataGuard.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"rmanTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RMANTimeout is how long one RMAN run of the loop may take.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"runtimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RuntimeSettings specifies the runtime settings of the loop's pod.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
+						},
+					},
+					"successfulLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SuccessfulLogHistoryLimit defines the number of successful cycles the incremental snapshot will retain.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failedLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailedLogHistoryLimit defines the number of failed cycles the incremental snapshot will retain for debugging purposes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"},
 	}
 }
 

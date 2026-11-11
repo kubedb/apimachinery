@@ -167,9 +167,16 @@ type OracleSpec struct {
 	// +optional
 	Listener *ListenerSpec `json:"listener,omitempty"`
 
-	// Init is used to initialize database
+	// Init is used to initialize database. init.archiver restores it to a point
+	// in time from the backups of an OracleArchiver before it starts serving.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// Archiver controls the continuous archiver (full backups and point-in-time
+	// recovery) of this database. It references an OracleArchiver that also
+	// selects this database (double opt-in).
+	// +optional
+	Archiver *Archiver `json:"archiver,omitempty"`
 
 	// Monitor is used monitor database instance
 	// +optional
