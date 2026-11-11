@@ -22,11 +22,13 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/ptr"
-	clustermeta "kmodules.xyz/client-go/cluster"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -118,6 +120,38 @@ func firstIDOfSCCRange(value string) (int64, error) {
 	return start, nil
 }
 
+// openShiftByMapper caches IsOpenShift per RESTMapper. A cluster does not switch between
+// OpenShift and plain Kubernetes while an operator runs.
+var openShiftByMapper sync.Map // meta.RESTMapper -> bool
+
+// IsOpenShift reports whether the cluster serves OpenShift's project.openshift.io Project kind,
+// the same check as kmodules' cluster.IsOpenShiftManaged, but remembered per RESTMapper.
+//
+// The cache matters on clusters that are not OpenShift: controller-runtime's RESTMapper does not
+// remember a group the server lacks, so every uncached lookup re-fetches /api and /apis while
+// holding the mapper's write lock, and operators call this on every reconcile.
+//
+// Only a definite answer is cached: the kind was found (true) or the server has no such kind
+// (a NoMatch error, false). Any other error, such as a failed discovery request, returns false
+// for this call and is retried on the next one, so a transient failure on OpenShift is not
+// remembered as "not OpenShift".
+func IsOpenShift(mapper meta.RESTMapper) bool {
+	if v, ok := openShiftByMapper.Load(mapper); ok {
+		return v.(bool)
+	}
+	_, err := mapper.RESTMappings(schema.GroupKind{Group: "project.openshift.io", Kind: "Project"})
+	switch {
+	case err == nil:
+		openShiftByMapper.Store(mapper, true)
+		return true
+	case meta.IsNoMatchError(err):
+		openShiftByMapper.Store(mapper, false)
+		return false
+	default:
+		return false
+	}
+}
+
 // GetNamespaceSecurityIDsFor reads a namespace and returns its OpenShift SCC IDs, or nil when it
 // carries no SCC annotations.
 func GetNamespaceSecurityIDsFor(ctx context.Context, kc client.Reader, namespace string) (*NamespaceSecurityIDs, error) {
@@ -134,7 +168,7 @@ func GetNamespaceSecurityIDsFor(ctx context.Context, kc client.Reader, namespace
 //
 // On a cluster that is not OpenShift it is exactly setDefaults(): the namespace is not read.
 func SetDefaultsInNamespace(ctx context.Context, kc client.Client, namespace string, spec any, setDefaults func() error) error {
-	if !clustermeta.IsOpenShiftManaged(kc.RESTMapper()) {
+	if !IsOpenShift(kc.RESTMapper()) {
 		return setDefaults()
 	}
 	nsIDs, err := GetNamespaceSecurityIDsFor(ctx, kc, namespace)
