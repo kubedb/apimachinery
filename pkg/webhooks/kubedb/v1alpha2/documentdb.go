@@ -103,7 +103,9 @@ func (w *DocumentDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 		return nil
 	}
 
-	db.SetDefaults(w.DefaultClient, documentDBVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(w.DefaultClient, documentDBVersion); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 

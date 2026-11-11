@@ -81,8 +81,10 @@ func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 		}
 	}
 
-	SetDefaultsWithProxyMonitorPort(db, usesAcme, &psVersion)
-	return nil
+	return dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error {
+		SetDefaultsWithProxyMonitorPort(db, usesAcme, &psVersion)
+		return nil
+	})
 }
 
 var _ webhook.CustomValidator = &ProxySQLCustomWebhook{}
@@ -127,7 +129,9 @@ func (w ProxySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 			return nil, err
 		}
 	}
-	oldProxy.SetDefaults(&proxysqlVersion, usesAcme)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldProxy.Namespace, &oldProxy.Spec, func() error { oldProxy.SetDefaults(&proxysqlVersion, usesAcme); return nil }); err != nil {
+		return nil, err
+	}
 
 	if oldProxy.Spec.AuthSecret == nil {
 		oldProxy.Spec.AuthSecret = proxy.Spec.AuthSecret
