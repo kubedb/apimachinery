@@ -314,3 +314,55 @@ func TestSetDefaultsInNamespaceForVersion(t *testing.T) {
 		}
 	})
 }
+
+// countingMapper counts RESTMappings lookups. It returns err when set, otherwise the wrapped
+// mapper's answer.
+type countingMapper struct {
+	meta.RESTMapper
+	lookups int
+	err     error
+}
+
+func (m *countingMapper) RESTMappings(gk schema.GroupKind, versions ...string) ([]*meta.RESTMapping, error) {
+	m.lookups++
+	if m.err != nil {
+		return nil, m.err
+	}
+	return m.RESTMapper.RESTMappings(gk, versions...)
+}
+
+func TestIsOpenShift(t *testing.T) {
+	newMapper := func(openShift bool) *countingMapper {
+		return &countingMapper{RESTMapper: (&namespaceReader{notOpenShift: !openShift}).RESTMapper()}
+	}
+
+	for _, openShift := range []bool{true, false} {
+		m := newMapper(openShift)
+		for i := 0; i < 100; i++ {
+			if got := IsOpenShift(m); got != openShift {
+				t.Fatalf("openShift=%v: call %d returned %v", openShift, i, got)
+			}
+		}
+		if m.lookups != 1 {
+			t.Errorf("openShift=%v: %d lookups for 100 calls, want 1 (answer not cached)", openShift, m.lookups)
+		}
+	}
+
+	t.Run("transient error is not cached", func(t *testing.T) {
+		m := newMapper(true)
+		m.err = errors.New("failed to get server groups: connection refused")
+		if IsOpenShift(m) {
+			t.Fatal("returned true on a discovery error")
+		}
+		m.err = nil
+		if !IsOpenShift(m) || m.lookups != 2 {
+			t.Fatalf("after the error cleared: lookups=%d, want a second lookup that finds OpenShift", m.lookups)
+		}
+	})
+
+	t.Run("each mapper has its own answer", func(t *testing.T) {
+		if !IsOpenShift(newMapper(true)) || IsOpenShift(newMapper(false)) {
+			t.Fatal("answer leaked between mappers")
+		}
+	})
+}
