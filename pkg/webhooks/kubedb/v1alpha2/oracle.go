@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"reflect"
 	"strings"
 	"unsafe"
 
@@ -126,6 +127,7 @@ func (w *OracleCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	oraLog.Info("validate update", "name", db.Name)
 
 	allErr := w.ValidateCreateOrUpdate(db)
+	allErr = append(allErr, oracleValidateArchiverImmutability(olddb, db)...)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
@@ -274,6 +276,7 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), oracleReservedVolumesMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
 	}
+	allErr = append(allErr, oracleValidateArchiver(db)...)
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -411,4 +414,47 @@ func (w *OracleCustomWebhook) validateEnvsForAllContainers(oracle *olddbapi.Orac
 		}
 	}
 	return err
+}
+
+// oracleValidateArchiver checks what a restore from an OracleArchiver needs
+// before the database is created, so it fails at admission and not in the
+// restore job.
+func oracleValidateArchiver(db *olddbapi.Oracle) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+
+	ini := db.Spec.Init
+	if ini == nil || ini.Archiver == nil {
+		return errs
+	}
+	a := ini.Archiver
+	if a.RecoveryTimestamp.IsZero() {
+		errs = append(errs, field.Required(spec.Child("init", "archiver", "recoveryTimestamp"), "recoveryTimestamp is required"))
+	}
+	if a.FullDBRepository == nil || a.FullDBRepository.Name == "" {
+		errs = append(errs, field.Required(spec.Child("init", "archiver", "fullDBRepository"), "fullDBRepository is required to restore an Oracle"))
+	}
+	if a.EncryptionSecret == nil || a.EncryptionSecret.Name == "" {
+		errs = append(errs, field.Required(spec.Child("init", "archiver", "encryptionSecret"), "encryptionSecret is required to read the encrypted backup"))
+	}
+	if db.Spec.Mode == olddbapi.OracleModeDataGuard {
+		errs = append(errs, field.Forbidden(spec.Child("init", "archiver"),
+			"an archiver restore into a DataGuard Oracle is not supported; restore a Standalone Oracle and build the standbys from it"))
+	}
+	return errs
+}
+
+func oracleValidateArchiverImmutability(oldDB, db *olddbapi.Oracle) field.ErrorList {
+	if oldDB.Spec.Init == nil || !oldDB.Spec.Init.Initialized {
+		return nil
+	}
+	var newArchiver *olddbapi.ArchiverRecovery
+	if db.Spec.Init != nil {
+		newArchiver = db.Spec.Init.Archiver
+	}
+	if !reflect.DeepEqual(oldDB.Spec.Init.Archiver, newArchiver) {
+		return field.ErrorList{field.Forbidden(field.NewPath("spec", "init", "archiver"),
+			"init.archiver cannot be changed after the database was initialized")}
+	}
+	return nil
 }

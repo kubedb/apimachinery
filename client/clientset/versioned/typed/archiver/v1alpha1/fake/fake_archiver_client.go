@@ -65,6 +65,10 @@ func (c *FakeArchiverV1alpha1) Neo4jArchivers(namespace string) v1alpha1.Neo4jAr
 	return newFakeNeo4jArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) OracleArchivers(namespace string) v1alpha1.OracleArchiverInterface {
+	return newFakeOracleArchivers(c, namespace)
+}
+
 func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {
 	return newFakePostgresArchivers(c, namespace)
 }

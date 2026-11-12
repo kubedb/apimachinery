@@ -131,3 +131,28 @@ const (
 
 	ClickHouseDriver = "ClickHouseBackup"
 )
+
+// Backup and restore names, flags, and defaults shared with the Oracle operator
+// and kubedb.dev/oracle-backup-plugin.
+const (
+	OracleDriver = "OracleBackup"
+
+	// The plugin's incremental-backup loop, run by the operator's sidekick.
+	OracleIncrementalBackupCommand         = "incremental-backup"
+	OracleIncrementalBackupConfigFlag      = "incr-backupconfig-name"
+	OracleIncrementalSnapshotFlag          = "incr-snapshot-name"
+	OracleIncrementalBackupIntervalFlag    = "incremental-backup-interval"
+	OracleArchivelogIntervalFlag           = "archivelog-interval"
+	OracleArchiveLagTargetFlag             = "archive-lag-target"
+	OracleForceLoggingFlag                 = "force-logging"
+	OracleMinControlFileRecordKeepDaysFlag = "min-controlfile-record-keep-days"
+	OracleCumulativeFlag                   = "cumulative"
+	OracleBlockChangeTrackingFlag          = "block-change-tracking"
+	OracleRMANTimeoutFlag                  = "rman-timeout"
+	OracleTargetPodFlag                    = "target-pod"
+
+	// oracle-addon task params.
+	OracleBackupStrategyParam       = "backupStrategy"
+	OracleBackupStrategyIncremental = "incremental"
+	OracleRecoveryTimestampParam    = "recoveryTimestamp"
+)

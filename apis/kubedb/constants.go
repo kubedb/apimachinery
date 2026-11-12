@@ -2778,6 +2778,13 @@ const (
 	EtcdEnvAdvertiseClientURLs      = "ETCD_ADVERTISE_CLIENT_URLS"
 )
 
+// Oracle archiver
+const (
+	OracleArchiverSidekickSuffix            = "sidekick"
+	OracleArchiverBackupConfigSuffix        = "archiver"
+	OracleArchiverIncrementalSnapshotSuffix = "incremental-snapshot"
+)
+
 const (
 	MilvusSidekickSuffix             = "sidekick"
 	MilvusArchiverBackupConfigSuffix = "archiver"

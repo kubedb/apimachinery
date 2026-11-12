@@ -90,6 +90,14 @@ type Neo4jArchiverListerExpansion interface{}
 // Neo4jArchiverNamespaceLister.
 type Neo4jArchiverNamespaceListerExpansion interface{}
 
+// OracleArchiverListerExpansion allows custom methods to be added to
+// OracleArchiverLister.
+type OracleArchiverListerExpansion interface{}
+
+// OracleArchiverNamespaceListerExpansion allows custom methods to be added to
+// OracleArchiverNamespaceLister.
+type OracleArchiverNamespaceListerExpansion interface{}
+
 // PostgresArchiverListerExpansion allows custom methods to be added to
 // PostgresArchiverLister.
 type PostgresArchiverListerExpansion interface{}

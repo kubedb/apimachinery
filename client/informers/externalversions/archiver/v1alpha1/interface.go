@@ -42,6 +42,8 @@ type Interface interface {
 	MySQLArchivers() MySQLArchiverInformer
 	// Neo4jArchivers returns a Neo4jArchiverInformer.
 	Neo4jArchivers() Neo4jArchiverInformer
+	// OracleArchivers returns a OracleArchiverInformer.
+	OracleArchivers() OracleArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
 }
@@ -100,6 +102,11 @@ func (v *version) MySQLArchivers() MySQLArchiverInformer {
 // Neo4jArchivers returns a Neo4jArchiverInformer.
 func (v *version) Neo4jArchivers() Neo4jArchiverInformer {
 	return &neo4jArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleArchivers returns a OracleArchiverInformer.
+func (v *version) OracleArchivers() OracleArchiverInformer {
+	return &oracleArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresArchivers returns a PostgresArchiverInformer.

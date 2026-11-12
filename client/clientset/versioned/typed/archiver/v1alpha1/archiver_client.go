@@ -38,6 +38,7 @@ type ArchiverV1alpha1Interface interface {
 	MongoDBArchiversGetter
 	MySQLArchiversGetter
 	Neo4jArchiversGetter
+	OracleArchiversGetter
 	PostgresArchiversGetter
 }
 
@@ -80,6 +81,10 @@ func (c *ArchiverV1alpha1Client) MySQLArchivers(namespace string) MySQLArchiverI
 
 func (c *ArchiverV1alpha1Client) Neo4jArchivers(namespace string) Neo4jArchiverInterface {
 	return newNeo4jArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) OracleArchivers(namespace string) OracleArchiverInterface {
+	return newOracleArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) PostgresArchivers(namespace string) PostgresArchiverInterface {

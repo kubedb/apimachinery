@@ -86,6 +86,12 @@ type OracleVersionSpec struct {
 
 	// +optional
 	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
+
+	// Archiver holds the KubeStash addon tasks and the image of the
+	// OracleArchiver: walg.image is the oracle-backup-plugin image that runs the
+	// incremental-backup loop.
+	// +optional
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 }
 
 // OracleObserver defines images for observer
