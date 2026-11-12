@@ -110,7 +110,9 @@ spec:
                 type: object
               init:
                 properties:
-                  archiver:
+                  initialized:
+                    type: boolean
+                  restore:
                     properties:
                       encryptionSecret:
                         properties:
@@ -130,48 +132,12 @@ spec:
                         required:
                         - name
                         type: object
-                      manifestOptions:
-                        properties:
-                          archiver:
-                            default: false
-                            type: boolean
-                          archiverRef:
-                            properties:
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            required:
-                            - name
-                            type: object
-                          initScript:
-                            default: false
-                            type: boolean
-                        type: object
-                      manifestRepository:
-                        properties:
-                          name:
-                            type: string
-                          namespace:
-                            type: string
-                        required:
-                        - name
-                        type: object
                       recoveryTimestamp:
                         format: date-time
                         type: string
-                      replicationStrategy:
-                        enum:
-                        - fscopy
-                        - clone
-                        - sync
-                        - none
+                      snapshotName:
                         type: string
-                    required:
-                    - recoveryTimestamp
                     type: object
-                  initialized:
-                    type: boolean
                   script:
                     properties:
                       awsElasticBlockStore:
