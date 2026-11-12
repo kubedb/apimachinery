@@ -261,6 +261,11 @@ func (w MariaDBCustomWebhook) validateUpdate(obj, oldObj *dbapi.MariaDB) error {
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
 		preconditions.Insert("spec.init")
 	}
+	// A DC-DR database cannot be turned into a non distributed one (or the reverse): the PetSets,
+	// Services, server_id and GTID domain layout of every data center depend on it.
+	if oldObj.IsDCDRDistributed() {
+		preconditions.Insert("spec.distributed")
+	}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
 	if err != nil {
 		if mergepatch.IsPreconditionFailed(err) {
@@ -467,6 +472,9 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 		if pp.Spec.ClusterSpreadConstraint == nil {
 			return fmt.Errorf(`'spec.clusterSpreadConstraint' is required in %v for distributed mariadb`, pp.Name)
 		}
+		if err := validateDCDRMariaDB(mariadb, &pp); err != nil {
+			return err
+		}
 	}
 
 	if err := amv.ValidateGitInitRootPath(mariadb.Spec.Init, reservedVolumeMounts); err != nil {
@@ -474,4 +482,28 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	}
 
 	return nil
+}
+
+// validateDCDRMariaDB checks a DC-DR MariaDB against its PlacementPolicy: every Member data center
+// runs its own Galera cluster. A deletion in progress is never blocked on the PlacementPolicy.
+func validateDCDRMariaDB(db *dbapi.MariaDB, pp *psapi.PlacementPolicy) error {
+	if !db.IsDCDRDistributed() || db.DeletionTimestamp != nil {
+		return nil
+	}
+	if err := pp.Spec.ClusterSpreadConstraint.Validate(); err != nil {
+		return fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
+	}
+	if pp.Spec.ClusterSpreadConstraint.FailoverPolicy == nil {
+		return fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR mariadb", pp.Name)
+	}
+	var dataCenters []string
+	var replicas []int32
+	for _, r := range pp.Spec.ClusterSpreadConstraint.DistributionRules {
+		if r.Role != "" && r.Role != psapi.DCRoleMember {
+			continue
+		}
+		dataCenters = append(dataCenters, r.ClusterName)
+		replicas = append(replicas, int32(len(r.ReplicaIndices)))
+	}
+	return db.ValidateDCDR(dataCenters, replicas)
 }
