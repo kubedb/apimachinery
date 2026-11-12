@@ -83,6 +83,13 @@ spec:
                             required:
                             - name
                             type: object
+                          incrementalBackup:
+                            properties:
+                              name:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           manifestBackup:
                             properties:
                               name:

@@ -47,6 +47,7 @@ const (
 	RepositorySuffixManifest = "manifest"
 	SessionNameFull          = "full-backup"
 	SessionNameManifest      = "manifest-backup"
+	SessionNameIncremental   = "incremental-backup"
 
 	BackupConfigNameSuffix = "archiver"
 	SnapshotNameSuffix     = "incremental-snapshot"

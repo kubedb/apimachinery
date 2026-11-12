@@ -625,6 +625,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverList":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverStatus":                      schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresIncrementalBackupOptions":            schema_apimachinery_apis_archiver_v1alpha1_PostgresIncrementalBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions":                            schema_apimachinery_apis_archiver_v1alpha1_SchedulerOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task":                                        schema_apimachinery_apis_archiver_v1alpha1_Task(ref),
 	}
@@ -35759,6 +35760,12 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
 						},
 					},
+					"incrementalBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IncrementalBackup defines the sessionConfig of the block-level incremental physical backup (pg_basebackup --incremental). It is taken on top of the latest physical backup and is only supported on PostgreSQL 17.11+ and 18.6+; other versions keep taking full backups.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresIncrementalBackupOptions"),
+						},
+					},
 					"logBackup": {
 						SchemaProps: spec.SchemaProps{
 							Description: "LogBackup defines the sidekick configuration for the log backup",
@@ -35794,7 +35801,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
 	}
 }
 
@@ -35824,6 +35831,63 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref commo
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_PostgresIncrementalBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"task": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+						},
+					},
+					"scheduler": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
+						},
+					},
+					"containerRuntimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"retryConfig": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"sessionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"maxChainLength": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxChainLength is the number of backups (the full one included) a chain may hold before the incremental session takes a new full backup instead. Restoring a long chain needs every backup in it, so keep this small enough for the restore to stay fast.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
 	}
 }
 
