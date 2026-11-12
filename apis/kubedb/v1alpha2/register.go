@@ -93,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerList{},
 		&Neo4j{},
 		&Neo4jList{},
+		&YugabyteDB{},
+		&YugabyteDBList{},
 		&Oracle{},
 		&OracleList{},
 		&PerconaXtraDB{},

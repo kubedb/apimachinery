@@ -84,4 +84,6 @@ type SolrVersionExpansion interface{}
 
 type WeaviateVersionExpansion interface{}
 
+type YugabyteDBVersionExpansion interface{}
+
 type ZooKeeperVersionExpansion interface{}

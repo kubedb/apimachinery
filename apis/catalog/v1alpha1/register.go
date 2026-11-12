@@ -95,6 +95,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLVersionList{},
 		&Neo4jVersion{},
 		&Neo4jVersionList{},
+		&YugabyteDBVersion{},
+		&YugabyteDBVersionList{},
 		&OracleVersion{},
 		&OracleVersionList{},
 		&PerconaXtraDBVersion{},

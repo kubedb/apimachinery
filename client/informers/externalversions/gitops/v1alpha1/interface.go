@@ -88,6 +88,8 @@ type Interface interface {
 	Solrs() SolrInformer
 	// Weaviates returns a WeaviateInformer.
 	Weaviates() WeaviateInformer
+	// YugabyteDBs returns a YugabyteDBInformer.
+	YugabyteDBs() YugabyteDBInformer
 	// ZooKeepers returns a ZooKeeperInformer.
 	ZooKeepers() ZooKeeperInformer
 }
@@ -261,6 +263,11 @@ func (v *version) Solrs() SolrInformer {
 // Weaviates returns a WeaviateInformer.
 func (v *version) Weaviates() WeaviateInformer {
 	return &weaviateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// YugabyteDBs returns a YugabyteDBInformer.
+func (v *version) YugabyteDBs() YugabyteDBInformer {
+	return &yugabyteDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeepers returns a ZooKeeperInformer.

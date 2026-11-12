@@ -61,6 +61,7 @@ type AutoscalingV1alpha1Interface interface {
 	SinglestoreAutoscalersGetter
 	SolrAutoscalersGetter
 	WeaviateAutoscalersGetter
+	YugabyteDBAutoscalersGetter
 	ZooKeeperAutoscalersGetter
 }
 
@@ -195,6 +196,10 @@ func (c *AutoscalingV1alpha1Client) SolrAutoscalers(namespace string) SolrAutosc
 
 func (c *AutoscalingV1alpha1Client) WeaviateAutoscalers(namespace string) WeaviateAutoscalerInterface {
 	return newWeaviateAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) YugabyteDBAutoscalers(namespace string) YugabyteDBAutoscalerInterface {
+	return newYugabyteDBAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) ZooKeeperAutoscalers(namespace string) ZooKeeperAutoscalerInterface {

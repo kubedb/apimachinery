@@ -61,6 +61,7 @@ type GitopsV1alpha1Interface interface {
 	SinglestoresGetter
 	SolrsGetter
 	WeaviatesGetter
+	YugabyteDBsGetter
 	ZooKeepersGetter
 }
 
@@ -195,6 +196,10 @@ func (c *GitopsV1alpha1Client) Solrs(namespace string) SolrInterface {
 
 func (c *GitopsV1alpha1Client) Weaviates(namespace string) WeaviateInterface {
 	return newWeaviates(c, namespace)
+}
+
+func (c *GitopsV1alpha1Client) YugabyteDBs(namespace string) YugabyteDBInterface {
+	return newYugabyteDBs(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) ZooKeepers(namespace string) ZooKeeperInterface {
