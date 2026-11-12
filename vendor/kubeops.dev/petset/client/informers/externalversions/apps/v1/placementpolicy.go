@@ -19,13 +19,13 @@ limitations under the License.
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	appsv1 "kubeops.dev/petset/apis/apps/v1"
+	apisappsv1 "kubeops.dev/petset/apis/apps/v1"
 	versioned "kubeops.dev/petset/client/clientset/versioned"
 	internalinterfaces "kubeops.dev/petset/client/informers/externalversions/internalinterfaces"
-	v1 "kubeops.dev/petset/client/listers/apps/v1"
+	appsv1 "kubeops.dev/petset/client/listers/apps/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PlacementPolicies.
 type PlacementPolicyInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.PlacementPolicyLister
+	Lister() appsv1.PlacementPolicyLister
 }
 
 type placementPolicyInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredPlacementPolicyInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().PlacementPolicies().List(context.TODO(), options)
+				return client.AppsV1().PlacementPolicies().List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().PlacementPolicies().Watch(context.TODO(), options)
+				return client.AppsV1().PlacementPolicies().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AppsV1().PlacementPolicies().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AppsV1().PlacementPolicies().Watch(ctx, options)
 			},
 		},
-		&appsv1.PlacementPolicy{},
+		&apisappsv1.PlacementPolicy{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *placementPolicyInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *placementPolicyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&appsv1.PlacementPolicy{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisappsv1.PlacementPolicy{}, f.defaultInformer)
 }
 
-func (f *placementPolicyInformer) Lister() v1.PlacementPolicyLister {
-	return v1.NewPlacementPolicyLister(f.Informer().GetIndexer())
+func (f *placementPolicyInformer) Lister() appsv1.PlacementPolicyLister {
+	return appsv1.NewPlacementPolicyLister(f.Informer().GetIndexer())
 }
