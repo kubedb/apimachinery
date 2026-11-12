@@ -276,10 +276,10 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), oracleReservedVolumesMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
 	}
+	allErr = append(allErr, oracleValidateArchiver(db)...)
 	if len(allErr) == 0 {
 		return nil
 	}
-	allErr = append(allErr, oracleValidateArchiver(db)...)
 	return allErr
 }
 
