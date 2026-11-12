@@ -35,6 +35,7 @@ type OpsV1alpha1Interface interface {
 	DB2OpsRequestsGetter
 	DocumentDBOpsRequestsGetter
 	DruidOpsRequestsGetter
+	DurableWorkflowOpsRequestsGetter
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	HanaDBOpsRequestsGetter
@@ -91,6 +92,10 @@ func (c *OpsV1alpha1Client) DocumentDBOpsRequests(namespace string) DocumentDBOp
 
 func (c *OpsV1alpha1Client) DruidOpsRequests(namespace string) DruidOpsRequestInterface {
 	return newDruidOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) DurableWorkflowOpsRequests(namespace string) DurableWorkflowOpsRequestInterface {
+	return newDurableWorkflowOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) ElasticsearchOpsRequests(namespace string) ElasticsearchOpsRequestInterface {

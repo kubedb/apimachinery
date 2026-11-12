@@ -30,6 +30,8 @@ type DocumentDBOpsRequestExpansion interface{}
 
 type DruidOpsRequestExpansion interface{}
 
+type DurableWorkflowOpsRequestExpansion interface{}
+
 type ElasticsearchOpsRequestExpansion interface{}
 
 type EtcdOpsRequestExpansion interface{}
