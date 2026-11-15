@@ -617,7 +617,8 @@ func esTopologyRoleList(t *dbapi.ElasticsearchClusterTopology) []esTopologyRole 
 var esTopologyDataRoles = sets.New("data", "dataContent", "dataHot", "dataWarm", "dataCold", "dataFrozen")
 
 // validateDistributedRolePlacement checks the topology roles of a distributed Elasticsearch that
-// have their own PlacementPolicy (spec.topology.<role>.podTemplate.spec.podPlacementPolicy). A
+// have their own cross-cluster PlacementPolicy (spec.topology.<role>.podTemplate.spec.
+// podPlacementPolicy with a clusterSpreadConstraint). A
 // deletion in progress is never blocked, and a database PlacementPolicy that does not exist yet
 // is left to the operator, which waits for it.
 func (w *ElasticsearchCustomWebhook) validateDistributedRolePlacement(db *dbapi.Elasticsearch) error {
@@ -636,6 +637,12 @@ func (w *ElasticsearchCustomWebhook) validateDistributedRolePlacement(db *dbapi.
 				return fmt.Errorf("PlacementPolicy %q of 'spec.topology.%s.podTemplate.spec.podPlacementPolicy' not found; create it first", ref.Name, r.name)
 			}
 			return err
+		}
+		// Only a policy that spreads pods across clusters places the role per data center; the
+		// defaulted in-cluster policy ("default") leaves every data center running the role's
+		// spec.topology replicas.
+		if pp.Spec.ClusterSpreadConstraint == nil {
+			continue
 		}
 		rolePolicies[r.name] = pp
 	}
@@ -672,12 +679,9 @@ func validateElasticsearchRolePlacement(db *dbapi.Elasticsearch, top *psapi.Plac
 	for _, r := range esTopologyRoleList(db.Spec.Topology) {
 		pp, ok := rolePolicies[r.name]
 		if !ok {
-			return fmt.Errorf("'spec.topology.%s.podTemplate.spec.podPlacementPolicy' is not set: when one topology role has its own PlacementPolicy, every role needs one", r.name)
+			return fmt.Errorf("'spec.topology.%s.podTemplate.spec.podPlacementPolicy' does not name a PlacementPolicy with a clusterSpreadConstraint: when one topology role has its own, every role needs one", r.name)
 		}
 		csc := pp.Spec.ClusterSpreadConstraint
-		if csc == nil {
-			return fmt.Errorf("PlacementPolicy %q of topology role %s has no clusterSpreadConstraint", pp.Name, r.name)
-		}
 		if csc.FailoverPolicy != nil {
 			return fmt.Errorf("PlacementPolicy %q of topology role %s must not set failoverPolicy: PlacementPolicy %q (spec.podPlacementPolicy) decides failover", pp.Name, r.name, top.Name)
 		}

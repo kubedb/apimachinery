@@ -73,7 +73,7 @@ func TestValidateElasticsearchRolePlacement(t *testing.T) {
 		{"symmetric", esRolesDB(6, 4, 4), roles(master, ingest, data), ""},
 		{"uneven ingest", esRolesDB(6, 3, 4), roles(master, esPolicy("i", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2)), data), ""},
 		{"wrong total", esRolesDB(3, 4, 4), roles(master, ingest, data), "'spec.topology.master.replicas' is 3 but PlacementPolicy \"es-topo-master\" places 6"},
-		{"role without its own policy", esRolesDB(6, 4, 4), roles(master, ingest, nil), "'spec.topology.data.podTemplate.spec.podPlacementPolicy' is not set"},
+		{"role without its own policy", esRolesDB(6, 4, 4), roles(master, ingest, nil), "'spec.topology.data.podTemplate.spec.podPlacementPolicy' does not name a PlacementPolicy with a clusterSpreadConstraint"},
 		{"not a Member", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", nil, dcRule("spoke-1", 0, 1), dcRule("hub", 2, 3))), `places nodes on "hub", which is not a Member`},
 		{"role policy with failoverPolicy", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", &psapi.FailoverPolicy{}, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2, 3))), "must not set failoverPolicy"},
 		{"duplicate index", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 1, 3))), "places index 1 on both"},
