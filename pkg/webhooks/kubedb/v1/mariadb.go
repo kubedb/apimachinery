@@ -486,9 +486,11 @@ func validateDCDRMariaDB(db *dbapi.MariaDB, pp *psapi.PlacementPolicy) error {
 	if !db.IsDCDRDistributed() || db.DeletionTimestamp != nil {
 		return nil
 	}
-	if err := pp.Spec.ClusterSpreadConstraint.Validate(); err != nil {
-		return fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
-	}
+	// The PlacementPolicy's own structure is validated by its CRD and the petset webhook. Its
+	// vendored validator is tied to one petset version: the July one rejects the newer
+	// failoverPolicy.failoverGroupRef shape (no trigger), and so blocked every update of a DC-DR
+	// database on a lab whose PlacementPolicy CRD had been upgraded. Only the database's own
+	// requirements are checked here.
 	if pp.Spec.ClusterSpreadConstraint.FailoverPolicy == nil {
 		return fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR mariadb", pp.Name)
 	}
