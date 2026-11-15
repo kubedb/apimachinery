@@ -39,6 +39,7 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -587,6 +588,143 @@ func (w *ElasticsearchCustomWebhook) validateDistributed(db *dbapi.Elasticsearch
 	// must stay a valid DNS label. Reserve room for the DC name, role suffix and ordinal.
 	if len(db.Name) > 30 {
 		return fmt.Errorf("distributed Elasticsearch name %q is too long: at most 30 characters, so per data center names stay valid DNS labels", db.Name)
+	}
+	return w.validateDistributedRolePlacement(db)
+}
+
+// esTopologyRole is a configured spec.topology node role with its spec.topology JSON name.
+type esTopologyRole struct {
+	name string
+	node *dbapi.ElasticsearchNode
+}
+
+// esTopologyRoleList returns the configured spec.topology roles in a fixed order.
+func esTopologyRoleList(t *dbapi.ElasticsearchClusterTopology) []esTopologyRole {
+	out := []esTopologyRole{{"master", &t.Master}, {"ingest", &t.Ingest}}
+	for _, r := range []esTopologyRole{
+		{"data", t.Data}, {"dataContent", t.DataContent}, {"dataHot", t.DataHot}, {"dataWarm", t.DataWarm},
+		{"dataCold", t.DataCold}, {"dataFrozen", t.DataFrozen}, {"ml", t.ML}, {"transform", t.Transform}, {"coordinating", t.Coordinating},
+	} {
+		if r.node != nil {
+			out = append(out, r)
+		}
+	}
+	return out
+}
+
+// esTopologyDataRoles are the roles that hold index data: every data center needs one, so its
+// cluster can follow the active data center's indices.
+var esTopologyDataRoles = sets.New("data", "dataContent", "dataHot", "dataWarm", "dataCold", "dataFrozen")
+
+// validateDistributedRolePlacement checks the topology roles of a distributed Elasticsearch that
+// have their own PlacementPolicy (spec.topology.<role>.podTemplate.spec.podPlacementPolicy). A
+// deletion in progress is never blocked, and a database PlacementPolicy that does not exist yet
+// is left to the operator, which waits for it.
+func (w *ElasticsearchCustomWebhook) validateDistributedRolePlacement(db *dbapi.Elasticsearch) error {
+	if db.DeletionTimestamp != nil || w.DefaultClient == nil || db.Spec.Topology == nil {
+		return nil
+	}
+	rolePolicies := map[string]*psapi.PlacementPolicy{}
+	for _, r := range esTopologyRoleList(db.Spec.Topology) {
+		ref := r.node.PodTemplate.Spec.PodPlacementPolicy
+		if ref == nil || ref.Name == "" {
+			continue
+		}
+		pp := &psapi.PlacementPolicy{}
+		if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: ref.Name}, pp); err != nil {
+			if kerr.IsNotFound(err) {
+				return fmt.Errorf("PlacementPolicy %q of 'spec.topology.%s.podTemplate.spec.podPlacementPolicy' not found; create it first", ref.Name, r.name)
+			}
+			return err
+		}
+		rolePolicies[r.name] = pp
+	}
+	if len(rolePolicies) == 0 {
+		return nil
+	}
+	top := &psapi.PlacementPolicy{}
+	if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: db.Spec.PodPlacementPolicy.Name}, top); err != nil {
+		if kerr.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+	return validateElasticsearchRolePlacement(db, top, rolePolicies)
+}
+
+// validateElasticsearchRolePlacement checks the role PlacementPolicies (role name -> policy)
+// against the database PlacementPolicy top and spec.topology. Each role's own PlacementPolicy
+// places that role across the Member data centers of top: spec.topology.<role>.replicas is the
+// total of its replicaIndices, and each data center, which runs a self-contained cluster, needs
+// a master, an ingest and a data node of its own. top alone decides failover.
+func validateElasticsearchRolePlacement(db *dbapi.Elasticsearch, top *psapi.PlacementPolicy, rolePolicies map[string]*psapi.PlacementPolicy) error {
+	if top.Spec.ClusterSpreadConstraint == nil {
+		return fmt.Errorf("PlacementPolicy %q has no clusterSpreadConstraint", top.Name)
+	}
+	var members []string
+	for _, r := range top.Spec.ClusterSpreadConstraint.DistributionRules {
+		if (r.Role == "" || r.Role == psapi.DCRoleMember) && len(r.ReplicaIndices) > 0 {
+			members = append(members, r.ClusterName)
+		}
+	}
+	memberSet := sets.New(members...)
+	perDC := map[string]map[string]int32{}
+	for _, r := range esTopologyRoleList(db.Spec.Topology) {
+		pp, ok := rolePolicies[r.name]
+		if !ok {
+			return fmt.Errorf("'spec.topology.%s.podTemplate.spec.podPlacementPolicy' is not set: when one topology role has its own PlacementPolicy, every role needs one", r.name)
+		}
+		csc := pp.Spec.ClusterSpreadConstraint
+		if csc == nil {
+			return fmt.Errorf("PlacementPolicy %q of topology role %s has no clusterSpreadConstraint", pp.Name, r.name)
+		}
+		if csc.FailoverPolicy != nil {
+			return fmt.Errorf("PlacementPolicy %q of topology role %s must not set failoverPolicy: PlacementPolicy %q (spec.podPlacementPolicy) decides failover", pp.Name, r.name, top.Name)
+		}
+		owner := map[int32]string{}
+		var total int32
+		for _, rule := range csc.DistributionRules {
+			if len(rule.ReplicaIndices) == 0 {
+				continue
+			}
+			if !memberSet.Has(rule.ClusterName) {
+				return fmt.Errorf("PlacementPolicy %q of topology role %s places nodes on %q, which is not a Member data center of PlacementPolicy %q", pp.Name, r.name, rule.ClusterName, top.Name)
+			}
+			for _, idx := range rule.ReplicaIndices {
+				if prev, dup := owner[idx]; dup {
+					return fmt.Errorf("PlacementPolicy %q of topology role %s places index %d on both %q and %q", pp.Name, r.name, idx, prev, rule.ClusterName)
+				}
+				owner[idx] = rule.ClusterName
+			}
+			if perDC[rule.ClusterName] == nil {
+				perDC[rule.ClusterName] = map[string]int32{}
+			}
+			perDC[rule.ClusterName][r.name] += int32(len(rule.ReplicaIndices))
+			total += int32(len(rule.ReplicaIndices))
+		}
+		want := int32(1)
+		if r.node.Replicas != nil {
+			want = *r.node.Replicas
+		}
+		if total != want {
+			return fmt.Errorf("'spec.topology.%s.replicas' is %d but PlacementPolicy %q places %d %s nodes across its data centers; they must match", r.name, want, pp.Name, total, r.name)
+		}
+	}
+	for _, dc := range members {
+		for _, role := range []string{"master", "ingest"} {
+			if perDC[dc][role] < 1 {
+				return fmt.Errorf("data center %q needs at least one %s node (its cluster is self-contained): add it to the %s PlacementPolicy", dc, role, role)
+			}
+		}
+		var data int32
+		for role, n := range perDC[dc] {
+			if esTopologyDataRoles.Has(role) {
+				data += n
+			}
+		}
+		if data < 1 {
+			return fmt.Errorf("data center %q needs at least one data node (data or a data tier) to hold the replicated indices", dc)
+		}
 	}
 	return nil
 }
