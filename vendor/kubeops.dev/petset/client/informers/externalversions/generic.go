@@ -19,7 +19,7 @@ limitations under the License.
 package externalversions
 
 import (
-	"fmt"
+	fmt "fmt"
 
 	v1 "kubeops.dev/petset/apis/apps/v1"
 
@@ -54,6 +54,8 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=apps.k8s.appscode.com, Version=v1
+	case v1.SchemeGroupVersion.WithResource("failovergroups"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Apps().V1().FailoverGroups().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("petsets"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Apps().V1().PetSets().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("placementpolicies"):

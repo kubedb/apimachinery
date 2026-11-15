@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1
 
+// FailoverGroupListerExpansion allows custom methods to be added to
+// FailoverGroupLister.
+type FailoverGroupListerExpansion interface{}
+
 // PlacementPolicyListerExpansion allows custom methods to be added to
 // PlacementPolicyLister.
 type PlacementPolicyListerExpansion interface{}

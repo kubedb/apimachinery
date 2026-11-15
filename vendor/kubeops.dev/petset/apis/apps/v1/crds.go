@@ -29,3 +29,7 @@ func (PetSet) CustomResourceDefinition() *apiextensions.CustomResourceDefinition
 func (PlacementPolicy) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePlacementPolicies))
 }
+
+func (FailoverGroup) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceFailoverGroups))
+}

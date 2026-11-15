@@ -1,0 +1,198 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: failovergroups.apps.k8s.appscode.com
+spec:
+  group: apps.k8s.appscode.com
+  names:
+    kind: FailoverGroup
+    listKind: FailoverGroupList
+    plural: failovergroups
+    singular: failovergroup
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.leaseHolder
+      name: Lease Holder
+      type: string
+    - jsonPath: .status.activeDC
+      name: Active DC
+      type: string
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          FailoverGroup is a set of DC/DR workloads that fail over together, backed by the
+          primary-dc-<name> Lease. Workloads join a group through their PlacementPolicy's
+          clusterSpreadConstraint.failoverPolicy.failoverGroupRef.
+
+          The Lease, not this object, decides which data center is primary. A FailoverGroup
+          only orders groups relative to each other (dependsOn) and publishes where each
+          group is active. Deleting it never stops a failover.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FailoverGroupSpec is the specification of a FailoverGroup.
+            properties:
+              dependsOn:
+                description: |-
+                  DependsOn names the FailoverGroups that must be active and ready on a data
+                  center before this group may become active there. This applies to both
+                  unplanned failover and planned switchover. The dependencies must all be
+                  active on the same data center.
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: FailoverGroupStatus is the observed state of a FailoverGroup.
+            properties:
+              activeDC:
+                description: |-
+                  ActiveDC is the data center where every member of this group is ready, and,
+                  for a group with dependencies, where every dependency is active too. It only
+                  moves once that holds, so it can lag LeaseHolder during a failover.
+                type: string
+              conditions:
+                items:
+                  description: Condition defines an observation of a object operational
+                    state.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        Last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed. If that is not known, then using the time when
+                        the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A human-readable message indicating details about the transition.
+                        This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        If set, this represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.condition[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: |-
+                        The reason for the condition's last transition in CamelCase.
+                        The specific API may choose whether this field is considered a guaranteed API.
+                        This field may not be empty.
+                      type: string
+                    severity:
+                      description: |-
+                        Severity provides an explicit classification of Reason code, so the users or machines can immediately
+                        understand the current situation and act accordingly.
+                        The Severity field MUST be set only when Status=False.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: |-
+                        Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary util
+                        can be useful (see .node.status.util), the ability to deconflict is important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastTransitionTime:
+                description: LastTransitionTime is when ActiveDC last changed.
+                format: date-time
+                type: string
+              leaseHolder:
+                description: LeaseHolder is the data center currently holding the
+                  group's Lease.
+                type: string
+              leaseName:
+                description: LeaseName is the primary DC Lease backing this group.
+                type: string
+              members:
+                description: |-
+                  Members are the workloads of this group. Each engine operator reports its own
+                  workloads here, using server side apply with its own field manager.
+                items:
+                  description: FailoverGroupMember is one workload's readiness, as
+                    reported by its operator.
+                  properties:
+                    apiGroup:
+                      type: string
+                    dc:
+                      description: DC is the data center this member currently treats
+                        as active.
+                      type: string
+                    kind:
+                      type: string
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                    observedAt:
+                      description: |-
+                        ObservedAt is when Ready was last established. A stale report is not
+                        treated as ready.
+                      format: date-time
+                      type: string
+                    ready:
+                      description: |-
+                        Ready is true when the member is positively observed serving on DC, for
+                        example a confirmed writable primary.
+                      type: boolean
+                  required:
+                  - apiGroup
+                  - kind
+                  - name
+                  - namespace
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - apiGroup
+                - kind
+                - namespace
+                - name
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: ObservedGeneration is the most recent generation observed.
+                format: int64
+                type: integer
+              phase:
+                description: Phase is the FailoverGroup phase.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
