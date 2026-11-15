@@ -58,7 +58,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c
 	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d
-	kubeops.dev/petset v0.2.1-0.20261115085249-4446cdb71613
+	kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab
 	kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447
 	kubestash.dev/apimachinery v0.30.0
 	open-cluster-management.io/api v1.2.0

@@ -3,6 +3,7 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  creationTimestamp: null
   name: placementpolicies.apps.k8s.appscode.com
 spec:
   group: apps.k8s.appscode.com
@@ -179,9 +180,6 @@ spec:
                               type: object
                           type: object
                         replicaIndices:
-                          description: |-
-                            ReplicaIndices are the pod ordinals this cluster runs. For a database with
-                            node roles (topology mode) leave it empty and set Topology instead.
                           items:
                             format: int32
                             type: integer
@@ -201,21 +199,9 @@ spec:
                           type: string
                         storageClassName:
                           type: string
-                        topology:
-                          additionalProperties:
-                            items:
-                              format: int32
-                              type: integer
-                            type: array
-                          description: |-
-                            Topology places a database's node roles, for databases that run several
-                            kinds of nodes (for example Elasticsearch master, ingest and data nodes).
-                            The key is the role name as used in the database's spec.topology, the value
-                            lists the ordinals of that role this cluster runs, numbered across all
-                            clusters like ReplicaIndices. A rule sets either ReplicaIndices or Topology.
-                          type: object
                       required:
                       - clusterName
+                      - replicaIndices
                       type: object
                     type: array
                   failoverPolicy:
@@ -224,25 +210,6 @@ spec:
                       and selects how the common DC failover service drives failover for it.
                       When nil, the placement is not managed for DC/DR.
                     properties:
-                      failoverGroupRef:
-                        description: |-
-                          FailoverGroupRef names the FailoverGroup this workload fails over with. Every
-                          group is backed by its own primary-dc-<group> Lease. When nil, the workload
-                          follows the global primary-dc Lease. The referenced FailoverGroup object is not
-                          required for failover: the Lease is derived from this reference alone, the
-                          object only adds ordering (dependsOn) and status.
-                        properties:
-                          name:
-                            default: ""
-                            description: |-
-                              Name of the referent.
-                              This field is effectively required, but due to backwards compatibility is
-                              allowed to be empty. Instances of this type with an empty value here are
-                              almost certainly wrong.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       mode:
                         description: |-
                           Mode is the DC topology. It can be derived from the per rule roles
@@ -252,6 +219,25 @@ spec:
                         - TwoDC
                         - ThreeDC
                         type: string
+                      trigger:
+                        description: Trigger selects which primary DC Lease this workload
+                          follows.
+                        properties:
+                          group:
+                            description: Group is required when Scope is Group; it
+                              names the primary-dc-<group> Lease.
+                            type: string
+                          scope:
+                            description: Scope is Global or Group.
+                            enum:
+                            - Global
+                            - Group
+                            type: string
+                        required:
+                        - scope
+                        type: object
+                    required:
+                    - trigger
                     type: object
                   slice:
                     properties:

@@ -18,8 +18,6 @@ limitations under the License.
 
 package v1
 
-type FailoverGroupExpansion interface{}
-
 type PetSetExpansion interface{}
 
 type PlacementPolicyExpansion interface{}

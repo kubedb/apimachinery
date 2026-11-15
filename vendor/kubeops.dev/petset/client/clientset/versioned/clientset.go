@@ -19,8 +19,8 @@ limitations under the License.
 package versioned
 
 import (
-	fmt "fmt"
-	http "net/http"
+	"fmt"
+	"net/http"
 
 	appsv1 "kubeops.dev/petset/client/clientset/versioned/typed/apps/v1"
 

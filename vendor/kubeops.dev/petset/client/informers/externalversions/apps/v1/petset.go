@@ -19,13 +19,13 @@ limitations under the License.
 package v1
 
 import (
-	context "context"
+	"context"
 	time "time"
 
-	apisappsv1 "kubeops.dev/petset/apis/apps/v1"
+	appsv1 "kubeops.dev/petset/apis/apps/v1"
 	versioned "kubeops.dev/petset/client/clientset/versioned"
 	internalinterfaces "kubeops.dev/petset/client/informers/externalversions/internalinterfaces"
-	appsv1 "kubeops.dev/petset/client/listers/apps/v1"
+	v1 "kubeops.dev/petset/client/listers/apps/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PetSets.
 type PetSetInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() appsv1.PetSetLister
+	Lister() v1.PetSetLister
 }
 
 type petSetInformer struct {
@@ -63,28 +63,16 @@ func NewFilteredPetSetInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().PetSets(namespace).List(context.Background(), options)
+				return client.AppsV1().PetSets(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().PetSets(namespace).Watch(context.Background(), options)
-			},
-			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&options)
-				}
-				return client.AppsV1().PetSets(namespace).List(ctx, options)
-			},
-			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&options)
-				}
-				return client.AppsV1().PetSets(namespace).Watch(ctx, options)
+				return client.AppsV1().PetSets(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&apisappsv1.PetSet{},
+		&appsv1.PetSet{},
 		resyncPeriod,
 		indexers,
 	)
@@ -95,9 +83,9 @@ func (f *petSetInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *petSetInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisappsv1.PetSet{}, f.defaultInformer)
+	return f.factory.InformerFor(&appsv1.PetSet{}, f.defaultInformer)
 }
 
-func (f *petSetInformer) Lister() appsv1.PetSetLister {
-	return appsv1.NewPetSetLister(f.Informer().GetIndexer())
+func (f *petSetInformer) Lister() v1.PetSetLister {
+	return v1.NewPetSetLister(f.Informer().GetIndexer())
 }

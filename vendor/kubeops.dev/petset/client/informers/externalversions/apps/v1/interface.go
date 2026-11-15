@@ -24,8 +24,6 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// FailoverGroups returns a FailoverGroupInformer.
-	FailoverGroups() FailoverGroupInformer
 	// PetSets returns a PetSetInformer.
 	PetSets() PetSetInformer
 	// PlacementPolicies returns a PlacementPolicyInformer.
@@ -41,11 +39,6 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
-}
-
-// FailoverGroups returns a FailoverGroupInformer.
-func (v *version) FailoverGroups() FailoverGroupInformer {
-	return &failoverGroupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // PetSets returns a PetSetInformer.
