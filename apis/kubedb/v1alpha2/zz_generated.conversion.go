@@ -1732,7 +1732,6 @@ func autoConvert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elast
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	// WARNING: in.Distributed requires manual conversion: does not exist in peer-type
-	// WARNING: in.PodPlacementPolicy requires manual conversion: does not exist in peer-type
 	if in.Topology != nil {
 		in, out := &in.Topology, &out.Topology
 		*out = new(ElasticsearchClusterTopology)

@@ -671,11 +671,6 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.PodPlacementPolicy != nil {
-		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Topology != nil {
 		in, out := &in.Topology, &out.Topology
 		*out = new(ElasticsearchClusterTopology)

@@ -68,14 +68,11 @@ type ElasticsearchSpec struct {
 	// A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch
 	// cluster per Member data center for cross data center disaster recovery (DC-DR). The active
 	// cluster holds the leader indices and takes writes; every standby cluster follows it with
-	// Cross-Cluster Replication (CCR).
+	// Cross-Cluster Replication (CCR). Each PetSet is placed by the PlacementPolicy its pod
+	// template names: spec.podTemplate.spec.podPlacementPolicy for a combined Elasticsearch,
+	// spec.topology.<role>.podTemplate.spec.podPlacementPolicy for each role in topology mode.
 	// +optional
 	Distributed bool `json:"distributed,omitempty"`
-
-	// PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data
-	// center Elasticsearch clusters across data centers for DC-DR.
-	// +optional
-	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 
 	// Elasticsearch topology for node specification
 	// +optional

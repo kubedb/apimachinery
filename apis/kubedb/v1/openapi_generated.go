@@ -34517,15 +34517,9 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 					},
 					"distributed": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Distributed if set true, manifestwork objects will be created instead of raw resources. A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch cluster per Member data center for cross data center disaster recovery (DC-DR). The active cluster holds the leader indices and takes writes; every standby cluster follows it with Cross-Cluster Replication (CCR).",
+							Description: "Distributed if set true, manifestwork objects will be created instead of raw resources. A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch cluster per Member data center for cross data center disaster recovery (DC-DR). The active cluster holds the leader indices and takes writes; every standby cluster follows it with Cross-Cluster Replication (CCR). Each PetSet is placed by the PlacementPolicy its pod template names: spec.podTemplate.spec.podPlacementPolicy for a combined Elasticsearch, spec.topology.<role>.podTemplate.spec.podPlacementPolicy for each role in topology mode.",
 							Type:        []string{"boolean"},
 							Format:      "",
-						},
-					},
-					"podPlacementPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data center Elasticsearch clusters across data centers for DC-DR.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"topology": {

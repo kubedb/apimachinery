@@ -38,50 +38,51 @@ func esRolesDB(master, ingest, data int32) *dbapi.Elasticsearch {
 	}
 }
 
-func esPolicy(name string, fp *psapi.FailoverPolicy, rules ...psapi.DistributionRule) *psapi.PlacementPolicy {
-	return &psapi.PlacementPolicy{
-		ObjectMeta: meta.ObjectMeta{Name: name},
-		Spec:       psapi.PlacementPolicySpec{ClusterSpreadConstraint: &psapi.ClusterSpreadConstraint{DistributionRules: rules, FailoverPolicy: fp}},
-	}
-}
+var esGroupFP = map[string]any{"mode": "TwoDC", "failoverGroupRef": map[string]any{"name": "es-topo"}}
 
-func dcRule(dc string, idx ...int32) psapi.DistributionRule {
-	return psapi.DistributionRule{ClusterName: dc, ReplicaIndices: idx}
+// rolePP is a DC-DR role policy: spoke-1 and spoke-2 Members with the given indices, hub Arbiter.
+func rolePP(name string, fp map[string]any, s1, s2 []int32) esRolePlacement {
+	rules := []psapi.DistributionRule{
+		{ClusterName: "spoke-1", ReplicaIndices: s1, Role: psapi.DCRoleMember},
+		{ClusterName: "spoke-2", ReplicaIndices: s2, Role: psapi.DCRoleMember},
+		{ClusterName: "hub", ReplicaIndices: []int32{}, Role: psapi.DCRoleArbiter},
+	}
+	pp := &psapi.PlacementPolicy{ObjectMeta: meta.ObjectMeta{Name: name}}
+	pp.Spec.ClusterSpreadConstraint = &psapi.ClusterSpreadConstraint{DistributionRules: rules}
+	return esRolePlacement{pp: pp, failoverPolicy: fp}
 }
 
 func TestValidateElasticsearchRolePlacement(t *testing.T) {
-	top := esPolicy("es-topo", &psapi.FailoverPolicy{Mode: psapi.FailoverModeTwoDC},
-		psapi.DistributionRule{ClusterName: "spoke-1", ReplicaIndices: []int32{0, 1, 2}, Role: psapi.DCRoleMember},
-		psapi.DistributionRule{ClusterName: "spoke-2", ReplicaIndices: []int32{3, 4, 5}, Role: psapi.DCRoleMember},
-		psapi.DistributionRule{ClusterName: "hub", ReplicaIndices: []int32{}, Role: psapi.DCRoleArbiter})
-	master := esPolicy("es-topo-master", nil, dcRule("spoke-1", 0, 1, 2), dcRule("spoke-2", 3, 4, 5))
-	ingest := esPolicy("es-topo-ingest", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2, 3))
-	data := esPolicy("es-topo-data", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2, 3))
-	roles := func(m, i, d *psapi.PlacementPolicy) map[string]*psapi.PlacementPolicy {
-		out := map[string]*psapi.PlacementPolicy{"master": m, "ingest": i}
-		if d != nil {
-			out["data"] = d
-		}
-		return out
+	master := rolePP("es-topo-master", esGroupFP, []int32{0, 1, 2}, []int32{3, 4, 5})
+	ingest := rolePP("es-topo-ingest", esGroupFP, []int32{0, 1}, []int32{2, 3})
+	data := rolePP("es-topo-data", esGroupFP, []int32{0, 1}, []int32{2, 3})
+	set := func(m, i, d esRolePlacement) map[string]esRolePlacement {
+		return map[string]esRolePlacement{"master": m, "ingest": i, "data": d}
 	}
+	noArbiter := rolePP("es-topo-data", esGroupFP, []int32{0, 1}, []int32{2, 3})
+	noArbiter.pp.Spec.ClusterSpreadConstraint.DistributionRules = noArbiter.pp.Spec.ClusterSpreadConstraint.DistributionRules[:2]
 	cases := []struct {
 		name  string
 		db    *dbapi.Elasticsearch
-		roles map[string]*psapi.PlacementPolicy
+		roles map[string]esRolePlacement
 		err   string
 	}{
-		{"symmetric", esRolesDB(6, 4, 4), roles(master, ingest, data), ""},
-		{"uneven ingest", esRolesDB(6, 3, 4), roles(master, esPolicy("i", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2)), data), ""},
-		{"wrong total", esRolesDB(3, 4, 4), roles(master, ingest, data), "'spec.topology.master.replicas' is 3 but PlacementPolicy \"es-topo-master\" places 6"},
-		{"role without its own policy", esRolesDB(6, 4, 4), roles(master, ingest, nil), "'spec.topology.data.podTemplate.spec.podPlacementPolicy' does not name a PlacementPolicy with a clusterSpreadConstraint"},
-		{"not a Member", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", nil, dcRule("spoke-1", 0, 1), dcRule("hub", 2, 3))), `places nodes on "hub", which is not a Member`},
-		{"role policy with failoverPolicy", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", &psapi.FailoverPolicy{}, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 2, 3))), "must not set failoverPolicy"},
-		{"duplicate index", esRolesDB(6, 4, 4), roles(master, ingest, esPolicy("d", nil, dcRule("spoke-1", 0, 1), dcRule("spoke-2", 1, 3))), "places index 1 on both"},
-		{"no master in a DC", esRolesDB(3, 4, 4), roles(esPolicy("m", nil, dcRule("spoke-1", 0, 1, 2)), ingest, data), `data center "spoke-2" needs at least one master node`},
-		{"no data in a DC", esRolesDB(6, 4, 2), roles(master, ingest, esPolicy("d", nil, dcRule("spoke-1", 0, 1))), `data center "spoke-2" needs at least one data node`},
+		{"symmetric", esRolesDB(6, 4, 4), set(master, ingest, data), ""},
+		{"uneven ingest", esRolesDB(6, 3, 4), set(master, rolePP("i", esGroupFP, []int32{0, 1}, []int32{2}), data), ""},
+		{"wrong total", esRolesDB(3, 4, 4), set(master, ingest, data), "'spec.topology.master.replicas' is 3 but PlacementPolicy \"es-topo-master\" places 6"},
+		{"role without its policy", esRolesDB(6, 4, 4), map[string]esRolePlacement{"master": master, "ingest": ingest}, "'spec.topology.data.podTemplate.spec.podPlacementPolicy' is required when 'spec.distributed' is true"},
+		{"not a DC-DR policy", esRolesDB(6, 4, 4), set(master, ingest, rolePP("d", nil, []int32{0, 1}, []int32{2, 3})), "is not a DC-DR PlacementPolicy"},
+		{"different failover group", esRolesDB(6, 4, 4), set(master, ingest, rolePP("d", map[string]any{"mode": "TwoDC", "failoverGroupRef": map[string]any{"name": "other"}}, []int32{0, 1}, []int32{2, 3})), "different failoverPolicy"},
+		{"different Arbiters", esRolesDB(6, 4, 4), set(master, ingest, noArbiter), "they must match"},
+		{"duplicate index", esRolesDB(6, 4, 4), set(master, ingest, rolePP("d", esGroupFP, []int32{0, 1}, []int32{1, 3})), "places index 1 on both"},
+		{"combined", &dbapi.Elasticsearch{Spec: dbapi.ElasticsearchSpec{Distributed: true, Replicas: pointer.Int32P(6)}},
+			map[string]esRolePlacement{"combined": rolePP("es-comb", map[string]any{"mode": "TwoDC"}, []int32{0, 1, 2}, []int32{3, 4, 5})}, ""},
+		{"combined wrong total", &dbapi.Elasticsearch{Spec: dbapi.ElasticsearchSpec{Distributed: true, Replicas: pointer.Int32P(3)}},
+			map[string]esRolePlacement{"combined": rolePP("es-comb", map[string]any{"mode": "TwoDC"}, []int32{0, 1, 2}, []int32{3, 4, 5})}, "'spec.replicas' is 3 but PlacementPolicy \"es-comb\" places 6"},
+		{"no data node in a DC", esRolesDB(6, 4, 2), set(master, ingest, rolePP("d", esGroupFP, []int32{0, 1}, []int32{})), `data center "spoke-2" needs at least one data node`},
 	}
 	for _, tc := range cases {
-		err := validateElasticsearchRolePlacement(tc.db, top, tc.roles)
+		err := validateElasticsearchPlacement(tc.db, tc.roles)
 		switch {
 		case tc.err == "" && err != nil:
 			t.Errorf("%s: unexpected error %v", tc.name, err)
