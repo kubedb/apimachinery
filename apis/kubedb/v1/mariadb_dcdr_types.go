@@ -210,19 +210,46 @@ func (m MariaDB) ValidateDCDR(dataCenters []string, replicas []int32) error {
 		return fmt.Errorf("got %d data centers but %d replica counts", len(dataCenters), len(replicas))
 	}
 	seen := map[string]bool{}
+	ha := false
 	for i, dc := range dataCenters {
 		if seen[dc] {
 			return fmt.Errorf("data center %q is listed twice in the placement", dc)
 		}
 		seen[dc] = true
-		// a Galera cluster keeps quorum only with an odd number of nodes, and a lone node of a
-		// 3-node cluster is non-Primary: every data center needs 3, 5, 7 or 9 nodes
-		if n := replicas[i]; n < 3 || n > 9 || n%2 == 0 {
-			return fmt.Errorf("data center %q: DC-DR needs an odd number of 3 to 9 Galera nodes per data center, got %d", dc, n)
+		// A Galera cluster keeps quorum only with an odd number of nodes, and a lone node of a
+		// 3-node cluster is non-Primary, so a highly available data center needs 3, 5, 7 or 9
+		// nodes. A single node cluster (a DR data center without HA, scaled up later with a
+		// HorizontalScaling ops request) is allowed too.
+		n := replicas[i]
+		if n != 1 && (n < 3 || n > 9 || n%2 == 0) {
+			return fmt.Errorf("data center %q: DC-DR needs 1 or an odd number of 3 to 9 Galera nodes per data center, got %d", dc, n)
+		}
+		if n >= 3 {
+			ha = true
 		}
 	}
 	if len(dataCenters) < 2 {
 		return fmt.Errorf("DC-DR needs at least 2 member data centers, got %d", len(dataCenters))
 	}
+	if !ha {
+		return fmt.Errorf("DC-DR needs at least one data center with 3 or more Galera nodes")
+	}
 	return nil
+}
+
+// MariaDBDCDRNodeCounts returns the Galera cluster size of every Member data center for a database
+// of `replicas` nodes: the number of its PlacementPolicy ordinals below replicas. The policy may
+// already hold the ordinals of a later scale up; spec.replicas, changed by a HorizontalScaling ops
+// request, decides when they are used. Every ordinal below replicas must be placed exactly once.
+// The placement type is shared with MySQL.
+func MariaDBDCDRNodeCounts(dataCenters []MySQLDCDRDataCenter, replicas int32) (names []string, counts []int32, err error) {
+	sizes, err := MySQLDCDRGroupSizes(dataCenters, replicas)
+	if err != nil {
+		return nil, nil, err
+	}
+	for _, dc := range dataCenters {
+		names = append(names, dc.Name)
+		counts = append(counts, sizes[dc.Name])
+	}
+	return names, counts, nil
 }

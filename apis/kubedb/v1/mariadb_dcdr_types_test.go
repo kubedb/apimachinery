@@ -69,7 +69,11 @@ func TestMariaDBValidateDCDR(t *testing.T) {
 		{"not DC-DR: nothing checked", dcdrMariaDB(MariaDBModeGaleraCluster, false), nil, nil, ""},
 		{"replication topology", dcdrMariaDB(MariaDBModeReplication, true), []string{"a", "b"}, []int32{3, 3}, "GaleraCluster"},
 		{"even node count", ok, []string{"spoke-1", "spoke-2"}, []int32{3, 4}, "odd number"},
-		{"too small", ok, []string{"spoke-1", "spoke-2"}, []int32{1, 3}, "odd number"},
+		{"valid 3+1 (DR data center without HA)", ok, []string{"spoke-1", "spoke-2"}, []int32{3, 1}, ""},
+		{"valid 1+3", ok, []string{"spoke-1", "spoke-2"}, []int32{1, 3}, ""},
+		{"2 nodes", ok, []string{"spoke-1", "spoke-2"}, []int32{3, 2}, "odd number"},
+		{"no data center with HA", ok, []string{"spoke-1", "spoke-2"}, []int32{1, 1}, "3 or more"},
+		{"empty data center", ok, []string{"spoke-1", "spoke-2"}, []int32{3, 0}, "odd number"},
 		{"one data center", ok, []string{"spoke-1"}, []int32{3}, "at least 2"},
 		{"duplicate data center", ok, []string{"spoke-1", "spoke-1"}, []int32{3, 3}, "twice"},
 	}
@@ -96,5 +100,19 @@ func TestMariaDBPerDCIDs(t *testing.T) {
 	db := dcdrMariaDB(MariaDBModeGaleraCluster, true)
 	if db.PetSetNameForDC("spoke-1") != "md-spoke-1" || db.GoverningServiceNameForDC("spoke-1") != "md-spoke-1-pods" {
 		t.Errorf("names: %s %s", db.PetSetNameForDC("spoke-1"), db.GoverningServiceNameForDC("spoke-1"))
+	}
+}
+
+func TestMariaDBDCDRNodeCounts(t *testing.T) {
+	placed := []MySQLDCDRDataCenter{{Name: "spoke-1", Ordinals: []int32{0, 1, 2}}, {Name: "spoke-2", Ordinals: []int32{3, 4, 5}}}
+	names, counts, err := MariaDBDCDRNodeCounts(placed, 4)
+	if err != nil || len(names) != 2 || names[0] != "spoke-1" || counts[0] != 3 || counts[1] != 1 {
+		t.Fatalf("replicas=4: got %v %v %v, want spoke-1=3 spoke-2=1", names, counts, err)
+	}
+	if _, counts, _ = MariaDBDCDRNodeCounts(placed, 6); counts[1] != 3 {
+		t.Fatalf("replicas=6: got %v", counts)
+	}
+	if _, _, err = MariaDBDCDRNodeCounts(placed, 7); err == nil {
+		t.Fatal("an ordinal not placed in any data center must be refused")
 	}
 }

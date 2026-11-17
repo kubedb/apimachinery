@@ -32,12 +32,14 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -259,6 +261,12 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(db *db
 		if err := w.ensureMariaDBCluster(db); err != nil {
 			return err
 		}
+		if req.Spec.HorizontalScaling.Member == nil {
+			return errors.New("`spec.horizontalScaling.member` is required")
+		}
+		if db.IsDCDRDistributed() {
+			return w.validateMariaDBDCDRHorizontalScaling(db, *req.Spec.HorizontalScaling.Member)
+		}
 
 		if *req.Spec.HorizontalScaling.Member <= int32(2) || *req.Spec.HorizontalScaling.Member > int32(9) {
 			return errors.New("Group size can not be less than 3 or greater than 9, range: [3,9]")
@@ -377,4 +385,59 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBRotateAuthenticationOpsR
 		}
 	}
 	return nil
+}
+
+// validateMariaDBDCDRHorizontalScaling checks a HorizontalScaling of a DC-DR MariaDB. member is the
+// new total; the database's PlacementPolicy decides which data center each new ordinal belongs to,
+// so the user first adds the ordinals to that data center's distribution rule and then scales.
+// Every data center must end with 1 or an odd 3 to 9 Galera nodes. Scaling down is not supported
+// yet.
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBDCDRHorizontalScaling(db *dbapi.MariaDB, member int32) error {
+	cur := ptr.Deref(db.Spec.Replicas, 0)
+	if member < cur {
+		return fmt.Errorf("scaling down a DC-DR MariaDB is not supported yet (spec.replicas=%d, member=%d)", cur, member)
+	}
+	if member == cur {
+		return fmt.Errorf("spec.horizontalScaling.member=%d equals the current spec.replicas", member)
+	}
+	ppp := db.Spec.PodTemplate.Spec.PodPlacementPolicy
+	if ppp == nil || ppp.Name == "" {
+		return errors.New("a DC-DR MariaDB needs spec.podTemplate.spec.podPlacementPolicy")
+	}
+	pp := &unstructured.Unstructured{}
+	pp.SetGroupVersionKind(schema.GroupVersionKind{Group: "apps.k8s.appscode.com", Version: "v1", Kind: "PlacementPolicy"})
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ppp.Name}, pp); err != nil {
+		return fmt.Errorf("failed to get PlacementPolicy %q: %w", ppp.Name, err)
+	}
+	rules, _, err := unstructured.NestedSlice(pp.Object, "spec", "clusterSpreadConstraint", "distributionRules")
+	if err != nil {
+		return fmt.Errorf("PlacementPolicy %q: %w", ppp.Name, err)
+	}
+	var placed []dbapi.MySQLDCDRDataCenter
+	for _, r := range rules {
+		m, ok := r.(map[string]any)
+		if !ok {
+			continue
+		}
+		if role, _, _ := unstructured.NestedString(m, "role"); role != "" && role != "Member" {
+			continue
+		}
+		name, _, _ := unstructured.NestedString(m, "clusterName")
+		dc := dbapi.MySQLDCDRDataCenter{Name: name}
+		idx, _, _ := unstructured.NestedSlice(m, "replicaIndices")
+		for _, v := range idx {
+			switch n := v.(type) {
+			case int64:
+				dc.Ordinals = append(dc.Ordinals, int32(n))
+			case float64:
+				dc.Ordinals = append(dc.Ordinals, int32(n))
+			}
+		}
+		placed = append(placed, dc)
+	}
+	names, counts, err := dbapi.MariaDBDCDRNodeCounts(placed, member)
+	if err != nil {
+		return fmt.Errorf("PlacementPolicy %q has no room for member=%d: %w (add the new replica indices to the data center first)", ppp.Name, member, err)
+	}
+	return db.ValidateDCDR(names, counts)
 }

@@ -494,14 +494,17 @@ func validateDCDRMariaDB(db *dbapi.MariaDB, pp *psapi.PlacementPolicy) error {
 	if pp.Spec.ClusterSpreadConstraint.FailoverPolicy == nil {
 		return fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR mariadb", pp.Name)
 	}
-	var dataCenters []string
-	var replicas []int32
+	var placed []dbapi.MySQLDCDRDataCenter
 	for _, r := range pp.Spec.ClusterSpreadConstraint.DistributionRules {
 		if r.Role != "" && r.Role != psapi.DCRoleMember {
 			continue
 		}
-		dataCenters = append(dataCenters, r.ClusterName)
-		replicas = append(replicas, int32(len(r.ReplicaIndices)))
+		placed = append(placed, dbapi.MySQLDCDRDataCenter{Name: r.ClusterName, Ordinals: r.ReplicaIndices})
+	}
+	// each data center runs one node per ordinal below spec.replicas
+	dataCenters, replicas, err := dbapi.MariaDBDCDRNodeCounts(placed, ptr.Deref(db.Spec.Replicas, 0))
+	if err != nil {
+		return fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
 	}
 	return db.ValidateDCDR(dataCenters, replicas)
 }
