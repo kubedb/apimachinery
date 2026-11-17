@@ -197,7 +197,7 @@ func (t PostgresNamedServiceTemplateSpec) GetServiceTemplateSpec() ofst.ServiceT
 	return t.ServiceTemplateSpec
 }
 
-// +kubebuilder:validation:Enum=primary;stats;broker
+// +kubebuilder:validation:Enum=primary;stats
 type KafkaServiceAlias string
 
 type KafkaNamedServiceTemplateSpec struct {

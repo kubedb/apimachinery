@@ -6988,7 +6988,6 @@ spec:
                       enum:
                       - primary
                       - stats
-                      - broker
                       type: string
                     metadata:
                       properties:
@@ -21822,7 +21821,6 @@ spec:
                       enum:
                       - primary
                       - stats
-                      - broker
                       type: string
                     metadata:
                       properties:

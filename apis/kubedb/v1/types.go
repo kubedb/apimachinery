@@ -121,7 +121,6 @@ const (
 	StatsServiceAlias       ServiceAlias = "stats"
 	DashboardServiceAlias   ServiceAlias = "dashboard"
 	ReadReplicaServiceAlias ServiceAlias = "readreplica"
-	BrokerServiceAlias      ServiceAlias = "broker"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none
@@ -199,7 +198,7 @@ func (t PostgresNamedServiceTemplateSpec) GetServiceTemplateSpec() ofstv1.Servic
 	return t.ServiceTemplateSpec
 }
 
-// +kubebuilder:validation:Enum=primary;stats;broker
+// +kubebuilder:validation:Enum=primary;stats
 type KafkaServiceAlias string
 
 type KafkaNamedServiceTemplateSpec struct {

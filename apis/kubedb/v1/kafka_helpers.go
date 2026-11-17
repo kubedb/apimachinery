@@ -43,6 +43,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
@@ -609,8 +610,26 @@ func (k *Kafka) GetKafkaBrokerCounts() int {
 	return int(*k.Spec.Replicas)
 }
 
+// ExternalAccessEnabled reports whether brokers are exposed outside the cluster,
+// which a LoadBalancer primary template asks for.
 func (k *Kafka) ExternalAccessEnabled() bool {
-	return GetServiceTemplate(k.Spec.ServiceTemplates, BrokerServiceAlias).Spec.Type == core.ServiceTypeLoadBalancer
+	return GetServiceTemplate(k.Spec.ServiceTemplates, PrimaryServiceAlias).Spec.Type == core.ServiceTypeLoadBalancer
+}
+
+// BrokerServiceTemplate returns the template for the per-broker external Services. They follow
+// the primary template, minus its addresses and node ports: those can only belong to one
+// Service, and the primary Service already claims them.
+func (k *Kafka) BrokerServiceTemplate() ofstv1.ServiceTemplateSpec {
+	primary := GetServiceTemplate(k.Spec.ServiceTemplates, PrimaryServiceAlias)
+	template := *primary.DeepCopy()
+	template.Spec.ClusterIP = ""
+	template.Spec.LoadBalancerIP = ""
+	template.Spec.ExternalIPs = nil
+	template.Spec.HealthCheckNodePort = 0
+	for i := range template.Spec.Ports {
+		template.Spec.Ports[i].NodePort = 0
+	}
+	return template
 }
 
 func (k *Kafka) BrokerPodNames() []string {

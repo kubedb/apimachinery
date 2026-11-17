@@ -47,7 +47,7 @@ import (
 // SetupKafkaWebhookWithManager registers the webhook for Kafka in the manager.
 func SetupKafkaWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Kafka{}).
-		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias, dbapi.PrimaryServiceAlias, dbapi.BrokerServiceAlias)).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&KafkaCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -290,20 +290,17 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, db.Name, allErr)
 }
 
-// Clients reach brokers through their advertised listeners after bootstrap, so an
-// external bootstrap Service is useless without a per-broker external Service.
+// Clients reach brokers through their advertised listeners after bootstrap, so exposing Kafka
+// outside the cluster needs an external Service per broker. Those are created only for a
+// LoadBalancer primary template.
 func (w *KafkaCustomWebhook) validateServiceTemplates(db *dbapi.Kafka) error {
-	broker := dbapi.GetServiceTemplate(db.Spec.ServiceTemplates, dbapi.BrokerServiceAlias)
-	if dbapi.HasServiceTemplate(db.Spec.ServiceTemplates, dbapi.BrokerServiceAlias) && broker.Spec.Type != core.ServiceTypeLoadBalancer {
-		return fmt.Errorf("service template %q must have type %s", dbapi.BrokerServiceAlias, core.ServiceTypeLoadBalancer)
-	}
 	// the per-broker external advertised listener is set by the kafka-init setup script, which older versions don't run
 	if db.ExternalAccessEnabled() && !db.IsVersionGreaterOrEqual("4.0.0") {
-		return fmt.Errorf("service template %q requires Kafka version 4.0.0 or later", dbapi.BrokerServiceAlias)
+		return fmt.Errorf("service template %q of type %s requires Kafka version 4.0.0 or later", dbapi.PrimaryServiceAlias, core.ServiceTypeLoadBalancer)
 	}
-	primaryType := dbapi.GetServiceTemplate(db.Spec.ServiceTemplates, dbapi.PrimaryServiceAlias).Spec.Type
-	if (primaryType == core.ServiceTypeLoadBalancer || primaryType == core.ServiceTypeNodePort) && !db.ExternalAccessEnabled() {
-		return fmt.Errorf("service template %q of type %s requires service template %q of type %s", dbapi.PrimaryServiceAlias, primaryType, dbapi.BrokerServiceAlias, core.ServiceTypeLoadBalancer)
+	// a NodePort bootstrap Service would point clients to brokers they can't reach
+	if dbapi.GetServiceTemplate(db.Spec.ServiceTemplates, dbapi.PrimaryServiceAlias).Spec.Type == core.ServiceTypeNodePort {
+		return fmt.Errorf("service template %q does not support type %s, use %s for external access", dbapi.PrimaryServiceAlias, core.ServiceTypeNodePort, core.ServiceTypeLoadBalancer)
 	}
 	return nil
 }
