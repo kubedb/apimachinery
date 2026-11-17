@@ -342,17 +342,24 @@ func (w MySQLCustomWebhook) validateDistributedMySQL(mysql *dbapi.MySQL) error {
 		return fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR mysql", pp.Name)
 	}
 	var dataCenters []string
+	var placed []dbapi.MySQLDCDRDataCenter
 	for _, r := range pp.Spec.ClusterSpreadConstraint.DistributionRules {
 		if r.Role != "" && r.Role != psapi.DCRoleMember {
 			continue
 		}
-		// every Member data center runs its own Group Replication group
-		if err := validateGroupReplicas(int32(len(r.ReplicaIndices))); err != nil {
-			return fmt.Errorf("data center %q: %w", r.ClusterName, err)
-		}
 		dataCenters = append(dataCenters, r.ClusterName)
+		placed = append(placed, dbapi.MySQLDCDRDataCenter{Name: r.ClusterName, Ordinals: r.ReplicaIndices})
 	}
-	return mysql.ValidateDCDR(dataCenters)
+	if err := mysql.ValidateDCDR(dataCenters); err != nil {
+		return err
+	}
+	// every Member data center runs its own Group Replication group, sized by its ordinals below
+	// spec.replicas
+	sizes, err := dbapi.MySQLDCDRGroupSizes(placed, ptr.Deref(mysql.Spec.Replicas, 0))
+	if err != nil {
+		return fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
+	}
+	return dbapi.ValidateDCDRGroupSizes(sizes)
 }
 
 func validateEnvsForAllContainers(mysql *dbapi.MySQL) error {

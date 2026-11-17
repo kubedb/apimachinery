@@ -203,3 +203,68 @@ func (m MySQL) ValidateDCDR(dataCenters []string) error {
 	}
 	return nil
 }
+
+// MySQLDCDRDataCenter is a Member data center of a DC-DR placement and the database ordinals
+// (PlacementPolicy replicaIndices) it holds.
+// +k8s:deepcopy-gen=false
+// +k8s:openapi-gen=false
+type MySQLDCDRDataCenter struct {
+	Name     string
+	Ordinals []int32
+}
+
+// MySQLDCDRGroupSizes returns the Group Replication group size of every Member data center for a
+// database of `replicas` members. A data center runs one member per ordinal below replicas, so the
+// PlacementPolicy may already list ordinals for a later scale up (spec.replicas, changed by a
+// HorizontalScaling ops request, decides when they are used). Every ordinal below replicas must
+// belong to exactly one data center.
+func MySQLDCDRGroupSizes(dataCenters []MySQLDCDRDataCenter, replicas int32) (map[string]int32, error) {
+	owner := map[int32]string{}
+	sizes := map[string]int32{}
+	for _, dc := range dataCenters {
+		sizes[dc.Name] += 0
+		for _, o := range dc.Ordinals {
+			if prev, ok := owner[o]; ok {
+				return nil, fmt.Errorf("replica index %d is placed in both %q and %q", o, prev, dc.Name)
+			}
+			owner[o] = dc.Name
+			if o < replicas {
+				sizes[dc.Name]++
+			}
+		}
+	}
+	for o := int32(0); o < replicas; o++ {
+		if _, ok := owner[o]; !ok {
+			return nil, fmt.Errorf("replica index %d (of spec.replicas=%d) is not placed in any data center", o, replicas)
+		}
+	}
+	return sizes, nil
+}
+
+// ValidateDCDRGroupSizes checks the per data center group sizes: each Member data center runs a
+// group of 1 (a DR data center without HA, scaled up later) or of 3 to MySQLMaxGroupMembers
+// members, and at least one data center has a highly available group of 3 or more. A group of 2
+// is refused: losing either member loses its majority.
+func ValidateDCDRGroupSizes(sizes map[string]int32) error {
+	ha := false
+	for dc, n := range sizes {
+		switch {
+		case n == 0:
+			return fmt.Errorf("data center %q has no member below spec.replicas", dc)
+		case n == 2:
+			return fmt.Errorf("data center %q would have 2 members: a group of 2 has no fault tolerance, use 1 or 3 to %d", dc, mysqlMaxGroupMembers)
+		case n > mysqlMaxGroupMembers:
+			return fmt.Errorf("data center %q would have %d members, the most a group can have is %d", dc, n, mysqlMaxGroupMembers)
+		}
+		if n >= 3 {
+			ha = true
+		}
+	}
+	if !ha {
+		return fmt.Errorf("at least one data center needs a group of 3 or more members")
+	}
+	return nil
+}
+
+// mysqlMaxGroupMembers is the largest Group Replication group (kubedb.MySQLMaxGroupMembers).
+const mysqlMaxGroupMembers = 9

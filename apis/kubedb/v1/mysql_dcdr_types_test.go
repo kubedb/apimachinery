@@ -130,3 +130,48 @@ func TestMySQLWritablePrimaryConfirmed(t *testing.T) {
 		})
 	}
 }
+
+func TestMySQLDCDRGroupSizes(t *testing.T) {
+	dcs := func(a, b []int32) []MySQLDCDRDataCenter {
+		return []MySQLDCDRDataCenter{{Name: "spoke-1", Ordinals: a}, {Name: "spoke-2", Ordinals: b}}
+	}
+	tests := []struct {
+		name       string
+		dcs        []MySQLDCDRDataCenter
+		replicas   int32
+		want       map[string]int32
+		wantErr    bool
+		wantValErr bool
+	}{
+		{"3+3", dcs([]int32{0, 1, 2}, []int32{3, 4, 5}), 6, map[string]int32{"spoke-1": 3, "spoke-2": 3}, false, false},
+		{"3+1", dcs([]int32{0, 1, 2}, []int32{3}), 4, map[string]int32{"spoke-1": 3, "spoke-2": 1}, false, false},
+		{"3+1, room for 3 more", dcs([]int32{0, 1, 2}, []int32{3, 4, 5}), 4, map[string]int32{"spoke-1": 3, "spoke-2": 1}, false, false},
+		{"scaled to 3+3", dcs([]int32{0, 1, 2}, []int32{3, 4, 5}), 6, map[string]int32{"spoke-1": 3, "spoke-2": 3}, false, false},
+		{"3+2 refused", dcs([]int32{0, 1, 2}, []int32{3, 4, 5}), 5, map[string]int32{"spoke-1": 3, "spoke-2": 2}, false, true},
+		{"1+1 refused (no HA DC)", dcs([]int32{0}, []int32{1}), 2, map[string]int32{"spoke-1": 1, "spoke-2": 1}, false, true},
+		{"1+3 (DR DC first)", dcs([]int32{3}, []int32{0, 1, 2}), 4, map[string]int32{"spoke-1": 1, "spoke-2": 3}, false, false},
+		{"ordinal not placed", dcs([]int32{0, 1, 2}, []int32{3}), 5, nil, true, false},
+		{"ordinal placed twice", dcs([]int32{0, 1, 2}, []int32{2, 3}), 4, nil, true, false},
+		{"DC with no member yet", dcs([]int32{0, 1, 2}, []int32{4, 5, 6}), 3, map[string]int32{"spoke-1": 3, "spoke-2": 0}, false, true},
+		{"10 in one DC", dcs([]int32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, []int32{10}), 11, map[string]int32{"spoke-1": 10, "spoke-2": 1}, false, true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := MySQLDCDRGroupSizes(tc.dcs, tc.replicas)
+			if (err != nil) != tc.wantErr {
+				t.Fatalf("err=%v, wantErr=%v", err, tc.wantErr)
+			}
+			if tc.wantErr {
+				return
+			}
+			for k, v := range tc.want {
+				if got[k] != v {
+					t.Fatalf("size of %s = %d, want %d (all %v)", k, got[k], v, got)
+				}
+			}
+			if vErr := ValidateDCDRGroupSizes(got); (vErr != nil) != tc.wantValErr {
+				t.Fatalf("validate err=%v, wantErr=%v", vErr, tc.wantValErr)
+			}
+		})
+	}
+}
