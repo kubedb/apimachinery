@@ -71,7 +71,7 @@ func (w *MariaDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj
 		return nil, fmt.Errorf("expected an MariaDBOpsRequest object but got %T", obj)
 	}
 	mdLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops, true)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
@@ -91,7 +91,7 @@ func (w *MariaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, old
 		return nil, err
 	}
 
-	if err := w.validateCreateOrUpdate(ops); err != nil {
+	if err := w.validateCreateOrUpdate(ops, false); err != nil {
 		return nil, err
 	}
 
@@ -110,7 +110,7 @@ func (w *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj
 	return nil, nil
 }
 
-func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest, isCreate bool) error {
 	if validType, _ := arrays.Contains(opsapi.MariaDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", ")))
@@ -125,13 +125,13 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 	switch opsapi.MariaDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
 	case opsapi.MariaDBOpsRequestTypeVerticalScaling:
-		if err := w.validateMariaDBScalingOpsRequest(db, req); err != nil {
+		if err := w.validateMariaDBScalingOpsRequest(db, req, isCreate); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeHorizontalScaling:
-		if err := w.validateMariaDBScalingOpsRequest(db, req); err != nil {
+		if err := w.validateMariaDBScalingOpsRequest(db, req, isCreate); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -252,7 +252,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpdateVersionOpsRequest(
 	return nil
 }
 
-func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(db *dbapi.MariaDB, req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(db *dbapi.MariaDB, req *opsapi.MariaDBOpsRequest, isCreate bool) error {
 	if req.Spec.Type == opsapi.MariaDBOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
@@ -265,6 +265,11 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(db *db
 			return errors.New("`spec.horizontalScaling.member` is required")
 		}
 		if db.IsDCDRDistributed() {
+			// Checked when the request is created. The request itself raises spec.replicas, so
+			// comparing again on its later (status) updates would reject its own progress.
+			if !isCreate {
+				return nil
+			}
 			return w.validateMariaDBDCDRHorizontalScaling(db, *req.Spec.HorizontalScaling.Member)
 		}
 
