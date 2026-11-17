@@ -126,13 +126,13 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 	case opsapi.MySQLOpsRequestTypeRestart:
 
 	case opsapi.MySQLOpsRequestTypeVerticalScaling:
-		if err := w.validateMySQLScalingOpsRequest(db, req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(db, req, isCreate); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeHorizontalScaling:
-		if err := w.validateMySQLScalingOpsRequest(db, req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(db, req, isCreate); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -247,7 +247,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest, isCreate bool) error {
 	if req.Spec.Type == opsapi.MySQLOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
@@ -260,6 +260,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(db *dbapi.
 			return errors.New("`spec.horizontalScaling.member` is required")
 		}
 		if db.IsDCDRDistributed() {
+			// Checked when the request is created. The request itself raises spec.replicas, so
+			// comparing again on its later (status) updates would reject its own progress.
+			if !isCreate {
+				return nil
+			}
 			return w.validateMySQLDCDRHorizontalScaling(db, *req.Spec.HorizontalScaling.Member)
 		}
 
