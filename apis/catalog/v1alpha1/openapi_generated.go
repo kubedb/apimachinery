@@ -662,6 +662,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore":                             schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncrementalBackup":                            schema_apimachinery_apis_catalog_v1alpha1_IncrementalBackup(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion":                        schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref),
@@ -33656,11 +33657,18 @@ func schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref common.ReferenceCa
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore"),
 						},
 					},
+					"incrementalBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IncrementalBackup is the task that takes a block-level incremental physical backup on top of the latest physical backup (Postgres: pg_basebackup --incremental).",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncrementalBackup"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncrementalBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"},
 	}
 }
 
@@ -36816,6 +36824,26 @@ func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref common.Refe
 }
 
 func schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_IncrementalBackup(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
