@@ -3541,6 +3541,7 @@ func (in *OracleVersionSpec) DeepCopyInto(out *OracleVersionSpec) {
 		}
 	}
 	out.GitSyncer = in.GitSyncer
+	out.Courier = in.Courier
 	return
 }
 

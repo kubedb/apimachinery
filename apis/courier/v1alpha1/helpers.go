@@ -51,6 +51,10 @@ func (MSSQLServerMigration) CustomResourceDefinition() *apiextensions.CustomReso
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLServerMigrations))
 }
 
+func (OracleMigration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralOracleMigrations))
+}
+
 func (Branch) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralBranches))
 }
@@ -71,6 +75,8 @@ func (m Migration) GetDBKindAndCommand() (string, string) {
 		return "MariaDB", "mariadb"
 	case m.Spec.Source.MSSQLServerSource != nil && m.Spec.Target.MSSQLServerTarget != nil:
 		return "MSSQLServer", "mssqlserver"
+	case m.Spec.Source.OracleSource != nil && m.Spec.Target.OracleTarget != nil:
+		return "Oracle", "oracle"
 	}
 
 	return "", ""
@@ -96,6 +102,8 @@ func (m Migration) GetConnectionInfos() (*ConnectionInfo, *ConnectionInfo) {
 			DBName:     m.Spec.Target.MSSQLServerTarget.ConnectionInfo.Database,
 		}
 		return src, tgt
+	case m.Spec.Source.OracleSource != nil && m.Spec.Target.OracleTarget != nil:
+		return m.Spec.Source.OracleSource.ConnectionInfo, m.Spec.Target.OracleTarget.ConnectionInfo
 	}
 	return nil, nil
 }
