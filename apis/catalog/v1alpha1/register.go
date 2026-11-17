@@ -93,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerVersionList{},
 		&MySQLVersion{},
 		&MySQLVersionList{},
+		&DurableWorkflowVersion{},
+		&DurableWorkflowVersionList{},
 		&Neo4jVersion{},
 		&Neo4jVersionList{},
 		&OracleVersion{},

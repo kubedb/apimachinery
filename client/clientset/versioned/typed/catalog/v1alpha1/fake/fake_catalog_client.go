@@ -53,6 +53,10 @@ func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
 	return newFakeDruidVersions(c)
 }
 
+func (c *FakeCatalogV1alpha1) DurableWorkflowVersions() v1alpha1.DurableWorkflowVersionInterface {
+	return newFakeDurableWorkflowVersions(c)
+}
+
 func (c *FakeCatalogV1alpha1) ElasticsearchVersions() v1alpha1.ElasticsearchVersionInterface {
 	return newFakeElasticsearchVersions(c)
 }

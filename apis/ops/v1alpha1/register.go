@@ -91,6 +91,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerOpsRequestList{},
 		&MySQLOpsRequest{},
 		&MySQLOpsRequestList{},
+		&DurableWorkflowOpsRequest{},
+		&DurableWorkflowOpsRequestList{},
 		&Neo4jOpsRequest{},
 		&Neo4jOpsRequestList{},
 		&OracleOpsRequest{},

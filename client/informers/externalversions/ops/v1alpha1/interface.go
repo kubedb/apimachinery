@@ -36,6 +36,8 @@ type Interface interface {
 	DocumentDBOpsRequests() DocumentDBOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
 	DruidOpsRequests() DruidOpsRequestInformer
+	// DurableWorkflowOpsRequests returns a DurableWorkflowOpsRequestInformer.
+	DurableWorkflowOpsRequests() DurableWorkflowOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
 	ElasticsearchOpsRequests() ElasticsearchOpsRequestInformer
 	// EtcdOpsRequests returns a EtcdOpsRequestInformer.
@@ -131,6 +133,11 @@ func (v *version) DocumentDBOpsRequests() DocumentDBOpsRequestInformer {
 // DruidOpsRequests returns a DruidOpsRequestInformer.
 func (v *version) DruidOpsRequests() DruidOpsRequestInformer {
 	return &druidOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DurableWorkflowOpsRequests returns a DurableWorkflowOpsRequestInformer.
+func (v *version) DurableWorkflowOpsRequests() DurableWorkflowOpsRequestInformer {
+	return &durableWorkflowOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.

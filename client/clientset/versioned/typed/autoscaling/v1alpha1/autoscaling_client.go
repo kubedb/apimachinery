@@ -35,6 +35,7 @@ type AutoscalingV1alpha1Interface interface {
 	DB2AutoscalersGetter
 	DocumentDBAutoscalersGetter
 	DruidAutoscalersGetter
+	DurableWorkflowAutoscalersGetter
 	ElasticsearchAutoscalersGetter
 	EtcdAutoscalersGetter
 	HanaDBAutoscalersGetter
@@ -91,6 +92,10 @@ func (c *AutoscalingV1alpha1Client) DocumentDBAutoscalers(namespace string) Docu
 
 func (c *AutoscalingV1alpha1Client) DruidAutoscalers(namespace string) DruidAutoscalerInterface {
 	return newDruidAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) DurableWorkflowAutoscalers(namespace string) DurableWorkflowAutoscalerInterface {
+	return newDurableWorkflowAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) ElasticsearchAutoscalers(namespace string) ElasticsearchAutoscalerInterface {

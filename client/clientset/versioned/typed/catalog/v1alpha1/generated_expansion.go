@@ -30,6 +30,8 @@ type DocumentDBVersionExpansion interface{}
 
 type DruidVersionExpansion interface{}
 
+type DurableWorkflowVersionExpansion interface{}
+
 type ElasticsearchVersionExpansion interface{}
 
 type EtcdVersionExpansion interface{}

@@ -593,6 +593,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Druid":                                         schema_apimachinery_apis_gitops_v1alpha1_Druid(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.DruidList":                                     schema_apimachinery_apis_gitops_v1alpha1_DruidList(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.DruidStatus":                                   schema_apimachinery_apis_gitops_v1alpha1_DruidStatus(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflow":                               schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflow(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflowList":                           schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflowList(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflowStatus":                         schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflowStatus(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Elasticsearch":                                 schema_apimachinery_apis_gitops_v1alpha1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.ElasticsearchList":                             schema_apimachinery_apis_gitops_v1alpha1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.ElasticsearchStatus":                           schema_apimachinery_apis_gitops_v1alpha1_ElasticsearchStatus(ref),
@@ -34304,6 +34307,161 @@ func schema_apimachinery_apis_gitops_v1alpha1_DruidStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflow(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflowStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflowStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowSpec"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflowList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflow"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.DurableWorkflow"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_DurableWorkflowStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the cluster, such as Ready and HighlyAvailable.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution is the resolved distribution of spec.version.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistence": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Persistence reports the state of each persistence store.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus"),
+						},
+					},
+					"gitops": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus"},
 	}
 }
 
