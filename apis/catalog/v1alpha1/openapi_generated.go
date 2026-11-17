@@ -818,6 +818,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFeatures":                    schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionFeatures(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFlags":                       schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionFlags(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionMemory":                      schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionMemory(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersion":                             schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionCoordinator":                  schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionDatabase(ref),
@@ -42996,6 +43003,314 @@ func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionSpec(ref common.Re
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionDatabase"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionDatabase is the YugabyteDB Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionFeatures(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionFeatures lists the capabilities of a version.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clientOnlyCertReload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientOnlyCertReload is true when certificates can be reloaded without a restart even if only the client to node TLS is on (2025.2.1 and later).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionFlags(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionFlags are the default flags of each role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tserver": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionList is a list of YugabyteDBVersions",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of YugabyteDBVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionMemory(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionMemory sets the share of the container memory limit given to each role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"masterLimitPercent": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"tserverLimitPercent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The tserver keeps the rest for the PostgreSQL backends, which run outside its memory tracker.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVersionSpec is the spec for a YugabyteDB version.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"build": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Build is the upstream build of the image, for example 2025.2.8.0-b60.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"endOfLife": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionDatabase"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+					"ysqlMajorVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "YSQLMajorVersion is the major version of PostgreSQL that the YSQL API is built on, for example 15. An update between versions with a different major version needs the YSQL major upgrade flow.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"memory": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Memory sizes --memory_limit_hard_bytes from the container memory limit of each role.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionMemory"),
+						},
+					},
+					"defaultFlags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DefaultFlags are written to the flag files before the user configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFlags"),
+						},
+					},
+					"features": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Features lists what this version supports.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFeatures"),
+						},
+					},
+					"ui": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
+									},
+								},
+							},
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+				},
+				Required: []string{"version", "db", "ysqlMajorVersion"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFeatures", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFlags", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionMemory"},
 	}
 }
 
