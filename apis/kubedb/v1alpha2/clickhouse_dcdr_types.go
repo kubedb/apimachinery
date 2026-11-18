@@ -320,6 +320,12 @@ func (c *ClickHouse) ValidateDCDR(dataCenters []string) ([]string, error) {
 	if c.Spec.DisableSecurity {
 		return nil, fmt.Errorf("DC-DR requires authentication: spec.disableSecurity must be false")
 	}
+	if c.Spec.TLS != nil {
+		return nil, fmt.Errorf("DC-DR does not support spec.tls yet")
+	}
+	if ct.Cluster.StorageType == StorageTypeEphemeral || (ct.ClickHouseKeeper != nil && ct.ClickHouseKeeper.Spec != nil && ct.ClickHouseKeeper.Spec.StorageType == StorageTypeEphemeral) {
+		return nil, fmt.Errorf("DC-DR needs durable storage: the coordinator state and the Keeper membership live on the data volumes")
+	}
 	if ct.ClickHouseKeeper == nil || ct.ClickHouseKeeper.ExternallyManaged || ct.ClickHouseKeeper.Spec == nil {
 		return nil, fmt.Errorf("DC-DR requires an operator managed Keeper: spec.clusterTopology.clickHouseKeeper.spec, not externallyManaged")
 	}
