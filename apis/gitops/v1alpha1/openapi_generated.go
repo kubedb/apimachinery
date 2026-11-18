@@ -33867,6 +33867,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_ClickHouseStatus(ref common.Refere
 							},
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state of a distributed ClickHouse.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -33877,7 +33883,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_ClickHouseStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseDisasterRecoveryStatus"},
 	}
 }
 

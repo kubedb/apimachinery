@@ -34,6 +34,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -87,7 +88,10 @@ func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", obj)
 	}
 	clickhouselog.Info("validate create", "name", db.Name)
-	return nil, w.ValidateCreateOrUpdate(db)
+	if err := w.ValidateCreateOrUpdate(db); err != nil {
+		return nil, err
+	}
+	return w.validateDistributedClickHouse(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -100,7 +104,19 @@ func (w *ClickHouseCustomWebhook) ValidateUpdate(ctx context.Context, old, newOb
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", newObj)
 	}
 	clickhouselog.Info("validate update", "name", db.Name)
-	return nil, w.ValidateCreateOrUpdate(db)
+	oldDB, ok := old.(*olddbapi.ClickHouse)
+	if !ok {
+		return nil, fmt.Errorf("expected an ClickHouse object but got %T", old)
+	}
+	// A DC-DR ClickHouse cannot be turned into a non DC-DR one (or the reverse): the per data center
+	// Keeper and shard PetSets, the replica names in every Keeper path and the Keeper ensemble depend on it.
+	if oldDB.IsDCDRDistributed() != db.IsDCDRDistributed() || (oldDB.IsDCDRDistributed() && oldDB.Spec.Distributed != db.Spec.Distributed) {
+		return nil, errors.New("spec.distributed and the dr.kubedb.com/enabled annotation of a DC-DR ClickHouse are immutable")
+	}
+	if err := w.ValidateCreateOrUpdate(db); err != nil {
+		return nil, err
+	}
+	return w.validateDistributedClickHouse(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -444,4 +460,61 @@ func (w *ClickHouseCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.Po
 		}
 	}
 	return nil
+}
+
+// validateDistributedClickHouse checks a distributed ClickHouse against its PlacementPolicy. A deletion
+// in progress is never blocked on the PlacementPolicy, so a policy deleted first cannot leave the CR
+// stuck behind its finalizer.
+func (w *ClickHouseCustomWebhook) validateDistributedClickHouse(db *olddbapi.ClickHouse) (admission.Warnings, error) {
+	if !db.Spec.Distributed || db.DeletionTimestamp != nil {
+		return nil, nil
+	}
+	if !db.IsDCDRDistributed() {
+		return nil, fmt.Errorf("a distributed ClickHouse is only supported as a DC-DR deployment: set the annotation %s=true", dbapi.DCDREnabledAnnotation)
+	}
+	name := db.DCDRPlacementPolicyName()
+	if name == "" {
+		return nil, errors.New("spec.clusterTopology.cluster.podTemplate.spec.podPlacementPolicy is required for distributed clickhouse")
+	}
+	pp := psapi.PlacementPolicy{}
+	if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: name}, &pp); err != nil {
+		return nil, err
+	}
+	return validateDCDRClickHouse(db, &pp)
+}
+
+// validateDCDRClickHouse checks a DC-DR ClickHouse against its PlacementPolicy. The PlacementPolicy
+// structure is validated by its CRD and the petset webhook; the vendored petset validator is not run
+// (it is tied to one petset version and refused every update of the MySQL/MariaDB DC-DR databases once
+// the lab PlacementPolicy CRD carried failoverGroupRef). Only the ClickHouse requirements are checked.
+func validateDCDRClickHouse(db *olddbapi.ClickHouse, pp *psapi.PlacementPolicy) (admission.Warnings, error) {
+	csc := pp.Spec.ClusterSpreadConstraint
+	if csc == nil {
+		return nil, fmt.Errorf("spec.clusterSpreadConstraint is required in PlacementPolicy %q for distributed clickhouse", pp.Name)
+	}
+	if csc.FailoverPolicy == nil {
+		return nil, fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR clickhouse", pp.Name)
+	}
+	var dataCenters []string
+	var placed []olddbapi.ClickHouseDCDRDataCenter
+	for _, r := range csc.DistributionRules {
+		if r.Role != "" && r.Role != psapi.DCRoleMember {
+			continue
+		}
+		dataCenters = append(dataCenters, r.ClusterName)
+		placed = append(placed, olddbapi.ClickHouseDCDRDataCenter{Name: r.ClusterName, Ordinals: r.ReplicaIndices})
+	}
+	warnings, err := db.ValidateDCDR(dataCenters)
+	if err != nil {
+		return nil, err
+	}
+	// every shard has replicas in each Member data center, one per ordinal below cluster.replicas
+	var replicas int32
+	if db.Spec.ClusterTopology.Cluster.Replicas != nil {
+		replicas = *db.Spec.ClusterTopology.Cluster.Replicas
+	}
+	if _, err := olddbapi.ClickHouseDCDRReplicasPerDC(placed, replicas); err != nil {
+		return nil, fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
+	}
+	return warnings, nil
 }
