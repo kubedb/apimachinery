@@ -783,6 +783,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion":                              schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator":                   schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref),
@@ -41626,6 +41627,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQVersionCoordinator is the rabbitmq-coordinator sidecar image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41767,12 +41789,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator is the rabbitmq-coordinator sidecar image used by a DC-DR (distributed) RabbitMQ in every node pod. Only versions used for DC-DR need it.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "initContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

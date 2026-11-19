@@ -805,6 +805,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_QdrantTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ":                                      schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQ(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQBind":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCDRSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDCDRSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDisasterRecoveryStatus":                schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQList":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQNamedServiceTemplateSpec":              schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQNamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref),
@@ -46213,6 +46216,196 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQBind(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDCDRSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQDCDRSpec holds the DC-DR options of a distributed RabbitMQ. It only has an effect when spec.distributed is true and the DC-DR annotation (dr.kubedb.com/enabled=true) is set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxLagMessages": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxLagMessages is the largest outbox backlog (messages not yet copied to the standby data center) for the database to report itself protected and for an automatic failover to be allowed without the dr.kubedb.com/accept-failover-data-loss annotation. nil means 1000.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQDCStatus is one data center's local view inside a distributed RabbitMQ.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster (the same clusterName used in the PlacementPolicy distributionRule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role is Member or Arbiter.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Writable is true when the application users of this data center have their permissions (the coordinator reports it open).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"fenced": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Fenced is true when the coordinator of this data center has revoked the application users.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nodesReady": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodesReady is the number of running nodes of this data center's RabbitMQ cluster.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"outboxMessages": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OutboxMessages is the number of messages in this data center's outbox queues that the standby has not copied yet. Only set for the active data center.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"linkState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LinkState is the state of this data center's shovels: \"Running\", \"Starting\", \"Terminated\", \"Partial\" (some exchanges have no running shovel) or \"None\" (the active data center).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"needsReseed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NeedsReseed is true when this data center returned after an unplanned failover and keeps its own messages: it stays fenced until the dr.kubedb.com/reseed annotation approves a reseed.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"healthy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Healthy is true when every node of this data center is running and its management API answers.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains an unhealthy or unknown entry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedAt is when this entry was last measured.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQDisasterRecoveryStatus reports the per data center DC-DR view of a distributed RabbitMQ. The cross-DC decision is owned by the dr-controlplane primary-DC Lease; this status reflects it on the single RabbitMQ object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that currently holds the primary DC Lease and takes client traffic.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member DC.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"protected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protected reports whether a standby data center has a running shovel for every replicated exchange and the outbox backlog is within spec.disasterRecovery.maxLagMessages, as of a fresh observation. nil means unknown, which must be treated as unprotected.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"protectionMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProtectionMessage explains the current value of Protected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"permittedDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PermittedDC is the data center the hub last wrote the permit for, with the Lease it was written under. The coordinator opens a data center only for a permit that matches the Lease.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains a blocked failover or the last error.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCStatus"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46440,12 +46633,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref common.ReferenceC
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed if set true, the database is placed across OCM spoke clusters by the PlacementPolicy named in spec.podTemplate.spec.podPlacementPolicy, and ManifestWork objects are created instead of raw resources. With a DC-DR PlacementPolicy (failoverPolicy set) it makes a cross data center disaster recovery (DC-DR) deployment: one self-contained RabbitMQ cluster per Member data center, a shovel link from the active data center to the standby, and a rabbitmq-coordinator sidecar that fences a data center which does not hold the primary-DC Lease.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery holds the cross data center DR options (used with spec.distributed and the dr.kubedb.com/enabled=true annotation).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCDRSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQNamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDCDRSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQNamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -46484,11 +46690,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQStatus(ref common.Referenc
 							},
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state of a distributed RabbitMQ.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDisasterRecoveryStatus"},
 	}
 }
 
