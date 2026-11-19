@@ -73,6 +73,19 @@ func TestOracleValidateArchiver(t *testing.T) {
 		"no timestamp":  {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) { a.RecoveryTimestamp = metav1.Time{} }), "spec.init.archiver.recoveryTimestamp"},
 		"no repository": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) { a.FullDBRepository = nil }), "spec.init.archiver.fullDBRepository"},
 		"no encryption": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) { a.EncryptionSecret = nil }), "spec.init.archiver.encryptionSecret"},
+		"future timestamp": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) {
+			a.RecoveryTimestamp = metav1.NewTime(time.Now().Add(time.Hour))
+		}), "spec.init.archiver.recoveryTimestamp"},
+		"manifest repository": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) {
+			a.ManifestRepository = &kmapi.ObjectReference{Name: "sa-oracle-manifest"}
+		}), "spec.init.archiver.manifestRepository"},
+		"manifest options": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) {
+			a.ManifestOptions = &olddbapi.ManifestOptions{Archiver: ptr.To(true)}
+		}), "spec.init.archiver.manifestOptions"},
+		"replication strategy": {oracleWithInitArchiver(func(a *olddbapi.ArchiverRecovery) {
+			s := olddbapi.ReplicationStrategyNone
+			a.ReplicationStrategy = &s
+		}), "spec.init.archiver.replicationStrategy"},
 		"into DataGuard": {func() *olddbapi.Oracle {
 			db := oracleWithInitArchiver(nil)
 			db.Spec.Mode = olddbapi.OracleModeDataGuard

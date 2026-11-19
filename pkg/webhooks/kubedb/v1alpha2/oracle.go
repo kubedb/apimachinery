@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -430,12 +431,26 @@ func oracleValidateArchiver(db *olddbapi.Oracle) field.ErrorList {
 	a := ini.Archiver
 	if a.RecoveryTimestamp.IsZero() {
 		errs = append(errs, field.Required(spec.Child("init", "archiver", "recoveryTimestamp"), "recoveryTimestamp is required"))
+	} else if a.RecoveryTimestamp.After(time.Now()) {
+		errs = append(errs, field.Invalid(spec.Child("init", "archiver", "recoveryTimestamp"), a.RecoveryTimestamp.UTC().Format(time.RFC3339),
+			"recoveryTimestamp is in the future; no backup can cover it yet"))
 	}
 	if a.FullDBRepository == nil || a.FullDBRepository.Name == "" {
 		errs = append(errs, field.Required(spec.Child("init", "archiver", "fullDBRepository"), "fullDBRepository is required to restore an Oracle"))
 	}
 	if a.EncryptionSecret == nil || a.EncryptionSecret.Name == "" {
 		errs = append(errs, field.Required(spec.Child("init", "archiver", "encryptionSecret"), "encryptionSecret is required to read the encrypted backup"))
+	}
+	// The Oracle restore reads only the full repository and the encryption
+	// secret; reject the other fields instead of silently ignoring them.
+	if a.ManifestRepository != nil {
+		errs = append(errs, field.Forbidden(spec.Child("init", "archiver", "manifestRepository"), "manifest restore is not supported for Oracle"))
+	}
+	if a.ManifestOptions != nil {
+		errs = append(errs, field.Forbidden(spec.Child("init", "archiver", "manifestOptions"), "manifest restore is not supported for Oracle"))
+	}
+	if a.ReplicationStrategy != nil {
+		errs = append(errs, field.Forbidden(spec.Child("init", "archiver", "replicationStrategy"), "replicationStrategy is not supported for Oracle"))
 	}
 	if db.Spec.Mode == olddbapi.OracleModeDataGuard {
 		errs = append(errs, field.Forbidden(spec.Child("init", "archiver"),
