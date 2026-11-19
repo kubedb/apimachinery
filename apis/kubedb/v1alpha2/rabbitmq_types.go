@@ -122,6 +122,21 @@ type RabbitMQSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// Distributed if set true, the database is placed across OCM spoke clusters by the
+	// PlacementPolicy named in spec.podTemplate.spec.podPlacementPolicy, and ManifestWork objects
+	// are created instead of raw resources. With a DC-DR PlacementPolicy (failoverPolicy set) it
+	// makes a cross data center disaster recovery (DC-DR) deployment: one self-contained RabbitMQ
+	// cluster per Member data center, a shovel link from the active data center to the standby,
+	// and a rabbitmq-coordinator sidecar that fences a data center which does not hold the
+	// primary-DC Lease.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// DisasterRecovery holds the cross data center DR options (used with spec.distributed and
+	// the dr.kubedb.com/enabled=true annotation).
+	// +optional
+	DisasterRecovery *RabbitMQDCDRSpec `json:"disasterRecovery,omitempty"`
 }
 
 // RabbitMQStatus defines the observed state of RabbitMQ
@@ -136,6 +151,9 @@ type RabbitMQStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state of a distributed RabbitMQ.
+	// +optional
+	DisasterRecovery *RabbitMQDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ca;client;server

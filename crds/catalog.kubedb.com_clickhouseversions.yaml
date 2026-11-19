@@ -121,6 +121,13 @@ spec:
                 required:
                 - image
                 type: object
+              coordinator:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               db:
                 properties:
                   image:

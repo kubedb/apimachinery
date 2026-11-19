@@ -118,6 +118,7 @@ const (
 	ElasticsearchInitSysctlContainerName         = "init-sysctl"
 	ElasticsearchInitConfigMergerContainerName   = "config-merger"
 	ElasticsearchContainerName                   = "elasticsearch"
+	ElasticsearchCoordinatorContainerName        = "es-coordinator"
 	ElasticsearchExporterContainerName           = "exporter"
 	ElasticsearchSearchGuardRolesMappingFileName = "sg_roles_mapping.yml"
 	ElasticsearchSearchGuardInternalUserFileName = "sg_internal_users.yml"
@@ -1589,6 +1590,7 @@ const (
 
 	RabbitMQContainerName              = "rabbitmq"
 	RabbitMQInitContainerName          = "rabbitmq-init"
+	RabbitMQCoordinatorContainerName   = "rabbitmq-coordinator"
 	RabbitMQManagementPlugin           = "rabbitmq_management"
 	RabbitMQPeerdiscoveryPlugin        = "rabbitmq_peer_discovery_k8s"
 	RabbitMQFederationPlugin           = "rabbitmq_federation"

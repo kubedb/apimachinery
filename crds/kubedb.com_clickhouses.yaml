@@ -6801,6 +6801,20 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
+              disasterRecovery:
+                properties:
+                  fenceMarginSeconds:
+                    format: int32
+                    type: integer
+                  maxFetchLagSeconds:
+                    format: int32
+                    type: integer
+                  maxLearnerLagZxid:
+                    format: int64
+                    type: integer
+                type: object
+              distributed:
+                type: boolean
               halted:
                 type: boolean
               healthChecker:
@@ -11792,6 +11806,85 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataAtRiskParts:
+                    format: int64
+                    type: integer
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        detachedParts:
+                          format: int64
+                          type: integer
+                        fenced:
+                          type: boolean
+                        fetchBacklog:
+                          format: int64
+                          type: integer
+                        keeperRole:
+                          type: string
+                        learnerLagZxid:
+                          format: int64
+                          type: integer
+                        maxAbsoluteDelaySeconds:
+                          format: int64
+                          type: integer
+                        notReadyPods:
+                          items:
+                            type: string
+                          type: array
+                        observedAt:
+                          format: date-time
+                          type: string
+                        onlineReplicas:
+                          format: int32
+                          type: integer
+                        readonlyReplicas:
+                          format: int32
+                          type: integer
+                        role:
+                          type: string
+                        writable:
+                          type: boolean
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  keeperLeader:
+                    type: string
+                  keeperMembers:
+                    items:
+                      properties:
+                        dataCenter:
+                          type: string
+                        id:
+                          format: int32
+                          type: integer
+                        pod:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - id
+                      - pod
+                      - type
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                  protected:
+                    type: boolean
+                  protectionMessage:
+                    type: string
+                type: object
               observedDataPVCUIDs:
                 additionalProperties:
                   type: string

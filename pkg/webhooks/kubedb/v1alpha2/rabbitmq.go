@@ -33,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -94,7 +95,10 @@ func (w *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", obj)
 	}
 	rabbitmqlog.Info("validate create", "name", db.GetName())
-	return nil, w.ValidateCreateOrUpdate(db)
+	if err := w.ValidateCreateOrUpdate(db); err != nil {
+		return nil, err
+	}
+	return w.validateDistributedRabbitMQ(ctx, db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -108,7 +112,18 @@ func (w *RabbitMQCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj 
 	}
 
 	rabbitmqlog.Info("validate update", "name", db.GetName())
-	return nil, w.ValidateCreateOrUpdate(db)
+	oldDB, ok := old.(*olddbapi.RabbitMQ)
+	if !ok {
+		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", old)
+	}
+	// The per data center PetSets, clusters and the cross data center link depend on it.
+	if oldDB.Spec.Distributed != db.Spec.Distributed {
+		return nil, errors.New("spec.distributed of a RabbitMQ is immutable")
+	}
+	if err := w.ValidateCreateOrUpdate(db); err != nil {
+		return nil, err
+	}
+	return w.validateDistributedRabbitMQ(ctx, db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -279,4 +294,59 @@ func (w *RabbitMQCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodT
 	}
 
 	return nil
+}
+
+// validateDistributedRabbitMQ checks a distributed RabbitMQ against its PlacementPolicy. A deletion
+// in progress is never blocked on the PlacementPolicy, so a policy deleted first cannot leave the
+// CR stuck behind its finalizer.
+func (w *RabbitMQCustomWebhook) validateDistributedRabbitMQ(ctx context.Context, db *olddbapi.RabbitMQ) (admission.Warnings, error) {
+	if !db.Spec.Distributed || db.DeletionTimestamp != nil {
+		return nil, nil
+	}
+	name := db.DCDRPlacementPolicyName()
+	if name == "" {
+		return nil, errors.New("spec.podTemplate.spec.podPlacementPolicy is required for distributed rabbitmq")
+	}
+	pp := psapi.PlacementPolicy{}
+	if err := w.DefaultClient.Get(ctx, client.ObjectKey{Name: name}, &pp); err != nil {
+		return nil, err
+	}
+	return validateDCDRRabbitMQ(db, &pp)
+}
+
+// validateDCDRRabbitMQ checks a distributed RabbitMQ against its PlacementPolicy. The
+// PlacementPolicy structure is validated by its CRD and the petset webhook; only the RabbitMQ
+// requirements are checked here (the vendored petset validator is tied to one petset version).
+func validateDCDRRabbitMQ(db *olddbapi.RabbitMQ, pp *psapi.PlacementPolicy) (admission.Warnings, error) {
+	csc := pp.Spec.ClusterSpreadConstraint
+	if csc == nil {
+		return nil, fmt.Errorf("spec.clusterSpreadConstraint is required in PlacementPolicy %q for distributed rabbitmq", pp.Name)
+	}
+	if csc.FailoverPolicy == nil {
+		return nil, fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for distributed rabbitmq", pp.Name)
+	}
+	var dataCenters []string
+	var placed []olddbapi.RabbitMQDCDRDataCenter
+	for _, r := range csc.DistributionRules {
+		if r.Role == psapi.DCRoleArbiter {
+			if len(r.ReplicaIndices) > 0 {
+				return nil, fmt.Errorf("PlacementPolicy %q: arbiter data center %q must not run rabbitmq nodes", pp.Name, r.ClusterName)
+			}
+			continue
+		}
+		if r.Role != "" && r.Role != psapi.DCRoleMember {
+			continue
+		}
+		dataCenters = append(dataCenters, r.ClusterName)
+		placed = append(placed, olddbapi.RabbitMQDCDRDataCenter{Name: r.ClusterName, Ordinals: r.ReplicaIndices})
+	}
+	var replicas int32
+	if db.Spec.Replicas != nil {
+		replicas = *db.Spec.Replicas
+	}
+	nodes, err := olddbapi.RabbitMQDCDRNodesPerDC(placed, replicas)
+	if err != nil {
+		return nil, fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
+	}
+	return db.ValidateDCDR(dataCenters, nodes)
 }

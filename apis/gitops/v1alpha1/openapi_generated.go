@@ -33867,6 +33867,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_ClickHouseStatus(ref common.Refere
 							},
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state of a distributed ClickHouse.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -33877,7 +33883,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_ClickHouseStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseDisasterRecoveryStatus"},
 	}
 }
 
@@ -34440,6 +34446,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_ElasticsearchStatus(ref common.Ref
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed Elasticsearch.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -34450,7 +34462,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_ElasticsearchStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchDisasterRecoveryStatus"},
 	}
 }
 
@@ -35511,6 +35523,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_MariaDBStatus(ref common.Reference
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed MariaDB.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -35521,7 +35539,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_MariaDBStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBDisasterRecoveryStatus"},
 	}
 }
 
@@ -36089,6 +36107,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_MySQLStatus(ref common.ReferenceCa
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed MySQL.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -36099,7 +36123,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_MySQLStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLDisasterRecoveryStatus"},
 	}
 }
 
@@ -37412,6 +37436,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_RabbitMQStatus(ref common.Referenc
 							},
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state of a distributed RabbitMQ.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -37422,7 +37452,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_RabbitMQStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQDisasterRecoveryStatus"},
 	}
 }
 

@@ -70,6 +70,15 @@ type RabbitMQVersionSpec struct {
 	UI []ChartInfo `json:"ui,omitempty"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+	// Coordinator is the rabbitmq-coordinator sidecar image used by a DC-DR (distributed)
+	// RabbitMQ in every node pod. Only versions used for DC-DR need it.
+	// +optional
+	Coordinator RabbitMQVersionCoordinator `json:"coordinator,omitempty"`
+}
+
+// RabbitMQVersionCoordinator is the rabbitmq-coordinator sidecar image
+type RabbitMQVersionCoordinator struct {
+	Image string `json:"image"`
 }
 
 // RabbitMQVersionDatabase is the RabbitMQ Database image

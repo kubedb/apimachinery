@@ -148,6 +148,11 @@ type MariaDBSpec struct {
 	// specify if the database deployment distributed or not
 	// +optional
 	Distributed bool `json:"distributed,omitempty"`
+
+	// DisasterRecovery holds the cross data center DR options (used with spec.distributed and
+	// the dr.kubedb.com/enabled annotation).
+	// +optional
+	DisasterRecovery *MariaDBDCDRSpec `json:"disasterRecovery,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter
@@ -180,6 +185,9 @@ type MariaDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MariaDB.
+	// +optional
+	DisasterRecovery *MariaDBDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

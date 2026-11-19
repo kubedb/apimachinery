@@ -24598,6 +24598,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionCoordinator": {
+      "description": "ElasticsearchVersionCoordinator is the Elasticsearch DC-DR coordinator image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDashboardInitContainer": {
       "description": "ElasticsearchVersionDashboardInitContainer is the ElasticsearchDashboard Container initializer",
       "type": "object",
@@ -24717,6 +24730,11 @@
           "description": "Authentication plugin used by Elasticsearch cluster",
           "type": "string",
           "default": ""
+        },
+        "coordinator": {
+          "description": "Coordinator is the DC-DR coordinator image (es-coordinator). It runs as a sidecar in the master-eligible pods of a distributed DC-DR Elasticsearch and fences the data center unless the dr-controlplane marker and the hub's write permit both name it.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionCoordinator"
         },
         "dashboard": {
           "description": "Dashboard Image",
@@ -31554,10 +31572,39 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingDC": {
+      "description": "ElasticsearchHorizontalScalingDC is a per data center node-count target for scaling a distributed DC-DR Elasticsearch.",
+      "type": "object",
+      "required": [
+        "clusterName",
+        "replicas"
+      ],
+      "properties": {
+        "clusterName": {
+          "description": "ClusterName is the data center, named by its OCM managed cluster, matching a Member distributionRule in the Elasticsearch PlacementPolicy.",
+          "type": "string",
+          "default": ""
+        },
+        "replicas": {
+          "description": "Replicas is the desired local node count for this data center.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec": {
       "description": "ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster",
       "type": "object",
       "properties": {
+        "dataCenters": {
+          "description": "DataCenters scales individual data centers of a distributed DC-DR Elasticsearch. Each entry sets that data center's local node count; data centers not listed are left unchanged. Use this instead of Node for a DC-DR cluster, where each data center runs its own self-contained Elasticsearch cluster and is scaled independently.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingDC"
+          }
+        },
         "node": {
           "description": "Number of combined (i.e. master, data, ingest) node",
           "type": "integer",

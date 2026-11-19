@@ -37,6 +37,7 @@ import (
 	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -308,7 +309,57 @@ func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
 		return err
 	}
 
-	return nil
+	return w.validateDistributedMySQL(mysql)
+}
+
+// validateDistributedMySQL checks a distributed MySQL against its PlacementPolicy. A deletion in
+// progress is never blocked on the PlacementPolicy, so a policy deleted first cannot leave the CR
+// stuck behind its finalizer.
+func (w MySQLCustomWebhook) validateDistributedMySQL(mysql *dbapi.MySQL) error {
+	if !mysql.Spec.Distributed || mysql.DeletionTimestamp != nil {
+		return nil
+	}
+	ppp := mysql.Spec.PodTemplate.Spec.PodPlacementPolicy
+	if ppp == nil || ppp.Name == "" {
+		return errors.New(`'spec.podTemplate.spec.podPlacementPolicy' is required for distributed mysql`)
+	}
+	pp := psapi.PlacementPolicy{}
+	if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: ppp.Name}, &pp); err != nil {
+		return err
+	}
+	if pp.Spec.ClusterSpreadConstraint == nil {
+		return fmt.Errorf(`'spec.clusterSpreadConstraint' is required in PlacementPolicy %q for distributed mysql`, pp.Name)
+	}
+	if !mysql.IsDCDRDistributed() {
+		return nil
+	}
+	// The PlacementPolicy's own structure is validated by its CRD and the petset webhook. Its
+	// vendored validator is tied to one petset version: the July one rejects the newer
+	// failoverPolicy.failoverGroupRef shape (no trigger), and so blocked every update of a DC-DR
+	// database on a lab whose PlacementPolicy CRD had been upgraded. Only the database's own
+	// requirements are checked here.
+	if pp.Spec.ClusterSpreadConstraint.FailoverPolicy == nil {
+		return fmt.Errorf("PlacementPolicy %q must set clusterSpreadConstraint.failoverPolicy for DC-DR mysql", pp.Name)
+	}
+	var dataCenters []string
+	var placed []dbapi.MySQLDCDRDataCenter
+	for _, r := range pp.Spec.ClusterSpreadConstraint.DistributionRules {
+		if r.Role != "" && r.Role != psapi.DCRoleMember {
+			continue
+		}
+		dataCenters = append(dataCenters, r.ClusterName)
+		placed = append(placed, dbapi.MySQLDCDRDataCenter{Name: r.ClusterName, Ordinals: r.ReplicaIndices})
+	}
+	if err := mysql.ValidateDCDR(dataCenters); err != nil {
+		return err
+	}
+	// every Member data center runs its own Group Replication group, sized by its ordinals below
+	// spec.replicas
+	sizes, err := dbapi.MySQLDCDRGroupSizes(placed, ptr.Deref(mysql.Spec.Replicas, 0))
+	if err != nil {
+		return fmt.Errorf("PlacementPolicy %q: %w", pp.Name, err)
+	}
+	return dbapi.ValidateDCDRGroupSizes(sizes)
 }
 
 func validateEnvsForAllContainers(mysql *dbapi.MySQL) error {
@@ -381,6 +432,11 @@ func validateUpdate(obj, oldObj *dbapi.MySQL) error {
 		Set: sets.New[string](
 			"spec.storageType",
 		),
+	}
+	// A DC-DR database cannot be turned into a non distributed one (or the reverse): the PetSets,
+	// Services and server_id layout of every data center depend on it.
+	if oldObj.IsDCDRDistributed() {
+		preconditions.Insert("spec.distributed")
 	}
 	// Once the database has been initialized, don't let update the "spec.init" section
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {

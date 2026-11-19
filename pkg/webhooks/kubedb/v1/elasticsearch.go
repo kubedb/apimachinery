@@ -19,6 +19,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	"reflect"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,6 +32,7 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
@@ -39,6 +41,7 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -184,6 +187,11 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 	}
 
 	err = w.validateSecureConfig(db, &esVersion)
+	if err != nil {
+		return err
+	}
+
+	err = w.validateDistributed(db, &esVersion)
 	if err != nil {
 		return err
 	}
@@ -544,6 +552,205 @@ func (w *ElasticsearchCustomWebhook) validateSecureConfig(db *dbapi.Elasticsearc
 		// KEYSTORE_PASSWORD is supported since ES version 7.9
 		if dbVersion.Major() < 7 || (dbVersion.Major() == 7 && dbVersion.Minor() < 9) {
 			return errors.Errorf("secureConfigSecret is not supported for ElasticsearchVersion %s, try with latest versions", esVersion.Name)
+		}
+	}
+	return nil
+}
+
+// validateDistributed checks the cross data center (DC-DR) settings of a distributed
+// Elasticsearch. DC-DR expands the CR into one cluster per Member DC linked by cross-cluster
+// replication: Elastic CCR on Elastic Stack, which needs a CCR-capable license on every
+// cluster, or the Apache-licensed cross-cluster-replication plugin on OpenSearch 2.x and later.
+func (w *ElasticsearchCustomWebhook) validateDistributed(db *dbapi.Elasticsearch, esVersion *catalogapi.ElasticsearchVersion) error {
+	if !db.Spec.Distributed {
+		return nil
+	}
+	switch esVersion.Spec.Distribution {
+	case catalogapi.ElasticsearchDistroElasticStack:
+		if db.Spec.License == nil {
+			return errors.New(`'spec.license' is required when 'spec.distributed' is true: cross-cluster replication needs a CCR-capable license on every data center`)
+		}
+	case catalogapi.ElasticsearchDistroOpenSearch:
+		v, err := semver.NewVersion(esVersion.Spec.Version)
+		if err != nil {
+			return fmt.Errorf("ElasticsearchVersion %s: invalid version %q: %w", esVersion.Name, esVersion.Spec.Version, err)
+		}
+		if v.Major() < 2 {
+			return fmt.Errorf("'spec.distributed' needs OpenSearch 2.x or later, ElasticsearchVersion %s is %s", esVersion.Name, esVersion.Spec.Version)
+		}
+	default:
+		return fmt.Errorf("'spec.distributed' is only supported for ElasticsearchVersion with distribution %s or %s, ElasticsearchVersion %s uses %s",
+			catalogapi.ElasticsearchDistroElasticStack, catalogapi.ElasticsearchDistroOpenSearch, esVersion.Name, esVersion.Spec.Distribution)
+	}
+	// Every per-DC child runs the es-coordinator sidecar, which fences its data center. External
+	// members are clusters the operator does not create, so they bring their own.
+	if db.Annotations["dr.kubedb.com/external-members"] != "true" && esVersion.Spec.Coordinator.Image == "" {
+		return fmt.Errorf("'spec.distributed' needs a DC-DR coordinator: ElasticsearchVersion %s has no spec.coordinator.image", esVersion.Name)
+	}
+	// Per-DC child names are <db>-<dc>; their PetSet pods are <db>-<dc>[-<role>]-<ordinal>, which
+	// must stay a valid DNS label. Reserve room for the DC name, role suffix and ordinal.
+	if len(db.Name) > 30 {
+		return fmt.Errorf("distributed Elasticsearch name %q is too long: at most 30 characters, so per data center names stay valid DNS labels", db.Name)
+	}
+	return w.validateDistributedPlacement(db)
+}
+
+// esTopologyRole is a configured spec.topology node role with its spec.topology JSON name.
+type esTopologyRole struct {
+	name string
+	node *dbapi.ElasticsearchNode
+}
+
+// esTopologyRoleList returns the configured spec.topology roles in a fixed order.
+func esTopologyRoleList(t *dbapi.ElasticsearchClusterTopology) []esTopologyRole {
+	out := []esTopologyRole{{"master", &t.Master}, {"ingest", &t.Ingest}}
+	for _, r := range []esTopologyRole{
+		{"data", t.Data}, {"dataContent", t.DataContent}, {"dataHot", t.DataHot}, {"dataWarm", t.DataWarm},
+		{"dataCold", t.DataCold}, {"dataFrozen", t.DataFrozen}, {"ml", t.ML}, {"transform", t.Transform}, {"coordinating", t.Coordinating},
+	} {
+		if r.node != nil {
+			out = append(out, r)
+		}
+	}
+	return out
+}
+
+// esRolePlacement is the PlacementPolicy one PetSet's pod template names (a topology role's, or
+// the combined PetSet's), with its failoverPolicy as stored (compared as raw JSON, so fields this
+// API version does not know, such as failoverGroupRef, still count).
+type esRolePlacement struct {
+	pp             *psapi.PlacementPolicy
+	failoverPolicy map[string]any
+}
+
+// esPlacementRole is one PetSet of a distributed Elasticsearch: its name in errors, the field
+// path of its pod template, the PlacementPolicy reference and the replicas across all data centers.
+type esPlacementRole struct {
+	name, path string
+	ref        *core.LocalObjectReference
+	replicas   *int32
+}
+
+// esPlacementRoles returns the PetSets of a distributed Elasticsearch: the combined one, or one
+// per configured topology role.
+func esPlacementRoles(db *dbapi.Elasticsearch) []esPlacementRole {
+	if db.Spec.Topology == nil {
+		return []esPlacementRole{{"combined", "spec.podTemplate.spec.podPlacementPolicy", db.Spec.PodTemplate.Spec.PodPlacementPolicy, db.Spec.Replicas}}
+	}
+	var out []esPlacementRole
+	for _, r := range esTopologyRoleList(db.Spec.Topology) {
+		out = append(out, esPlacementRole{r.name, "spec.topology." + r.name + ".podTemplate.spec.podPlacementPolicy", r.node.PodTemplate.Spec.PodPlacementPolicy, r.node.Replicas})
+	}
+	return out
+}
+
+// validateDistributedPlacement checks the PlacementPolicies of a distributed Elasticsearch. Like
+// a distributed MySQL, every PetSet's pod template names a DC-DR PlacementPolicy: the combined
+// PetSet's spec.podTemplate.spec.podPlacementPolicy, or in topology mode each role's
+// spec.topology.<role>.podTemplate.spec.podPlacementPolicy. A deletion in progress is never
+// blocked.
+func (w *ElasticsearchCustomWebhook) validateDistributedPlacement(db *dbapi.Elasticsearch) error {
+	if db.DeletionTimestamp != nil || w.DefaultClient == nil {
+		return nil
+	}
+	policies := map[string]esRolePlacement{}
+	for _, r := range esPlacementRoles(db) {
+		if r.ref == nil || r.ref.Name == "" {
+			return fmt.Errorf("'%s' is required when 'spec.distributed' is true", r.path)
+		}
+		u := &unstructured.Unstructured{}
+		u.SetGroupVersionKind(psapi.SchemeGroupVersion.WithKind("PlacementPolicy"))
+		if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: r.ref.Name}, u); err != nil {
+			if kerr.IsNotFound(err) {
+				return fmt.Errorf("PlacementPolicy %q of '%s' not found; create it first", r.ref.Name, r.path)
+			}
+			return err
+		}
+		pp := &psapi.PlacementPolicy{}
+		if err := runtime.DefaultUnstructuredConverter.FromUnstructured(u.Object, pp); err != nil {
+			return err
+		}
+		fp, _, _ := unstructured.NestedMap(u.Object, "spec", "clusterSpreadConstraint", "failoverPolicy")
+		policies[r.name] = esRolePlacement{pp: pp, failoverPolicy: fp}
+	}
+	return validateElasticsearchPlacement(db, policies)
+}
+
+// validateElasticsearchPlacement checks the PlacementPolicies of a distributed Elasticsearch's
+// PetSets (PetSet name, "combined" or a topology role -> its policy). Each is a DC-DR policy like
+// the one of a distributed MySQL: Member data centers with that PetSet's replicaIndices, an
+// Arbiter and a failoverPolicy. In topology mode all of them name the same Member data centers,
+// Arbiter and failoverPolicy as the master role's, so they fail over as one group. The PetSet's
+// replicas is the total of its replicaIndices across the data centers, and every Member data
+// center, which runs a self-contained cluster, needs at least one node of every PetSet.
+func validateElasticsearchPlacement(db *dbapi.Elasticsearch, policies map[string]esRolePlacement) error {
+	type shape struct{ members, arbiters sets.Set[string] }
+	shapeOf := func(csc *psapi.ClusterSpreadConstraint) shape {
+		sh := shape{sets.New[string](), sets.New[string]()}
+		for _, r := range csc.DistributionRules {
+			if r.Role == psapi.DCRoleArbiter || r.Role == psapi.DCRoleWitness {
+				sh.arbiters.Insert(r.ClusterName)
+			} else {
+				sh.members.Insert(r.ClusterName)
+			}
+		}
+		return sh
+	}
+	var ref shape
+	var refFP map[string]any
+	var refName string
+	for i, r := range esPlacementRoles(db) {
+		rp, ok := policies[r.name]
+		if !ok {
+			return fmt.Errorf("'%s' is required when 'spec.distributed' is true", r.path)
+		}
+		pp := rp.pp
+		csc := pp.Spec.ClusterSpreadConstraint
+		if csc == nil || rp.failoverPolicy == nil {
+			return fmt.Errorf("PlacementPolicy %q of '%s' is not a DC-DR PlacementPolicy: it needs a clusterSpreadConstraint with Member data centers, an Arbiter and a failoverPolicy", pp.Name, r.path)
+		}
+		sh := shapeOf(csc)
+		if i == 0 {
+			ref, refFP, refName = sh, rp.failoverPolicy, pp.Name
+		} else {
+			if !sh.members.Equal(ref.members) || !sh.arbiters.Equal(ref.arbiters) {
+				return fmt.Errorf("PlacementPolicy %q of topology role %s names Members %v and Arbiters %v, but PlacementPolicy %q of the master role names Members %v and Arbiters %v; they must match",
+					pp.Name, r.name, sets.List(sh.members), sets.List(sh.arbiters), refName, sets.List(ref.members), sets.List(ref.arbiters))
+			}
+			if !reflect.DeepEqual(rp.failoverPolicy, refFP) {
+				return fmt.Errorf("PlacementPolicy %q of topology role %s has a different failoverPolicy than PlacementPolicy %q of the master role; all roles fail over as one group", pp.Name, r.name, refName)
+			}
+		}
+		owner := map[int32]string{}
+		var total int32
+		for _, rule := range csc.DistributionRules {
+			if rule.Role == psapi.DCRoleArbiter || rule.Role == psapi.DCRoleWitness {
+				if len(rule.ReplicaIndices) > 0 {
+					return fmt.Errorf("PlacementPolicy %q places nodes on Arbiter %q; an Arbiter runs no Elasticsearch", pp.Name, rule.ClusterName)
+				}
+				continue
+			}
+			if len(rule.ReplicaIndices) == 0 {
+				return fmt.Errorf("data center %q needs at least one %s node (its cluster is self-contained): add indices for it to PlacementPolicy %q", rule.ClusterName, r.name, pp.Name)
+			}
+			for _, idx := range rule.ReplicaIndices {
+				if prev, dup := owner[idx]; dup {
+					return fmt.Errorf("PlacementPolicy %q places index %d on both %q and %q", pp.Name, idx, prev, rule.ClusterName)
+				}
+				owner[idx] = rule.ClusterName
+			}
+			total += int32(len(rule.ReplicaIndices))
+		}
+		want := int32(1)
+		if r.replicas != nil {
+			want = *r.replicas
+		}
+		if total != want {
+			field := "spec.replicas"
+			if r.name != "combined" {
+				field = "spec.topology." + r.name + ".replicas"
+			}
+			return fmt.Errorf("'%s' is %d but PlacementPolicy %q places %d %s nodes across its data centers; they must match", field, want, pp.Name, total, r.name)
 		}
 	}
 	return nil
