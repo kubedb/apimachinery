@@ -69,7 +69,11 @@ type CoordinatorManagerClient interface {
 	GetUpgradeCapabilities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeCapabilities, error)
 	GetUpgradeEnv(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeEnv, error)
 	// StartUpgradeStep starts the step in the background, or reports it when it is
-	// already running or done for this ops request; it never runs a step twice.
+	// already running or done for this ops request; a step that succeeded or failed
+	// is not run again for the same ops request. A step interrupted by a coordinator
+	// restart is run again when that is safe (every step but PG_UPGRADE, which is
+	// reported FAILED instead), and GetUpgradeStepStatus reports such a step
+	// NOT_STARTED so the caller starts it again.
 	StartUpgradeStep(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
 	GetUpgradeStepStatus(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
 }
@@ -300,7 +304,11 @@ type CoordinatorManagerServer interface {
 	GetUpgradeCapabilities(context.Context, *Empty) (*UpgradeCapabilities, error)
 	GetUpgradeEnv(context.Context, *Empty) (*UpgradeEnv, error)
 	// StartUpgradeStep starts the step in the background, or reports it when it is
-	// already running or done for this ops request; it never runs a step twice.
+	// already running or done for this ops request; a step that succeeded or failed
+	// is not run again for the same ops request. A step interrupted by a coordinator
+	// restart is run again when that is safe (every step but PG_UPGRADE, which is
+	// reported FAILED instead), and GetUpgradeStepStatus reports such a step
+	// NOT_STARTED so the caller starts it again.
 	StartUpgradeStep(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
 	GetUpgradeStepStatus(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
 	mustEmbedUnimplementedCoordinatorManagerServer()
