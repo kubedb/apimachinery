@@ -122,6 +122,7 @@ const (
 	DashboardServiceAlias   ServiceAlias = "dashboard"
 	ReadReplicaServiceAlias ServiceAlias = "readreplica"
 	BrokerServiceAlias      ServiceAlias = "broker"
+	MaxScaleServiceAlias    ServiceAlias = "maxscale"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none
@@ -196,6 +197,28 @@ func (t PostgresNamedServiceTemplateSpec) GetAlias() ServiceAlias {
 }
 
 func (t PostgresNamedServiceTemplateSpec) GetServiceTemplateSpec() ofstv1.ServiceTemplateSpec {
+	return t.ServiceTemplateSpec
+}
+
+// +kubebuilder:validation:Enum=primary;standby;stats;maxscale
+type MariaDBServiceAlias string
+
+// MariaDBNamedServiceTemplateSpec adds the "maxscale" alias, which configures the MaxScale
+// Service ({name}-mx) in Replication mode. Without it, that Service uses the "primary" template.
+type MariaDBNamedServiceTemplateSpec struct {
+	// Alias represents the identifier of the service.
+	Alias MariaDBServiceAlias `json:"alias"`
+
+	// ServiceTemplate is an optional configuration for a service used to expose database
+	// +optional
+	ofstv1.ServiceTemplateSpec `json:",inline,omitempty"`
+}
+
+func (t MariaDBNamedServiceTemplateSpec) GetAlias() ServiceAlias {
+	return ServiceAlias(t.Alias)
+}
+
+func (t MariaDBNamedServiceTemplateSpec) GetServiceTemplateSpec() ofstv1.ServiceTemplateSpec {
 	return t.ServiceTemplateSpec
 }
 

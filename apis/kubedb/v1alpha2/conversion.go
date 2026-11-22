@@ -158,7 +158,7 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 	if len(out.PodTemplate.Spec.Containers) > 0 {
 		out.PodTemplate.Spec.Containers[0].Name = kubedb.MariaDBContainerName // db container name used in petSet
 	}
-	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.ServiceTemplates = *(*[]v1.MariaDBNamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
