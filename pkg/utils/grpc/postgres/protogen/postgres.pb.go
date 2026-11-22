@@ -7,12 +7,11 @@
 package protogen
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -1462,7 +1461,7 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x1eUPGRADE_STEP_PHASE_NOT_STARTED\x10\x01\x12\x1e\n" +
 	"\x1aUPGRADE_STEP_PHASE_RUNNING\x10\x02\x12 \n" +
 	"\x1cUPGRADE_STEP_PHASE_SUCCEEDED\x10\x03\x12\x1d\n" +
-	"\x19UPGRADE_STEP_PHASE_FAILED\x10\x042\xe7\x06\n" +
+	"\x19UPGRADE_STEP_PHASE_FAILED\x10\x042\x95\a\n" +
 	"\x12CoordinatorManager\x12\x1e\n" +
 	"\n" +
 	"GetPodInfo\x12\x04.Pod\x1a\b.PodInfo\"\x00\x12$\n" +
@@ -1483,7 +1482,8 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x16GetUpgradeCapabilities\x12\x06.Empty\x1a\x14.UpgradeCapabilities\"\x00\x12&\n" +
 	"\rGetUpgradeEnv\x12\x06.Empty\x1a\v.UpgradeEnv\"\x00\x12=\n" +
 	"\x10StartUpgradeStep\x12\x13.UpgradeStepRequest\x1a\x12.UpgradeStepStatus\"\x00\x12A\n" +
-	"\x14GetUpgradeStepStatus\x12\x13.UpgradeStepRequest\x1a\x12.UpgradeStepStatus\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
+	"\x14GetUpgradeStepStatus\x12\x13.UpgradeStepRequest\x1a\x12.UpgradeStepStatus\"\x00\x12,\n" +
+	"\x0eGetArchivedWal\x12\x06.Empty\x1a\x10.WalFileResponse\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
 
 var (
 	file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescOnce sync.Once
@@ -1556,27 +1556,29 @@ var file_pkg_utils_grpc_postgres_proto_postgres_proto_depIdxs = []int32{
 	7,  // 23: CoordinatorManager.GetUpgradeEnv:input_type -> Empty
 	24, // 24: CoordinatorManager.StartUpgradeStep:input_type -> UpgradeStepRequest
 	24, // 25: CoordinatorManager.GetUpgradeStepStatus:input_type -> UpgradeStepRequest
-	3,  // 26: CoordinatorManager.GetPodInfo:output_type -> PodInfo
-	7,  // 27: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
-	7,  // 28: CoordinatorManager.TerminatePostgres:output_type -> Empty
-	5,  // 29: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
-	10, // 30: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
-	7,  // 31: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
-	17, // 32: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
-	5,  // 33: CoordinatorManager.PromotePostgres:output_type -> ExecResult
-	12, // 34: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
-	13, // 35: CoordinatorManager.GetControlData:output_type -> CD
-	15, // 36: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
-	19, // 37: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
-	20, // 38: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
-	21, // 39: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
-	17, // 40: CoordinatorManager.CreateFailOverFile:output_type -> ACK
-	22, // 41: CoordinatorManager.GetUpgradeCapabilities:output_type -> UpgradeCapabilities
-	23, // 42: CoordinatorManager.GetUpgradeEnv:output_type -> UpgradeEnv
-	25, // 43: CoordinatorManager.StartUpgradeStep:output_type -> UpgradeStepStatus
-	25, // 44: CoordinatorManager.GetUpgradeStepStatus:output_type -> UpgradeStepStatus
-	26, // [26:45] is the sub-list for method output_type
-	7,  // [7:26] is the sub-list for method input_type
+	7,  // 26: CoordinatorManager.GetArchivedWal:input_type -> Empty
+	3,  // 27: CoordinatorManager.GetPodInfo:output_type -> PodInfo
+	7,  // 28: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
+	7,  // 29: CoordinatorManager.TerminatePostgres:output_type -> Empty
+	5,  // 30: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
+	10, // 31: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
+	7,  // 32: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
+	17, // 33: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
+	5,  // 34: CoordinatorManager.PromotePostgres:output_type -> ExecResult
+	12, // 35: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
+	13, // 36: CoordinatorManager.GetControlData:output_type -> CD
+	15, // 37: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
+	19, // 38: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
+	20, // 39: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
+	21, // 40: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
+	17, // 41: CoordinatorManager.CreateFailOverFile:output_type -> ACK
+	22, // 42: CoordinatorManager.GetUpgradeCapabilities:output_type -> UpgradeCapabilities
+	23, // 43: CoordinatorManager.GetUpgradeEnv:output_type -> UpgradeEnv
+	25, // 44: CoordinatorManager.StartUpgradeStep:output_type -> UpgradeStepStatus
+	25, // 45: CoordinatorManager.GetUpgradeStepStatus:output_type -> UpgradeStepStatus
+	20, // 46: CoordinatorManager.GetArchivedWal:output_type -> WalFileResponse
+	27, // [27:47] is the sub-list for method output_type
+	7,  // [7:27] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name

@@ -8,7 +8,6 @@ package protogen
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -39,6 +38,7 @@ const (
 	CoordinatorManager_GetUpgradeEnv_FullMethodName            = "/CoordinatorManager/GetUpgradeEnv"
 	CoordinatorManager_StartUpgradeStep_FullMethodName         = "/CoordinatorManager/StartUpgradeStep"
 	CoordinatorManager_GetUpgradeStepStatus_FullMethodName     = "/CoordinatorManager/GetUpgradeStepStatus"
+	CoordinatorManager_GetArchivedWal_FullMethodName           = "/CoordinatorManager/GetArchivedWal"
 )
 
 // CoordinatorManagerClient is the client API for CoordinatorManager service.
@@ -76,6 +76,11 @@ type CoordinatorManagerClient interface {
 	// NOT_STARTED so the caller starts it again.
 	StartUpgradeStep(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
 	GetUpgradeStepStatus(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
+	// GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+	// storage (its contiguous watermark), answered only by the primary. Coordinators
+	// in a DC-DR standby data center use it to prune their local wal_archive, which
+	// the primary's same-DC LSN broadcast never reaches.
+	GetArchivedWal(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WalFileResponse, error)
 }
 
 type coordinatorManagerClient struct {
@@ -276,6 +281,16 @@ func (c *coordinatorManagerClient) GetUpgradeStepStatus(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *coordinatorManagerClient) GetArchivedWal(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WalFileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WalFileResponse)
+	err := c.cc.Invoke(ctx, CoordinatorManager_GetArchivedWal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoordinatorManagerServer is the server API for CoordinatorManager service.
 // All implementations must embed UnimplementedCoordinatorManagerServer
 // for forward compatibility.
@@ -311,6 +326,11 @@ type CoordinatorManagerServer interface {
 	// NOT_STARTED so the caller starts it again.
 	StartUpgradeStep(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
 	GetUpgradeStepStatus(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
+	// GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+	// storage (its contiguous watermark), answered only by the primary. Coordinators
+	// in a DC-DR standby data center use it to prune their local wal_archive, which
+	// the primary's same-DC LSN broadcast never reaches.
+	GetArchivedWal(context.Context, *Empty) (*WalFileResponse, error)
 	mustEmbedUnimplementedCoordinatorManagerServer()
 }
 
@@ -377,6 +397,9 @@ func (UnimplementedCoordinatorManagerServer) StartUpgradeStep(context.Context, *
 }
 func (UnimplementedCoordinatorManagerServer) GetUpgradeStepStatus(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUpgradeStepStatus not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) GetArchivedWal(context.Context, *Empty) (*WalFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArchivedWal not implemented")
 }
 func (UnimplementedCoordinatorManagerServer) mustEmbedUnimplementedCoordinatorManagerServer() {}
 func (UnimplementedCoordinatorManagerServer) testEmbeddedByValue()                            {}
@@ -741,6 +764,24 @@ func _CoordinatorManager_GetUpgradeStepStatus_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CoordinatorManager_GetArchivedWal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).GetArchivedWal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_GetArchivedWal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).GetArchivedWal(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoordinatorManager_ServiceDesc is the grpc.ServiceDesc for CoordinatorManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -823,6 +864,10 @@ var CoordinatorManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUpgradeStepStatus",
 			Handler:    _CoordinatorManager_GetUpgradeStepStatus_Handler,
+		},
+		{
+			MethodName: "GetArchivedWal",
+			Handler:    _CoordinatorManager_GetArchivedWal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
