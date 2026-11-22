@@ -47,7 +47,7 @@ import (
 // SetupKafkaWebhookWithManager registers the webhook for Kafka in the manager.
 func SetupKafkaWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Kafka{}).
-		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias)).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias, dbapi.PrimaryServiceAlias, dbapi.BrokerServiceAlias)).
 		WithDefaulter(&KafkaCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -72,7 +72,9 @@ func (w *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) er
 	}
 
 	kafkalog.Info("default", "name", db.Name)
-	db.SetDefaults(w.DefaultClient)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(w.DefaultClient); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -276,10 +278,27 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 			err.Error()))
 	}
 
+	if err := w.validateServiceTemplates(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("serviceTemplates"),
+			db.Name,
+			err.Error()))
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, db.Name, allErr)
+}
+
+// The broker template creates one external Service per broker, and the primary template creates
+// one bootstrap Service in front of all brokers. Each works without the other.
+func (w *KafkaCustomWebhook) validateServiceTemplates(db *dbapi.Kafka) error {
+	// each broker advertises the address its Service gets from the load balancer
+	broker := dbapi.GetServiceTemplate(db.Spec.ServiceTemplates, dbapi.BrokerServiceAlias)
+	if dbapi.HasServiceTemplate(db.Spec.ServiceTemplates, dbapi.BrokerServiceAlias) && broker.Spec.Type != core.ServiceTypeLoadBalancer {
+		return fmt.Errorf("service template %q must have type %s", dbapi.BrokerServiceAlias, core.ServiceTypeLoadBalancer)
+	}
+	return nil
 }
 
 func (w *KafkaCustomWebhook) validateVersion(db *dbapi.Kafka) error {

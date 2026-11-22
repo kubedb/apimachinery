@@ -567,6 +567,12 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
 		}
+		// The data volume is mounted for every Durable StreamingNode, so a spec that sets
+		// the role (replicas, podTemplate) but no storage needs the default too, or the
+		// PetSet references a volume it never claims and no pod can be created.
+		if (*n).StorageType == StorageTypeDurable && (*n).Storage == nil {
+			(*n).Storage = m.SetDefaultStorage()
+		}
 	}
 
 	if replicas != nil && *replicas == nil {
@@ -725,7 +731,7 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 }
 
 func (m *Milvus) SetTLSDefaults() {
-	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
+	if !m.TLSConfigured() {
 		return
 	}
 
@@ -741,8 +747,11 @@ func (m *Milvus) SetTLSDefaults() {
 		}
 	}
 
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MilvusCertificateTypeServer), m.CertificateName(MilvusCertificateTypeServer))
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MilvusCertificateTypeClient), m.CertificateName(MilvusCertificateTypeClient))
+	for _, alias := range []MilvusCertificateType{MilvusCertificateTypeServer, MilvusCertificateTypeClient} {
+		if m.CertificateIssued(alias) {
+			m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(alias), m.CertificateName(alias))
+		}
+	}
 }
 
 func (m *Milvus) setMetaStorageDefaults() {
@@ -883,7 +892,61 @@ func (m Milvus) StatsService() mona.StatsAccessor {
 	return &milvusStatsService{&m}
 }
 
+// TLSConfigured reports whether the certificates can be resolved: from an
+// issuer, from existing Secrets, or from both.
+func (m *Milvus) TLSConfigured() bool {
+	if m.Spec.TLS == nil {
+		return false
+	}
+	return m.Spec.TLS.IssuerRef != nil || m.ExistingCertSecretName(MilvusCertificateTypeServer) != ""
+}
+
+// ExistingCertSecretName returns the user's Secret for this certificate, or ""
+// if there is none.
+func (m *Milvus) ExistingCertSecretName(alias MilvusCertificateType) string {
+	if m.Spec.TLS == nil || m.Spec.TLS.ExistingSecrets == nil {
+		return ""
+	}
+	var ref *core.LocalObjectReference
+	switch alias {
+	case MilvusCertificateTypeServer:
+		ref = m.Spec.TLS.ExistingSecrets.Server
+	case MilvusCertificateTypeClient:
+		ref = m.Spec.TLS.ExistingSecrets.Client
+	}
+	if ref == nil {
+		return ""
+	}
+	return ref.Name
+}
+
+// clientUsesServerSecret reports whether KubeDB, as a client, needs nothing but
+// the CA in the user's server Secret: it has no client certificate of its own
+// and Milvus does not ask for one.
+func (m *Milvus) clientUsesServerSecret() bool {
+	if m.ExistingCertSecretName(MilvusCertificateTypeServer) == "" ||
+		m.ExistingCertSecretName(MilvusCertificateTypeClient) != "" {
+		return false
+	}
+	return m.Spec.TLS.External == nil || m.Spec.TLS.External.Mode != TLSModeMTLS
+}
+
+// CertificateIssued reports whether KubeDB issues this certificate through
+// cert-manager. A certificate the user supplied is never issued.
+func (m *Milvus) CertificateIssued(alias MilvusCertificateType) bool {
+	if m.Spec.TLS == nil || m.ExistingCertSecretName(alias) != "" {
+		return false
+	}
+	return alias != MilvusCertificateTypeClient || !m.clientUsesServerSecret()
+}
+
 func (m *Milvus) GetCertSecretName(alias MilvusCertificateType) string {
+	if name := m.ExistingCertSecretName(alias); name != "" {
+		return name
+	}
+	if alias == MilvusCertificateTypeClient && m.Spec.TLS != nil && m.clientUsesServerSecret() {
+		return m.ExistingCertSecretName(MilvusCertificateTypeServer)
+	}
 	if m.Spec.TLS != nil {
 		name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
 		if ok {

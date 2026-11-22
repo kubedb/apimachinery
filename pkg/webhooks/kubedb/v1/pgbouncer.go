@@ -61,7 +61,7 @@ var _ webhook.CustomDefaulter = &PgBouncerCustomWebhook{}
 // log is for logging in this package.
 var pgBouncerLog = logf.Log.WithName("pqbouncer-resource")
 
-func (pw PgBouncerCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+func (pw PgBouncerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	if isDeletionInProgress(obj) {
 		return nil
 	}
@@ -95,7 +95,9 @@ func (pw PgBouncerCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 		}
 	}
 
-	db.SetDefaults(&pgBouncerVersion, usesAcme)
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, pw.DefaultClient, db.Namespace, pgBouncerVersion.Spec.SecurityContext.RunAsAnyNonRoot, &db.Spec, func() error { db.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -171,7 +173,9 @@ func (pw PgBouncerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		}
 	}
 
-	oldPgBouncer.SetDefaults(&pgBouncerVersion, usesAcme)
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, pw.DefaultClient, oldPgBouncer.Namespace, pgBouncerVersion.Spec.SecurityContext.RunAsAnyNonRoot, &oldPgBouncer.Spec, func() error { oldPgBouncer.SetDefaults(&pgBouncerVersion, usesAcme); return nil }); err != nil {
+		return nil, err
+	}
 
 	if oldPgBouncer.Spec.AuthSecret == nil {
 		oldPgBouncer.Spec.AuthSecret = pgBouncer.Spec.AuthSecret

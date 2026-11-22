@@ -90,7 +90,9 @@ func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 		return errors.Wrapf(err, "failed to get MongoDBVersion: %s", db.Spec.Version)
 	}
 
-	db.SetDefaults(&mongodbVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&mongodbVersion); return nil }); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -131,7 +133,9 @@ func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get MongodbVersion: %s", oldMongoDB.Spec.Version)
 	}
-	oldMongoDB.SetDefaults(&mongodbVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldMongoDB.Namespace, &oldMongoDB.Spec, func() error { oldMongoDB.SetDefaults(&mongodbVersion); return nil }); err != nil {
+		return nil, err
+	}
 	if oldMongoDB.Spec.AuthSecret == nil {
 		oldMongoDB.Spec.AuthSecret = mongodb.Spec.AuthSecret
 	}
