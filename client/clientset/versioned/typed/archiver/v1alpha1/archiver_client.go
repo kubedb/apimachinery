@@ -39,6 +39,7 @@ type ArchiverV1alpha1Interface interface {
 	MySQLArchiversGetter
 	Neo4jArchiversGetter
 	PostgresArchiversGetter
+	YugabyteDBArchiversGetter
 }
 
 // ArchiverV1alpha1Client is used to interact with features provided by the archiver.kubedb.com group.
@@ -84,6 +85,10 @@ func (c *ArchiverV1alpha1Client) Neo4jArchivers(namespace string) Neo4jArchiverI
 
 func (c *ArchiverV1alpha1Client) PostgresArchivers(namespace string) PostgresArchiverInterface {
 	return newPostgresArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) YugabyteDBArchivers(namespace string) YugabyteDBArchiverInterface {
+	return newYugabyteDBArchivers(c, namespace)
 }
 
 // NewForConfig creates a new ArchiverV1alpha1Client for the given config.

@@ -43305,12 +43305,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_YugabyteDBVersionSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archiver names the KubeStash addon and its tasks used by the YugabyteDBArchiver: the full backup exports the snapshot schedule's snapshots, the manifest tasks back up and restore the YugabyteDB object. YugabyteDB has no WAL, so walg is not used.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "ysqlMajorVersion"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFeatures", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFlags", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionMemory"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFeatures", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionFlags", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.YugabyteDBVersionMemory"},
 	}
 }
 

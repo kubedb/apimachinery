@@ -49122,12 +49122,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref common.Referenc
 							},
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archiver backs up the YSQL databases of spec.pitr to a KubeStash repository by exporting the snapshots of their schedules, so a database can be restored to any time the exported chain covers (spec.init.archiver.recoveryTimestamp). It is normally set by the operator, which matches a YugabyteDBArchiver to this database through that archiver's spec.databases selector; setting it explicitly pins a specific archiver. It needs at least one YSQL entry in spec.pitr.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITR", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"},
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITR", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"},
 	}
 }
 

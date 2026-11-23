@@ -97,3 +97,11 @@ type PostgresArchiverListerExpansion interface{}
 // PostgresArchiverNamespaceListerExpansion allows custom methods to be added to
 // PostgresArchiverNamespaceLister.
 type PostgresArchiverNamespaceListerExpansion interface{}
+
+// YugabyteDBArchiverListerExpansion allows custom methods to be added to
+// YugabyteDBArchiverLister.
+type YugabyteDBArchiverListerExpansion interface{}
+
+// YugabyteDBArchiverNamespaceListerExpansion allows custom methods to be added to
+// YugabyteDBArchiverNamespaceLister.
+type YugabyteDBArchiverNamespaceListerExpansion interface{}

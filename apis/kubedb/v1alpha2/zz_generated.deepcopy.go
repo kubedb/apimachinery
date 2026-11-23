@@ -9214,6 +9214,11 @@ func (in *YugabyteDBSpec) DeepCopyInto(out *YugabyteDBSpec) {
 		*out = make([]YugabyteDBPITR, len(*in))
 		copy(*out, *in)
 	}
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	return
 }
 

@@ -44,6 +44,8 @@ type Interface interface {
 	Neo4jArchivers() Neo4jArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
+	// YugabyteDBArchivers returns a YugabyteDBArchiverInformer.
+	YugabyteDBArchivers() YugabyteDBArchiverInformer
 }
 
 type version struct {
@@ -105,4 +107,9 @@ func (v *version) Neo4jArchivers() Neo4jArchiverInformer {
 // PostgresArchivers returns a PostgresArchiverInformer.
 func (v *version) PostgresArchivers() PostgresArchiverInformer {
 	return &postgresArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// YugabyteDBArchivers returns a YugabyteDBArchiverInformer.
+func (v *version) YugabyteDBArchivers() YugabyteDBArchiverInformer {
+	return &yugabyteDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

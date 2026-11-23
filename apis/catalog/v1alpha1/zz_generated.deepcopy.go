@@ -5563,6 +5563,7 @@ func (in *YugabyteDBVersionSpec) DeepCopyInto(out *YugabyteDBVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.Archiver = in.Archiver
 	return
 }
 
