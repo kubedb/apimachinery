@@ -61,13 +61,10 @@ type YugabyteDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *YugabyteDBTLSSpec `json:"tls,omitempty"`
-	// ConnectionManager changes the YSQL Connection Manager of the database. It is only valid in a Reconfigure
-	// request, next to or instead of spec.configuration. The pods restart one at a time.
-	ConnectionManager *dbapi.YugabyteDBConnectionManager `json:"connectionManager,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for custom configuration of YugabyteDB
-	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
+	Configuration *YugabyteDBReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *YugabyteDBHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -99,6 +96,16 @@ type YugabyteDBOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
+}
+
+// YugabyteDBReconfigurationSpec is the YugabyteDB-specific reconfiguration spec.
+type YugabyteDBReconfigurationSpec struct {
+	ReconfigurationSpec `json:",inline,omitempty"`
+
+	// ConnectionManager changes the YSQL Connection Manager of the database, next to or instead of the
+	// configuration fields. The tserver pods restart one at a time when the change needs it.
+	// +optional
+	ConnectionManager *dbapi.YugabyteDBConnectionManager `json:"connectionManager,omitempty"`
 }
 
 // YugabyteDBRollingSpec tunes a rolling restart. Pods restart one at a time, masters first.

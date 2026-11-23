@@ -2870,7 +2870,7 @@ const (
 
 	// YugabyteDBAuthBootstrappedLabel is set on a pod after the default passwords were replaced.
 	// The client Service selects only the pods that have it.
-	YugabyteDBAuthBootstrappedLabel = GroupName + "/auth-bootstrapped"
+	YugabyteDBAuthBootstrappedLabel = "yugabytedb." + GroupName + "/auth-bootstrapped"
 
 	// Users. YSQL and YCQL are created with these passwords and the operator replaces them at bootstrap.
 	YugabyteDBAdminUser           = "yugabyte"
@@ -2910,19 +2910,19 @@ const (
 	YugabyteDBPlacementUUIDFlag = "placement_uuid"
 
 	// Conditions
-	YugabyteDBConditionMastersReady         = "MastersReady"
-	YugabyteDBConditionTServersReady        = "TServersReady"
-	YugabyteDBConditionPlacementSet         = "PlacementSet"
-	YugabyteDBConditionLeaderBlacklistDirty = "LeaderBlacklistDirty"
-	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
+	YugabyteDBMastersReadyCondition         = "MastersReady"
+	YugabyteDBTServersReadyCondition        = "TServersReady"
+	YugabyteDBPlacementSetCondition         = "PlacementSet"
+	YugabyteDBLeaderBlacklistDirtyCondition = "LeaderBlacklistDirty"
+	// YugabyteDBUpgradePendingFinalizeCondition is true on the database while an UpdateVersion with finalize: Manual
 	// waits for a FinalizeUpgrade or RollbackUpgrade request.
-	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
-	// YugabyteDBConditionPITRReady is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
-	YugabyteDBConditionPITRReady = "PITRReady"
-	// YugabyteDBConditionRewindInProgress is true on the database while a Rewind restores a snapshot schedule.
-	YugabyteDBConditionRewindInProgress = "RewindInProgress"
-	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
-	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
+	YugabyteDBUpgradePendingFinalizeCondition = "UpgradePendingFinalize"
+	// YugabyteDBPITRReadyCondition is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
+	YugabyteDBPITRReadyCondition = "PITRReady"
+	// YugabyteDBRewindInProgressCondition is true on the database while a Rewind restores a snapshot schedule.
+	YugabyteDBRewindInProgressCondition = "RewindInProgress"
+	// YugabyteDBStorageMigrationInProgressCondition is true on the database while a StorageMigration moves the pods to a new StorageClass.
+	YugabyteDBStorageMigrationInProgressCondition = "StorageMigrationInProgress"
 )
 
 var (

@@ -37,6 +37,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmc "kmodules.xyz/client-go/conditions"
+	meta_util "kmodules.xyz/client-go/meta"
 	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -79,12 +80,6 @@ func (w *YugabyteDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 	}
 	yugabyteDBLog.Info("default", "name", db.GetName())
 
-	// SetDefaults forces the master replicas to the replication factor. A different value set by the user
-	// is a mistake and is rejected instead of being overwritten silently.
-	if t := db.Spec.Topology; t != nil && t.Master != nil && t.Master.Replicas != nil && *t.Master.Replicas != db.ReplicationFactor() {
-		return fmt.Errorf("spec.topology.master.replicas must equal spec.replicationFactor (%d), got %d", db.ReplicationFactor(), *t.Master.Replicas)
-	}
-
 	if db.Spec.Halted {
 		if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 			return errors.New(`can't halt, since deletion policy is 'DoNotTerminate'`)
@@ -92,8 +87,10 @@ func (w *YugabyteDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 		db.Spec.DeletionPolicy = olddbapi.DeletionPolicyHalt
 	}
 
-	db.SetDefaults(w.DefaultClient)
-	return nil
+	return dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error {
+		db.SetDefaults(w.DefaultClient)
+		return nil
+	})
 }
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-yugabytedb,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=yugabytedbs,verbs=create;update;delete,versions=v1alpha2,name=vyugabytedb.kb.io,admissionReviewVersions={v1,v1beta1}
@@ -161,15 +158,20 @@ func yugabyteDBInvalid(name string, allErr field.ErrorList) error {
 	return apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindYugabyteDB}, name, allErr)
 }
 
-// isYugabyteDBOperatorRequest reports whether the request comes from a service account, which is how the
-// KubeDB provisioner and ops-manager write the spec. Users and CI systems that edit a YugabyteDB use their own
-// identity. A request without admission information is not trusted.
+// isYugabyteDBOperatorRequest reports whether the request comes from a service account of the KubeDB operator
+// namespace, which is where the provisioner, ops-manager and this webhook server run. Users, CI systems and
+// GitOps agents (Argo CD, Flux) use other identities and must go through a YugabyteDBOpsRequest. A request
+// without admission information is not trusted.
 func isYugabyteDBOperatorRequest(ctx context.Context) bool {
 	req, err := admission.RequestFromContext(ctx)
 	if err != nil {
 		return false
 	}
-	return strings.HasPrefix(req.UserInfo.Username, "system:serviceaccount:")
+	ns := meta_util.PodNamespace()
+	if ns == "" {
+		return false
+	}
+	return strings.HasPrefix(req.UserInfo.Username, "system:serviceaccount:"+ns+":")
 }
 
 func yugabyteDBStorageType(n *olddbapi.YugabyteDBNode) olddbapi.StorageType {
@@ -191,6 +193,9 @@ func validateYugabyteDBImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	}
 	if old.IsYCQLEnabled() != db.IsYCQLEnabled() {
 		allErr = append(allErr, field.Forbidden(spec.Child("ycql", "enabled"), "ycql.enabled is immutable"))
+	}
+	if old.Spec.Init != nil && old.Spec.Init.Initialized && !apiequality.Semantic.DeepEqual(old.Spec.Init, db.Spec.Init) {
+		allErr = append(allErr, field.Forbidden(spec.Child("init"), "init is immutable once the database is initialized"))
 	}
 	if old.Spec.DisableSecurity != db.Spec.DisableSecurity {
 		allErr = append(allErr, field.Forbidden(spec.Child("disableSecurity"), "disableSecurity is immutable"))

@@ -36,7 +36,7 @@ import (
 
 func ybPendingFinalizeDB() *dbapi.YugabyteDB {
 	db := ybOpsDB(nil, false)
-	db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
+	db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBUpgradePendingFinalizeCondition, Status: metav1.ConditionTrue}}
 	return db
 }
 

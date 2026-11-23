@@ -35,6 +35,7 @@ import (
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -105,10 +106,35 @@ func (w *YugabyteDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 }
 
 func (w *YugabyteDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	if _, ok := obj.(*opsapi.YugabyteDBOpsRequest); !ok {
+	req, ok := obj.(*opsapi.YugabyteDBOpsRequest)
+	if !ok {
 		return nil, fmt.Errorf("expected a YugabyteDBOpsRequest object but got %T", obj)
 	}
-	return nil, nil
+	// A request deleted while it runs would leave the database paused. Resume it, as the Postgres webhook does.
+	if req.Status.Phase != opsapi.OpsRequestPhaseProgressing {
+		return nil, nil
+	}
+	var db dbapi.YugabyteDB
+	if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}, &db); err != nil {
+		if apierrors.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return nil, resumeDatabase(w.DefaultClient, &db)
+}
+
+// validateYugabyteDBRolling rejects negative waits and timeouts.
+func validateYugabyteDBRolling(r *opsapi.YugabyteDBRollingSpec) error {
+	if r == nil {
+		return nil
+	}
+	for name, d := range map[string]*metav1.Duration{"masterWait": r.MasterWait, "tserverWait": r.TServerWait, "leaderDrainTimeout": r.LeaderDrainTimeout} {
+		if d != nil && d.Duration < 0 {
+			return fmt.Errorf("spec.rolling.%s must not be negative", name)
+		}
+	}
+	return nil
 }
 
 // validateYugabyteDBOpsRequestImmutable rejects any change of the spec.
@@ -153,9 +179,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 			allErr = append(allErr, field.Invalid(spec.Child(child), req.Name, err.Error()))
 		}
 	}
-	if req.Spec.ConnectionManager != nil && req.Spec.Type != opsapi.YugabyteDBOpsRequestTypeReconfigure {
-		add("connectionManager", fmt.Errorf("spec.connectionManager is only valid in a Reconfigure request, not in %s", req.Spec.Type))
-	}
+	add("rolling", validateYugabyteDBRolling(req.Spec.Rolling))
 	switch opsapi.YugabyteDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.YugabyteDBOpsRequestTypeRestart:
 	case opsapi.YugabyteDBOpsRequestTypeUpdateVersion:
@@ -264,14 +288,14 @@ func yugabyteDBIsUpgradeType(t opsapi.YugabyteDBOpsRequestType) bool {
 }
 
 // validateOneUpgradeAtATime rejects a new upgrade related request while another one of the same database has not
-// completed. A FinalizeUpgrade or RollbackUpgrade may run next to the UpdateVersion request that left the
-// upgrade pending, since that request stays active until the upgrade is completed. A pending upgrade of the
-// database also blocks a new UpdateVersion.
+// completed. An UpdateVersion with finalize: Manual ends Successful with the upgrade pending finalization (the
+// UpgradePendingFinalize condition of the database); the FinalizeUpgrade or RollbackUpgrade that follows is a
+// separate request. A pending upgrade of the database blocks a new UpdateVersion.
 func (w *YugabyteDBOpsRequestCustomWebhook) validateOneUpgradeAtATime(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	if !yugabyteDBOpsPending(req) {
 		return nil
 	}
-	pendingFinalize := kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBConditionUpgradePendingFinalize)
+	pendingFinalize := kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBUpgradePendingFinalizeCondition)
 	if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeUpdateVersion && pendingFinalize {
 		return errors.New("an upgrade of this database is pending finalization, send a FinalizeUpgrade or RollbackUpgrade request first")
 	}
@@ -295,28 +319,29 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateOneUpgradeAtATime(ctx contex
 // validateFinalizeOrRollback checks a FinalizeUpgrade or RollbackUpgrade request. Both are only valid while the
 // database has the UpgradePendingFinalize condition, which an UpdateVersion with finalize: Manual sets.
 func (w *YugabyteDBOpsRequestCustomWebhook) validateFinalizeOrRollback(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
-	if yugabyteDBOpsPending(req) && !kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBConditionUpgradePendingFinalize) {
+	if yugabyteDBOpsPending(req) && !kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBUpgradePendingFinalizeCondition) {
 		return fmt.Errorf("%s needs a pending upgrade: the database has no %s condition, run an UpdateVersion with spec.updateVersion.finalize: Manual first",
-			req.Spec.Type, kubedb.YugabyteDBConditionUpgradePendingFinalize)
+			req.Spec.Type, kubedb.YugabyteDBUpgradePendingFinalizeCondition)
 	}
 	return w.validateOneUpgradeAtATime(ctx, db, req)
 }
 
-// yugabyteDBUpgradeAllowed evaluates the updateConstraints of the target version against the current version.
-// As in the design, the allowlist of a YugabyteDBVersion lists the versions it can be reached from. An empty
-// allowlist accepts every version that is not in the denylist.
+// yugabyteDBUpgradeAllowed evaluates the updateConstraints of the current version against the target version,
+// as every KubeDB catalog does (see IsUpgradable): the allowlist of a version lists the versions it can be
+// updated to, and the denylist the versions it can not. An empty allowlist accepts every version that is not
+// in the denylist.
 func yugabyteDBUpgradeAllowed(current, target *catalog.YugabyteDBVersion) (bool, error) {
-	cur, err := semver.NewVersion(current.Spec.Version)
+	tv, err := semver.NewVersion(target.Spec.Version)
 	if err != nil {
-		return false, fmt.Errorf("current version %q is not a semantic version: %w", current.Spec.Version, err)
+		return false, fmt.Errorf("target version %q is not a semantic version: %w", target.Spec.Version, err)
 	}
-	uc := target.Spec.UpdateConstraints
+	uc := current.Spec.UpdateConstraints
 	for _, d := range uc.Denylist {
 		c, err := semver.NewConstraint(d)
 		if err != nil {
-			return false, fmt.Errorf("invalid denylist constraint %q of %s: %w", d, target.Name, err)
+			return false, fmt.Errorf("invalid denylist constraint %q of %s: %w", d, current.Name, err)
 		}
-		if c.Check(cur) {
+		if c.Check(tv) {
 			return false, nil
 		}
 	}
@@ -326,9 +351,9 @@ func yugabyteDBUpgradeAllowed(current, target *catalog.YugabyteDBVersion) (bool,
 	for _, a := range uc.Allowlist {
 		c, err := semver.NewConstraint(a)
 		if err != nil {
-			return false, fmt.Errorf("invalid allowlist constraint %q of %s: %w", a, target.Name, err)
+			return false, fmt.Errorf("invalid allowlist constraint %q of %s: %w", a, current.Name, err)
 		}
-		if c.Check(cur) {
+		if c.Check(tv) {
 			return true, nil
 		}
 	}
@@ -641,19 +666,16 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateRoleExpansion(db *dbapi.Yuga
 
 func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigure(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	cfg := req.Spec.Configuration
-	if cm := req.Spec.ConnectionManager; cm != nil {
-		if err := w.validateConnectionManager(db, req); err != nil {
-			return err
-		}
-		if cfg == nil {
-			return nil
-		}
-	}
 	if cfg == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 {
-		return errors.New("at least one of `removeCustomConfig`, `configSecret` or `applyConfig` must be specified")
+	if cfg.ConnectionManager != nil {
+		if err := w.validateConnectionManager(db, req); err != nil {
+			return err
+		}
+	}
+	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 && cfg.ConnectionManager == nil {
+		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `connectionManager` must be specified")
 	}
 	switch cfg.Restart {
 	case "", opsapi.ReconfigureRestartAuto, opsapi.ReconfigureRestartTrue, opsapi.ReconfigureRestartFalse:
@@ -689,19 +711,19 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigure(ctx context.Cont
 }
 
 func (w *YugabyteDBOpsRequestCustomWebhook) validateConnectionManager(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
-	cm := req.Spec.ConnectionManager
+	cm := req.Spec.Configuration.ConnectionManager
 	if !db.IsYSQLEnabled() {
-		return errors.New("spec.connectionManager: YSQL is not enabled on this database")
+		return errors.New("spec.configuration.connectionManager: YSQL is not enabled on this database")
 	}
 	if cm.MaxClientConnections != nil && *cm.MaxClientConnections < 1 {
-		return errors.New("spec.connectionManager.maxClientConnections must be at least 1")
+		return errors.New("spec.configuration.connectionManager.maxClientConnections must be at least 1")
 	}
 	if !yugabyteDBOpsPending(req) {
 		return nil
 	}
 	cur := db.IsConnectionManagerEnabled()
 	if cm.Enabled == cur && (!cm.Enabled || cm.MaxClientConnections == nil || *cm.MaxClientConnections == db.ConnectionManagerMaxClientConnections()) {
-		return errors.New("spec.connectionManager is the same as the current setting")
+		return errors.New("spec.configuration.connectionManager is the same as the current setting")
 	}
 	return nil
 }

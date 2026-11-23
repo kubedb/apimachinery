@@ -495,7 +495,7 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			}
 			// finalize and rollback need an upgrade that is pending finalization
 			if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade || req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade {
-				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
+				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBUpgradePendingFinalizeCondition, Status: metav1.ConditionTrue}}
 			}
 			if req.Spec.VerticalScaling != nil && req.Spec.VerticalScaling.Mode == opsapi.VerticalScalingModeInPlace {
 				db.Spec.Topology.TServer.PodTemplate.Spec.Containers = []core.Container{{Name: "yb-tserver", Resources: core.ResourceRequirements{
