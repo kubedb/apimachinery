@@ -72,7 +72,9 @@ func (w *QdrantCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 
 	qdrantlog.Info("default", "name", db.Name)
 
-	db.SetDefaults(w.DefaultClient)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(w.DefaultClient); return nil }); err != nil {
+		return err
+	}
 	return nil
 }
 

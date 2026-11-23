@@ -93,7 +93,9 @@ func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 	if err != nil {
 		return errors.Wrapf(err, "failed to get MariaDBVersion: %s", db.Spec.Version)
 	}
-	db.SetDefaults(&mdVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&mdVersion); return nil }); err != nil {
+		return err
+	}
 
 	archiverList := &archiverapi.MariaDBArchiverList{}
 	err = w.DefaultClient.List(context.TODO(), archiverList)
@@ -171,7 +173,9 @@ func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get MariaDBVersion: %s", oldMariaDB.Spec.Version)
 	}
-	oldMariaDB.SetDefaults(&mariadbVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldMariaDB.Namespace, &oldMariaDB.Spec, func() error { oldMariaDB.SetDefaults(&mariadbVersion); return nil }); err != nil {
+		return nil, err
+	}
 	if oldMariaDB.Spec.AuthSecret == nil {
 		oldMariaDB.Spec.AuthSecret = mariadb.Spec.AuthSecret
 	}
@@ -221,6 +225,9 @@ func (w MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 }
 
 func validateMariaDBReplicationSpec(db *dbapi.MariaDB) error {
+	if db.Spec.Topology.MaxScale == nil {
+		return fmt.Errorf("spec.topology.maxscale must be set when spec.topology.mode is %s", dbapi.MariaDBModeReplication)
+	}
 	if db.Spec.Topology.MaxScale.Replicas == nil || ptr.Deref(db.Spec.Replicas, 0) < 1 {
 		return fmt.Errorf(`spec.topology.maxscale.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(db.Spec.Topology.MaxScale.Replicas, 0))
 	}

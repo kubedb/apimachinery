@@ -63,7 +63,7 @@ var pgLog = logf.Log.WithName("postgres-resource")
 
 var _ webhook.CustomDefaulter = &PostgresCustomWebhook{}
 
-func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+func (wh *PostgresCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	if isDeletionInProgress(obj) {
 		return nil
 	}
@@ -102,7 +102,9 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 		return errors.Wrapf(err, "failed to get PostgresVersion: %s", db.Spec.Version)
 	}
 
-	db.SetDefaults(&postgresVersion)
+	if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, wh.DefaultClient, db.Namespace, postgresVersion.Spec.SecurityContext.RunAsAnyNonRoot, &db.Spec, func() error { db.SetDefaults(&postgresVersion); return nil }); err != nil {
+		return err
+	}
 
 	if db.Spec.TDE != nil {
 		if db.Spec.TDE.Cipher == "" {
@@ -676,7 +678,9 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
 		}
-		oldPostgres.SetDefaults(&postgresVersion)
+		if err := dbapi.SetDefaultsInNamespaceForVersion(ctx, wh.DefaultClient, oldPostgres.Namespace, postgresVersion.Spec.SecurityContext.RunAsAnyNonRoot, &oldPostgres.Spec, func() error { oldPostgres.SetDefaults(&postgresVersion); return nil }); err != nil {
+			return nil, err
+		}
 	}
 	if oldPostgres.Spec.AuthSecret == nil {
 		oldPostgres.Spec.AuthSecret = postgres.Spec.AuthSecret
