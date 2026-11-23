@@ -2894,6 +2894,10 @@ const (
 	YugabyteDBConditionPITRReady = "PITRReady"
 	// YugabyteDBConditionRewindInProgress is true on the database while a Rewind restores a snapshot schedule.
 	YugabyteDBConditionRewindInProgress = "RewindInProgress"
+	// YugabyteDBConditionArchiverReady is true while the YugabyteDBArchiver in spec.archiver backs the
+	// database up: the archiver exists, it is not paused, and the retention of every archived spec.pitr
+	// schedule outlasts two backup runs plus the backup timeout.
+	YugabyteDBConditionArchiverReady = "ArchiverReady"
 	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
 	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
 )
