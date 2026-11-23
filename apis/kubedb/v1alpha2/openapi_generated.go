@@ -716,7 +716,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus":                                        schema_apimachinery_apis_kubedb_v1alpha2_Milvus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusCDCSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MilvusCDCSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCDRSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDCDRSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRPromotion":                             schema_apimachinery_apis_kubedb_v1alpha2_MilvusDRPromotion(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRRebuild":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusDRRebuild(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataCenterSpec":                          schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataCenterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDisasterRecoveryStatus":                  schema_apimachinery_apis_kubedb_v1alpha2_MilvusDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets":                      schema_apimachinery_apis_kubedb_v1alpha2_MilvusExistingTLSSecrets(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MilvusGPUSpec(ref),
@@ -724,6 +731,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_MilvusNetworkSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNode":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusNodeGroup(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusReplicateCheckpoint":                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusReplicateCheckpoint(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVAttachmentSpec":                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVAttachmentSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref),
@@ -41230,6 +41238,293 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusCDCSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusCDCSpec configures the CDC pod of a DC-DR Milvus.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for the CDC pod.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDCDRSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDCDRSpec holds the cross data center disaster recovery (DC-DR) options of a Milvus with spec.distributed set. Every Member data center of the PlacementPolicy named by spec.podTemplate.spec.podPlacementPolicy runs its own complete Milvus with its own meta etcd and object storage. The data center that holds the dr-controlplane primary-DC Lease is the primary; the others are standbys that receive its write-ahead log through Milvus CDC.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters holds the storage of each Member data center, one entry per data center. Each data center needs its own meta etcd and its own bucket or root path.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataCenterSpec"),
+									},
+								},
+							},
+						},
+					},
+					"cdc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CDC configures the CDC pod that runs in every data center. It always runs one replica.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusCDCSpec"),
+						},
+					},
+					"maxFailoverLagSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxFailoverLagSeconds is the largest replication lag, in seconds, a standby may have been observed with for an unplanned failover to promote it without the dr.kubedb.com/accept-failover-data-loss annotation. Defaults to 30.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"maxRebuildLossSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxRebuildLossSeconds is the largest span, in seconds, of writes that a returning old primary holds and the new primary never received, which an automatic rebuild may discard. A larger span waits for the dr.kubedb.com/accept-rebuild-data-loss annotation. Defaults to 0: any unreplicated write blocks the automatic rebuild.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"dataCenters"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusCDCSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataCenterSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDCStatus is one data center's view inside a DC-DR Milvus.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clusterID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterID is the Milvus cluster id of this data center (msgChannel.chanNamePrefix.cluster).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicationRole": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationRole is the replication role this data center's Milvus reports.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reachable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reachable is true when the hub reached this data center's Milvus in the last pass.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"lastSeenAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSeenAt is when the hub last reached this data center's Milvus.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"lagSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LagSeconds is how far this standby's replicated WAL is behind the current time, using the oldest channel. Unset on the primary.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"lagObservedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LagObservedAt is when LagSeconds was measured.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"healthy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Healthy reflects whether this data center's dr-controlplane health Lease is fresh.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDRPromotion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDRPromotion records a promotion of a data center to primary.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DC is the promoted data center.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "From is the data center that was primary before.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"forced": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Forced is true for an unplanned failover (force promote). The old primary then needs a rebuild before it can follow the new primary.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"time": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Time is when the promotion completed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"fromLastSeenAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FromLastSeenAt is when the hub last reached the old primary before a forced promotion. Writes it took after the salvage checkpoints and before this time were lost.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"salvageCheckpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SalvageCheckpoints are the last positions the promoted data center received from the old primary, per channel. Writes after them were lost by the failover.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusReplicateCheckpoint"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"dc"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusReplicateCheckpoint"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDRRebuild(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDRRebuild reports the rebuild of an old primary as a standby of the active data center.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DC is the data center being rebuilt.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"step": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Step is the current step.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"startedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StartedAt is when the rebuild started.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains the current step, for example why it waits.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"dc", "step"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataCenterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDataCenterSpec is the storage of one Member data center of a DC-DR Milvus.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the data center, named by its OCM managed cluster (the clusterName of the PlacementPolicy distribution rule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metaStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MetaStorage is the meta etcd of this data center. It must be externally managed and reachable from this data center's pods and from the hub.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec"),
+						},
+					},
+					"objectStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObjectStorage is the object storage of this data center. Its bucket or root path must differ from every other data center's.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec"),
+						},
+					},
+				},
+				Required: []string{"name", "metaStorage", "objectStorage"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41293,6 +41588,87 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusDisasterRecoveryStatus reports the per data center DC-DR view of a Milvus. The cross-DC decision is owned by the dr-controlplane primary-DC Lease; this status reflects it.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that holds the primary-DC Lease.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member data center.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"protected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protected reports whether a standby data center receives the primary's WAL within the lag budget, as of a fresh observation. nil means unknown, which must be treated as unprotected.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"protectionMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProtectionMessage explains the current value of Protected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastProtectedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastProtectedAt is when a standby was last observed caught up within the lag budget. An unplanned failover relies on it when the old primary can no longer be reached.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"promotion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Promotion records the last promotion of a data center. It is kept after the promotion so that a rebuild of the old primary knows what was lost.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRPromotion"),
+						},
+					},
+					"rebuild": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Rebuild reports the rebuild of an old primary, while it runs.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRRebuild"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRPromotion", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDRRebuild"},
 	}
 }
 
@@ -41605,6 +41981,36 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNodeGroup(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusReplicateCheckpoint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusReplicateCheckpoint is the last replicated position of one channel.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pchannel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pchannel is the source cluster's physical channel.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"timeTick": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TimeTick is the hybrid timestamp of the last replicated message.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"pchannel", "timeTick"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVAttachmentSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41849,12 +42255,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
 						},
 					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed deploys this Milvus for cross data center disaster recovery (DC-DR): one complete Milvus per Member data center of the PlacementPolicy named by spec.podTemplate.spec.podPlacementPolicy, delivered to the spoke clusters with OCM ManifestWorks and linked by Milvus CDC. It is unrelated to spec.topology.mode Distributed, which selects the Milvus deployment mode inside each data center. spec.disasterRecovery holds the per data center storage. spec.objectStorage is then the staging location of the backups that seed a rebuilt data center; it must be reachable from every data center.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery holds the DC-DR options. Required when Distributed is true.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCDRSpec"),
+						},
+					},
 				},
 				Required: []string{"version", "objectStorage"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDCDRSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -41893,11 +42312,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref common.ReferenceC
 							},
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state of a Milvus with spec.distributed set.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDisasterRecoveryStatus"},
 	}
 }
 

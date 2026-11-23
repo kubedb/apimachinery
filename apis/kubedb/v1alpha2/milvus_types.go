@@ -154,6 +154,20 @@ type MilvusSpec struct {
 	// selects this database (double opt-in).
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// Distributed deploys this Milvus for cross data center disaster recovery (DC-DR): one
+	// complete Milvus per Member data center of the PlacementPolicy named by
+	// spec.podTemplate.spec.podPlacementPolicy, delivered to the spoke clusters with OCM
+	// ManifestWorks and linked by Milvus CDC. It is unrelated to spec.topology.mode Distributed,
+	// which selects the Milvus deployment mode inside each data center. spec.disasterRecovery
+	// holds the per data center storage. spec.objectStorage is then the staging location of the
+	// backups that seed a rebuilt data center; it must be reachable from every data center.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// DisasterRecovery holds the DC-DR options. Required when Distributed is true.
+	// +optional
+	DisasterRecovery *MilvusDCDRSpec `json:"disasterRecovery,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
@@ -509,6 +523,11 @@ type MilvusStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+
+	// DisasterRecovery reports the cross data center (DC-DR) state of a Milvus with
+	// spec.distributed set.
+	// +optional
+	DisasterRecovery *MilvusDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -526,6 +545,8 @@ const (
 	MilvusNodeRoleQueryNode     MilvusNodeRoleType = "querynode"
 	MilvusNodeRoleStreamingNode MilvusNodeRoleType = "streamingnode"
 	MilvusNodeRoleProxy         MilvusNodeRoleType = "proxy"
+	// MilvusNodeRoleCDC is the CDC component a DC-DR Milvus runs in every data center.
+	MilvusNodeRoleCDC MilvusNodeRoleType = "cdc"
 )
 
 // MilvusGPUDefaultResourceName is the extended resource requested when

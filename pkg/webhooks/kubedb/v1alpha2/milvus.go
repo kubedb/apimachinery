@@ -123,6 +123,7 @@ func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	warnings, allErr := m.ValidateCreateOrUpdate(db)
 	if oldDB, ok := old.(*olddbapi.Milvus); ok {
 		allErr = append(allErr, milvusValidateArchiverImmutability(oldDB, db)...)
+		allErr = append(allErr, milvusValidateDCDRImmutability(oldDB, db)...)
 	}
 	if len(allErr) == 0 {
 		return warnings, nil
@@ -154,6 +155,7 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 	var allErr field.ErrorList
 
 	milvusVersion, err := m.milvusValidateVersion(db)
+	allErr = append(allErr, milvusValidateDCDR(db, milvusVersion)...)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
