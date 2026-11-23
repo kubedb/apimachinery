@@ -88,7 +88,7 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 		return err
 	}
 
-	if err = db.SetDefaults(&myVersion); err != nil {
+	if err = dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { return db.SetDefaults(&myVersion) }); err != nil {
 		return err
 	}
 
@@ -131,7 +131,7 @@ func (w MySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj r
 		return nil, errors.Wrapf(err, "failed to get mysqlversion: %s", oldMySQL.Spec.Version)
 	}
 
-	if err = oldMySQL.SetDefaults(&mysqlVersion); err != nil {
+	if err = dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldMySQL.Namespace, &oldMySQL.Spec, func() error { return oldMySQL.SetDefaults(&mysqlVersion) }); err != nil {
 		return nil, err
 	}
 

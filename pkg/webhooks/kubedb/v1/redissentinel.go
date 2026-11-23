@@ -89,7 +89,7 @@ func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 		return errors.Wrapf(err, "failed to get RedisVersion: %s", sentinel.Spec.Version)
 	}
 
-	return sentinel.SetDefaults(&redisVersion)
+	return dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, sentinel.Namespace, &sentinel.Spec, func() error { return sentinel.SetDefaults(&redisVersion) })
 }
 
 var _ webhook.CustomValidator = &RedisSentinelCustomWebhook{}
@@ -131,7 +131,7 @@ func (w RedisSentinelCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, 
 		return nil, errors.Wrapf(err, "failed to get redisversion: %s", oldRedisSentinel.Spec.Version)
 	}
 
-	err = oldRedisSentinel.SetDefaults(&redisVersion)
+	err = dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldRedisSentinel.Namespace, &oldRedisSentinel.Spec, func() error { return oldRedisSentinel.SetDefaults(&redisVersion) })
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to set defaults for RedisVersion: %s", oldRedisSentinel.Spec.Version)
 	}

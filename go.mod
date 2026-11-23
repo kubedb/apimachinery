@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
-	github.com/cert-manager/cert-manager v1.19.4
+	github.com/cert-manager/cert-manager v1.19.6
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
 	github.com/go-logr/logr v1.4.4
@@ -21,7 +21,7 @@ require (
 	go.bytebuilders.dev/audit v0.0.53
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.etcd.io/etcd/client/pkg/v3 v3.6.14
-	go.etcd.io/etcd/raft/v3 v3.5.27
+	go.etcd.io/etcd/raft/v3 v3.5.33
 	go.etcd.io/etcd/server/v3 v3.6.4
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.2.0
@@ -48,19 +48,19 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912
 	k8s.io/metrics v0.34.3
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
-	kmodules.xyz/client-go v0.34.7-0.20260916091548-45e2a0e7782d
+	kmodules.xyz/client-go v0.34.7
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/custom-resources v0.34.0
 	kmodules.xyz/monitoring-agent-api v0.34.1
 	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
-	kmodules.xyz/resource-metadata v0.49.1-0.20260916091615-a7e699f904a2
+	kmodules.xyz/resource-metadata v0.52.1
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c
-	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d
-	kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab
-	kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447
-	kubestash.dev/apimachinery v0.30.0
+	kubeops.dev/operator-shard-manager v0.0.7
+	kubeops.dev/petset v0.2.0
+	kubeops.dev/sidekick v0.0.17
+	kubestash.dev/apimachinery v0.32.0
 	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
@@ -70,7 +70,7 @@ require (
 
 require (
 	cel.dev/expr v0.25.2 // indirect
-	cloud.google.com/go v0.121.6 // indirect
+	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.18.2 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
@@ -93,8 +93,8 @@ require (
 	github.com/Azure/go-autorest/tracing v0.6.1 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.6.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.33.0 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/metric v0.53.0 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.53.0 // indirect
+	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/metric v0.54.0 // indirect
+	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.54.0 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
@@ -124,7 +124,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
+	github.com/cloudevents/sdk-go/v2 v2.16.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
 	github.com/cockroachdb/datadriven v1.0.2 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.18.1 // indirect
@@ -146,7 +146,7 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.6 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.22.1 // indirect
 	github.com/go-openapi/jsonreference v0.21.2 // indirect
@@ -188,8 +188,8 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.1-0.20220621161143-b0104c826a24 // indirect
 	github.com/jonboulle/clockwork v0.5.0 // indirect
-	github.com/klauspost/compress v1.18.7 // indirect
-	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
+	github.com/klauspost/compress v1.20.2 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -203,7 +203,7 @@ require (
 	github.com/nats-io/nats.go v1.52.0 // indirect
 	github.com/nats-io/nkeys v0.4.15 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/onsi/gomega v1.36.2 // indirect
+	github.com/onsi/gomega v1.38.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
@@ -219,7 +219,7 @@ require (
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/spf13/cast v1.7.0 // indirect
+	github.com/spf13/cast v1.9.2 // indirect
 	github.com/spf13/cobra v1.10.1 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.7.0 // indirect
@@ -237,7 +237,7 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.44.0 // indirect
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.61.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.63.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0 // indirect
 	go.opentelemetry.io/otel v1.45.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.45.0 // indirect
@@ -251,14 +251,14 @@ require (
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	gocloud.dev v0.41.0 // indirect
-	golang.org/x/crypto v0.56.0 // indirect
+	golang.org/x/crypto v0.58.1-0.20261009181718-2f1f834330b2 // indirect
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
-	golang.org/x/net v0.58.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
-	golang.org/x/sync v0.23.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/term v0.46.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/term v0.47.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f // indirect
@@ -290,6 +290,6 @@ require (
 
 replace go.etcd.io/etcd/raft/v3 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9
 
-replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
+replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.33
 
-replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27
+replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.33

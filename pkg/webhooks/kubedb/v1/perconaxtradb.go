@@ -82,7 +82,9 @@ func (w PerconaXtraDBCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 	if err != nil {
 		return errors.Wrapf(err, "failed to get PerconaXtraDBVersion: %s", db.Spec.Version)
 	}
-	db.SetDefaults(&pxVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, db.Namespace, &db.Spec, func() error { db.SetDefaults(&pxVersion); return nil }); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -122,7 +124,9 @@ func (w PerconaXtraDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, 
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get PerconaXtraDBVersion: %s", oldPerconaXtraDB.Spec.Version)
 	}
-	oldPerconaXtraDB.SetDefaults(&perconaxtradbVersion)
+	if err := dbapi.SetDefaultsInNamespace(ctx, w.DefaultClient, oldPerconaXtraDB.Namespace, &oldPerconaXtraDB.Spec, func() error { oldPerconaXtraDB.SetDefaults(&perconaxtradbVersion); return nil }); err != nil {
+		return nil, err
+	}
 	if oldPerconaXtraDB.Spec.AuthSecret == nil {
 		oldPerconaXtraDB.Spec.AuthSecret = perconaxtradb.Spec.AuthSecret
 	}
