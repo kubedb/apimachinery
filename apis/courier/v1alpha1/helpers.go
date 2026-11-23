@@ -47,6 +47,10 @@ func (MongoDBMigration) CustomResourceDefinition() *apiextensions.CustomResource
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMongoDBMigrations))
 }
 
+func (RedisMigration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRedisMigrations))
+}
+
 func (MSSQLServerMigration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLServerMigrations))
 }
@@ -71,6 +75,8 @@ func (m Migration) GetDBKindAndCommand() (string, string) {
 		return "MariaDB", "mariadb"
 	case m.Spec.Source.MSSQLServerSource != nil && m.Spec.Target.MSSQLServerTarget != nil:
 		return "MSSQLServer", "mssqlserver"
+	case m.Spec.Source.RedisSource != nil && m.Spec.Target.RedisTarget != nil:
+		return "Redis", "redis"
 	}
 
 	return "", ""
@@ -96,6 +102,8 @@ func (m Migration) GetConnectionInfos() (*ConnectionInfo, *ConnectionInfo) {
 			DBName:     m.Spec.Target.MSSQLServerTarget.ConnectionInfo.Database,
 		}
 		return src, tgt
+	case m.Spec.Source.RedisSource != nil && m.Spec.Target.RedisTarget != nil:
+		return &m.Spec.Source.RedisSource.ConnectionInfo, &m.Spec.Target.RedisTarget.ConnectionInfo
 	}
 	return nil, nil
 }

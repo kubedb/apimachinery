@@ -57,6 +57,10 @@ func (c *FakeCourierV1alpha1) PostgresMigrations(namespace string) v1alpha1.Post
 	return newFakePostgresMigrations(c, namespace)
 }
 
+func (c *FakeCourierV1alpha1) RedisMigrations(namespace string) v1alpha1.RedisMigrationInterface {
+	return newFakeRedisMigrations(c, namespace)
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCourierV1alpha1) RESTClient() rest.Interface {

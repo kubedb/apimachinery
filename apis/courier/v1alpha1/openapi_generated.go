@@ -645,6 +645,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget":                               schema_apimachinery_apis_courier_v1alpha1_PostgresTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress":                                     schema_apimachinery_apis_courier_v1alpha1_Progress(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Publication":                                  schema_apimachinery_apis_courier_v1alpha1_Publication(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigration":                               schema_apimachinery_apis_courier_v1alpha1_RedisMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigrationList":                           schema_apimachinery_apis_courier_v1alpha1_RedisMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigrationSpec":                           schema_apimachinery_apis_courier_v1alpha1_RedisMigrationSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSentinelSource":                          schema_apimachinery_apis_courier_v1alpha1_RedisSentinelSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShake":                                   schema_apimachinery_apis_courier_v1alpha1_RedisShake(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShakeFilter":                             schema_apimachinery_apis_courier_v1alpha1_RedisShakeFilter(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSource":                                  schema_apimachinery_apis_courier_v1alpha1_RedisSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisTarget":                                  schema_apimachinery_apis_courier_v1alpha1_RedisTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Subscription":                                 schema_apimachinery_apis_courier_v1alpha1_Subscription(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.TLSConfig":                                    schema_apimachinery_apis_courier_v1alpha1_TLSConfig(ref),
 	}
@@ -36526,6 +36534,531 @@ func schema_apimachinery_apis_courier_v1alpha1_Publication(ref common.ReferenceC
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of RedisMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of RedisMigration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigrationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisMigrationSpec defines the desired state of RedisMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source Redis database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target Redis database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisTarget"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisSentinelSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"addresses": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Addresses of the sentinels in host:port form",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"masterName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"addresses", "masterName"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisShake(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reader": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reader selects how data is read from the source. sync uses PSYNC replication (full + incremental); scan uses SCAN + DUMP (full only, for services that block SYNC/PSYNC).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"syncMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncMode is all (full + incremental) or full (snapshot only, the job exits when done).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"filter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShakeFilter"),
+						},
+					},
+					"keyExistsBehavior": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KeyExistsBehavior maps to advanced.rdb_restore_command_behavior.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"emptyTargetBeforeSync": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EmptyTargetBeforeSync flushes the target before syncing.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"extraConfiguration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraConfiguration holds raw \"section.key\" overrides, e.g. \"advanced.target_redis_max_qps\": \"100000\".",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShakeFilter"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisShakeFilter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"allowKeys": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowKeyPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowKeySuffix": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowKeyRegex": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockKeys": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockKeyPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockKeySuffix": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockKeyRegex": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowDB": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int32",
+									},
+								},
+							},
+						},
+					},
+					"blockDB": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int32",
+									},
+								},
+							},
+						},
+					},
+					"allowCommand": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockCommand": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowCommandGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"blockCommandGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode is the topology of the source. When an AppBinding is used, the operator fills it from the Redis object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sentinel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Sentinel is required when Mode is Sentinel and the master address must be resolved through sentinels.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSentinelSource"),
+						},
+					},
+					"redisShake": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShake"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSentinelSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisShake"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_RedisTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode is the topology of the target. When an AppBinding is used, the operator fills it from the Redis object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
 	}
 }
 

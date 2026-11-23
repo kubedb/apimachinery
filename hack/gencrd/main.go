@@ -109,6 +109,7 @@ func generateSwaggerJson() {
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMariaDBMigrations, courierv1alpha1.ResourceKindMariaDBMigration, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMongoDBMigrations, courierv1alpha1.ResourceKindMongoDBMigration, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMSSQLServerMigrations, courierv1alpha1.ResourceKindMSSQLServerMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralRedisMigrations, courierv1alpha1.ResourceKindRedisMigration, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranches, courierv1alpha1.ResourceKindBranch, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranchWorks, courierv1alpha1.ResourceKindBranchWork, true},
 		},

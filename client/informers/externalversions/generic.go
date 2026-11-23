@@ -240,6 +240,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MySQLMigrations().Informer()}, nil
 	case courierv1alpha1.SchemeGroupVersion.WithResource("postgresmigrations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().PostgresMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("redismigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().RedisMigrations().Informer()}, nil
 
 		// Group=elasticsearch.kubedb.com, Version=v1alpha1
 	case elasticsearchv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):

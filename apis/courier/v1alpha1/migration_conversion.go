@@ -89,6 +89,16 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobDefaults: t.Spec.JobDefaults,
 			JobTemplate: t.Spec.JobTemplate,
 		}
+	case *RedisMigration:
+		m.Kind = ResourceKindRedisMigration
+		m.ObjectMeta = t.ObjectMeta
+		m.Status = t.Status
+		m.Spec = MigrationSpec{
+			Source:      &Source{RedisSource: &t.Spec.Source},
+			Target:      &Target{RedisTarget: &t.Spec.Target},
+			JobDefaults: t.Spec.JobDefaults,
+			JobTemplate: t.Spec.JobTemplate,
+		}
 	default:
 		return fmt.Errorf("courier: cannot Duckify %T", srcRaw)
 	}

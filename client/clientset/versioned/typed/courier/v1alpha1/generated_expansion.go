@@ -31,3 +31,5 @@ type MongoDBMigrationExpansion interface{}
 type MySQLMigrationExpansion interface{}
 
 type PostgresMigrationExpansion interface{}
+
+type RedisMigrationExpansion interface{}

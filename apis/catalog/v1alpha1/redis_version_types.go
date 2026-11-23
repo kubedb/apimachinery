@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"kubedb.dev/apimachinery/apis/courier/v1alpha1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
@@ -84,6 +86,9 @@ type RedisVersionSpec struct {
 	SecurityContext SecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+	// Courier defines the courier related CLI/Tools images for this Redis version
+	// +optional
+	Courier v1alpha1.DBCourierImages `json:"courier,omitempty"`
 }
 
 // RedisVersionInitContainer is the Redis init container image
