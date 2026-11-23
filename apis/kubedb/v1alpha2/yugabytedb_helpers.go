@@ -352,6 +352,18 @@ func (r *YugabyteDB) PITRStatusFor(database string) *YugabyteDBPITRStatus {
 	return nil
 }
 
+// ArchivedPITR returns the spec.pitr entries a YugabyteDBArchiver backs up: the YSQL ones.
+// YCQL keyspaces are not archived.
+func (r *YugabyteDB) ArchivedPITR() []YugabyteDBPITR {
+	var out []YugabyteDBPITR
+	for _, p := range r.Spec.PITR {
+		if p.GetKind() == YugabyteDBPITRKindYSQL {
+			out = append(out, p)
+		}
+	}
+	return out
+}
+
 // GetKind returns the kind of the schedule, YSQL when unset.
 func (p YugabyteDBPITR) GetKind() YugabyteDBPITRKind {
 	if p.Kind == "" {

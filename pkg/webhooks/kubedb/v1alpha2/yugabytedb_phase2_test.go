@@ -234,3 +234,59 @@ func TestYugabyteDBPITR(t *testing.T) {
 		checkErr(t, err, "")
 	})
 }
+
+func TestYugabyteDBArchiver(t *testing.T) {
+	w := ybTestWebhook(t)
+	ref := &olddbapi.Archiver{Ref: kmapi.ObjectReference{Name: "yb-archiver", Namespace: "demo"}}
+	ysql := olddbapi.YugabyteDBPITR{Database: "a", IntervalMinutes: 15, RetentionMinutes: 60}
+	ycql := olddbapi.YugabyteDBPITR{Database: "ks", Kind: olddbapi.YugabyteDBPITRKindYCQL, IntervalMinutes: 15, RetentionMinutes: 60}
+	tests := []struct {
+		name     string
+		archiver *olddbapi.Archiver
+		pitr     []olddbapi.YugabyteDBPITR
+		want     string
+	}{
+		{name: "no archiver"},
+		{name: "archiver with a YSQL schedule", archiver: ref, pitr: []olddbapi.YugabyteDBPITR{ysql}},
+		{name: "archiver with YSQL and YCQL schedules", archiver: ref, pitr: []olddbapi.YugabyteDBPITR{ysql, ycql}},
+		{name: "archiver without spec.pitr", archiver: ref, want: "add a YSQL entry"},
+		{name: "archiver with only a YCQL schedule", archiver: ref, pitr: []olddbapi.YugabyteDBPITR{ycql}, want: "add a YSQL entry"},
+		{name: "archiver without a name", archiver: &olddbapi.Archiver{}, pitr: []olddbapi.YugabyteDBPITR{ysql}, want: "name of the YugabyteDBArchiver is required"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			db := ybTestDB(t, w)
+			db.Spec.YCQL.Enabled = true
+			db.Spec.Archiver = tc.archiver
+			db.Spec.PITR = tc.pitr
+			_, err := w.ValidateCreate(context.TODO(), db)
+			checkErr(t, err, tc.want)
+		})
+	}
+	t.Run("ArchivedPITR keeps the YSQL entries", func(t *testing.T) {
+		db := ybTestDB(t, w)
+		db.Spec.PITR = []olddbapi.YugabyteDBPITR{ycql, ysql}
+		if got := db.ArchivedPITR(); len(got) != 1 || got[0].Database != "a" {
+			t.Fatalf("ArchivedPITR() = %v", got)
+		}
+	})
+	t.Run("the operator binds an archiver after provisioning", func(t *testing.T) {
+		old := ybTestDB(t, w)
+		old.Spec.PITR = []olddbapi.YugabyteDBPITR{ysql}
+		setProvisioned(old)
+		db := old.DeepCopy()
+		db.Spec.Archiver = ref
+		_, err := w.ValidateUpdate(ybCtx("alice"), old, db)
+		checkErr(t, err, "")
+	})
+	t.Run("removing the last YSQL schedule while archived is rejected", func(t *testing.T) {
+		old := ybTestDB(t, w)
+		old.Spec.PITR = []olddbapi.YugabyteDBPITR{ysql}
+		old.Spec.Archiver = ref
+		setProvisioned(old)
+		db := old.DeepCopy()
+		db.Spec.PITR = nil
+		_, err := w.ValidateUpdate(ybCtx("alice"), old, db)
+		checkErr(t, err, "add a YSQL entry")
+	})
+}

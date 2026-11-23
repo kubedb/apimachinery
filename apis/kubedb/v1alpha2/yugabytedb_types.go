@@ -128,6 +128,14 @@ type YugabyteDBSpec struct {
 	// +listMapKey=database
 	// +optional
 	PITR []YugabyteDBPITR `json:"pitr,omitempty"`
+
+	// Archiver backs up the YSQL databases of spec.pitr to a KubeStash repository by exporting the
+	// snapshots of their schedules, so a database can be restored to any time the exported chain
+	// covers (spec.init.archiver.recoveryTimestamp). It is normally set by the operator, which
+	// matches a YugabyteDBArchiver to this database through that archiver's spec.databases selector;
+	// setting it explicitly pins a specific archiver. It needs at least one YSQL entry in spec.pitr.
+	// +optional
+	Archiver *Archiver `json:"archiver,omitempty"`
 }
 
 // YugabyteDBPITRKind is the API of the database or keyspace that a PITR schedule protects.

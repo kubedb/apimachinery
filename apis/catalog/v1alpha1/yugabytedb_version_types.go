@@ -92,6 +92,12 @@ type YugabyteDBVersionSpec struct {
 
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+
+	// Archiver names the KubeStash addon and its tasks used by the YugabyteDBArchiver: the full
+	// backup exports the snapshot schedule's snapshots, the manifest tasks back up and restore the
+	// YugabyteDB object. YugabyteDB has no WAL, so walg is not used.
+	// +optional
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 }
 
 // YugabyteDBVersionDatabase is the YugabyteDB Database image

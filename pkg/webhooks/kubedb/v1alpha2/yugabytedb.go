@@ -399,6 +399,7 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 	}
 
 	allErr = append(allErr, validateYugabyteDBPITR(db)...)
+	allErr = append(allErr, validateYugabyteDBArchiver(db)...)
 
 	if pl := db.Spec.Placement; pl != nil {
 		seen := map[string]bool{}
@@ -455,6 +456,27 @@ func validateYugabyteDBPITR(db *olddbapi.YugabyteDB) field.ErrorList {
 		if p.RetentionMinutes < p.IntervalMinutes || p.RetentionMinutes < 1 {
 			allErr = append(allErr, field.Invalid(path.Child("retentionMinutes"), p.RetentionMinutes, "retentionMinutes must be at least intervalMinutes"))
 		}
+	}
+	return allErr
+}
+
+// validateYugabyteDBArchiver checks spec.archiver. The archiver exports the snapshots of the
+// spec.pitr schedules and never creates a schedule itself, so it needs at least one YSQL entry
+// there. Whether the retention of each schedule outlasts the archiver's backup cadence depends on
+// the YugabyteDBArchiver and is checked by the operator when it binds the archiver.
+func validateYugabyteDBArchiver(db *olddbapi.YugabyteDB) field.ErrorList {
+	a := db.Spec.Archiver
+	if a == nil {
+		return nil
+	}
+	p := field.NewPath("spec", "archiver")
+	var allErr field.ErrorList
+	if a.Ref.Name == "" {
+		allErr = append(allErr, field.Required(p.Child("ref", "name"), "the name of the YugabyteDBArchiver is required"))
+	}
+	if len(db.ArchivedPITR()) == 0 {
+		allErr = append(allErr, field.Required(field.NewPath("spec", "pitr"),
+			"the archiver backs up the snapshots of spec.pitr schedules; add a YSQL entry for every database to archive"))
 	}
 	return allErr
 }

@@ -69,6 +69,10 @@ func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.Post
 	return newFakePostgresArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) YugabyteDBArchivers(namespace string) v1alpha1.YugabyteDBArchiverInterface {
+	return newFakeYugabyteDBArchivers(c, namespace)
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeArchiverV1alpha1) RESTClient() rest.Interface {
