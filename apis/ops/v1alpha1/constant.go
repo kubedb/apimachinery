@@ -619,6 +619,35 @@ const (
 	YugabyteDBDeleteSnapshotSchedules = "DeleteSnapshotSchedules"
 	// YugabyteDBRecordAutoFlagsConfig is the step that records the AutoFlags config version, so a rollback can return to it.
 	YugabyteDBRecordAutoFlagsConfig = "RecordAutoFlagsConfig"
+	// YugabyteDBRemoveTServers is the step that removes the drained tservers from the universe after a scale in.
+	YugabyteDBRemoveTServers = "RemoveTServers"
+	// YugabyteDBUpdatePlacement is the step that writes the placement derived from the tserver zones.
+	YugabyteDBUpdatePlacement = "UpdatePlacement"
+	// YugabyteDBVerifyCredential is the step that checks the new credentials and points the AppBinding at them.
+	YugabyteDBVerifyCredential = "VerifyCredential"
+	// YugabyteDBWaitBalancerIdle is the step that waits until the load balancer is idle after tservers joined.
+	YugabyteDBWaitBalancerIdle = "WaitBalancerIdle"
+	// YugabyteDBWaitBalancerIdleReadReplicas is YugabyteDBWaitBalancerIdle for the read replicas.
+	YugabyteDBWaitBalancerIdleReadReplicas = "WaitBalancerIdleReadReplicas"
+	// YugabyteDBTLSConverged is the step that waits until every server serves the expected transport.
+	YugabyteDBTLSConverged = "TLSConverged"
+	// YugabyteDBIssueProbeCertificate is the step that issues a certificate from the new issuer to learn its CA.
+	YugabyteDBIssueProbeCertificate = "IssueProbeCertificate"
+	// YugabyteDBCABundleExtended is the step that trusts the old and the new CA.
+	YugabyteDBCABundleExtended = "CABundleExtended"
+	// YugabyteDBCertificatesReissued is the step that reissues every certificate from the new issuer.
+	YugabyteDBCertificatesReissued = "CertificatesReissued"
+	// YugabyteDBCABundleReduced is the step that trusts only the new CA.
+	YugabyteDBCABundleReduced = "CABundleReduced"
+	// YugabyteDBAllowInsecureConnections is the step that lets servers accept plaintext peers during add or remove TLS.
+	YugabyteDBAllowInsecureConnections = "AllowInsecureConnections"
+	// YugabyteDBRequireSecureConnections is the step that makes servers refuse plaintext peers again.
+	YugabyteDBRequireSecureConnections = "RequireSecureConnections"
+	// YugabyteDBRollingRoundOne and YugabyteDBRollingRoundTwo are the two rolling rounds of add TLS.
+	YugabyteDBRollingRoundOne = "RollingRoundOne"
+	YugabyteDBRollingRoundTwo = "RollingRoundTwo"
+	// YugabyteDBCleanupCertificates is the step that deletes the Certificates that are no longer used.
+	YugabyteDBCleanupCertificates = "CleanupCertificates"
 	// YugabyteDBUpgradePendingFinalize is the step at which a Manual upgrade waits for a FinalizeUpgrade or RollbackUpgrade request.
 	YugabyteDBUpgradePendingFinalize = "UpgradePendingFinalize"
 	// YugabyteDBUpgradeYSQL is the step that upgrades the YSQL catalog (upgrade_ysql) as part of the finalization.

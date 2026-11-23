@@ -653,7 +653,7 @@ func (r yugabyteDBStatsService) TLSConfig() *promapi.TLSConfig {
 			CA: promapi.SecretOrConfigMap{
 				Secret: &core.SecretKeySelector{
 					LocalObjectReference: core.LocalObjectReference{
-						Name: r.GetCertSecretName(YugabyteDBCertificateTypeClient),
+						Name: r.GetCertSecretName(YugabyteDBClientCert),
 					},
 					Key: kubedb.CACert,
 				},

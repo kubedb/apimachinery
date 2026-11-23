@@ -91,6 +91,17 @@ spec:
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
+                  connectionManager:
+                    properties:
+                      enabled:
+                        type: boolean
+                      maxClientConnections:
+                        format: int32
+                        minimum: 1
+                        type: integer
+                    required:
+                    - enabled
+                    type: object
                   removeCustomConfig:
                     type: boolean
                   restart:
@@ -100,17 +111,6 @@ spec:
                     - "true"
                     - "false"
                     type: string
-                type: object
-              connectionManager:
-                properties:
-                  enabled:
-                    type: boolean
-                  maxClientConnections:
-                    format: int32
-                    minimum: 1
-                    type: integer
-                required:
-                - enabled
                 type: object
               databaseRef:
                 properties:

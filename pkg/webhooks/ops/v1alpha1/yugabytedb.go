@@ -272,7 +272,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateUpdateVersion(ctx context.Co
 		return err
 	}
 	if !ok {
-		return fmt.Errorf("upgrade from version %v to %v is not allowed by the updateConstraints of %v", db.Spec.Version, uv.TargetVersion, uv.TargetVersion)
+		return fmt.Errorf("upgrade from version %v to %v is not allowed by the updateConstraints of %v", db.Spec.Version, uv.TargetVersion, db.Spec.Version)
 	}
 	return nil
 }

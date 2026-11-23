@@ -915,6 +915,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec":                    schema_apimachinery_apis_ops_v1alpha1_YugabyteDBReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRewindSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec":                            schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRollingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec":                                schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref),
@@ -48331,12 +48332,6 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec"),
 						},
 					},
-					"connectionManager": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ConnectionManager changes the YSQL Connection Manager of the database. It is only valid in a Reconfigure request, next to or instead of spec.configuration. The pods restart one at a time.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"),
-						},
-					},
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring authSecret of the database",
@@ -48346,7 +48341,7 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of YugabyteDB",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec"),
 						},
 					},
 					"horizontalScaling": {
@@ -48433,7 +48428,64 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBReconfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBReconfigurationSpec is the YugabyteDB-specific reconfiguration spec.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"connectionManager": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionManager changes the YSQL Connection Manager of the database, next to or instead of the configuration fields. The tserver pods restart one at a time when the change needs it.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"},
 	}
 }
 

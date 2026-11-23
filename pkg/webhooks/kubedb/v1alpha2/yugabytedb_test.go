@@ -114,6 +114,12 @@ func ybTestDB(t *testing.T, w *YugabyteDBCustomWebhook) *olddbapi.YugabyteDB {
 	return db
 }
 
+// The edit lock trusts only service accounts of the operator namespace, which PodNamespace reads from
+// POD_NAMESPACE. The tests run as if the webhook server were in "kubedb".
+func init() {
+	_ = os.Setenv("POD_NAMESPACE", "kubedb")
+}
+
 func ybCtx(user string) context.Context {
 	return admission.NewContextWithRequest(context.TODO(), admission.Request{
 		AdmissionRequest: admissionv1.AdmissionRequest{UserInfo: authenticationv1.UserInfo{Username: user}},
@@ -173,11 +179,15 @@ func TestYugabyteDBDefault(t *testing.T) {
 			},
 		},
 		{
-			name: "master replicas different from RF are rejected",
+			name: "master replicas different from RF are kept for the validator",
 			mutate: func(db *olddbapi.YugabyteDB) {
 				db.Spec.Topology = &olddbapi.YugabyteDBTopology{Master: &olddbapi.YugabyteDBNode{Replicas: ptr.To(int32(1))}}
 			},
-			want: "must equal spec.replicationFactor",
+			check: func(t *testing.T, db *olddbapi.YugabyteDB) {
+				if got := *db.Spec.Topology.Master.Replicas; got != 1 {
+					t.Fatalf("defaulting must not overwrite the master replicas, got %d", got)
+				}
+			},
 		},
 		{
 			name: "master replicas equal to RF are accepted",
@@ -525,6 +535,11 @@ func TestYugabyteDBValidateUpdateOpsOwned(t *testing.T) {
 			old, db = build(true)
 			_, err = w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-ops-manager"), old, db)
 			checkErr(t, err, "")
+
+			// a service account of another namespace (Argo CD, Flux, CI) is treated as a user
+			old, db = build(true)
+			_, err = w.ValidateUpdate(ybCtx("system:serviceaccount:argocd:argocd-application-controller"), old, db)
+			checkErr(t, err, tc.want)
 
 			// before provisioning the user is still writing the spec
 			old, db = build(false)

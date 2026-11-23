@@ -188,7 +188,7 @@ func TestYugabyteDBOpsConnectionManager(t *testing.T) {
 	cm := func(enabled bool, max *int32) func() *opsapi.YugabyteDBOpsRequest {
 		return func() *opsapi.YugabyteDBOpsRequest {
 			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeReconfigure)
-			r.Spec.ConnectionManager = &dbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}
+			r.Spec.Configuration = &opsapi.YugabyteDBReconfigurationSpec{ConnectionManager: &dbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}}
 			return r
 		}
 	}
@@ -205,14 +205,9 @@ func TestYugabyteDBOpsConnectionManager(t *testing.T) {
 		{name: "disable", db: withCM, req: cm(false, nil)},
 		{name: "zero max", req: cm(true, ptr.To(int32(0))), want: "at least 1"},
 		{name: "ysql disabled", db: noYSQL, req: cm(true, nil), want: "YSQL is not enabled"},
-		{name: "wrong type", req: func() *opsapi.YugabyteDBOpsRequest {
-			r := cm(true, nil)()
-			r.Spec.Type = opsapi.YugabyteDBOpsRequestTypeRestart
-			return r
-		}, want: "only valid in a Reconfigure request"},
 		{name: "with configuration", req: func() *opsapi.YugabyteDBOpsRequest {
 			r := cm(true, nil)()
-			r.Spec.Configuration = &opsapi.ReconfigurationSpec{RemoveCustomConfig: true}
+			r.Spec.Configuration.RemoveCustomConfig = true
 			return r
 		}},
 	})
