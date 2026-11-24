@@ -40742,6 +40742,26 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref commo
 							Format: "",
 						},
 					},
+					"extensions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Extensions lists the non-core extensions this image bundles, by the name PostgreSQL reports in pg_available_extensions (for example postgis, pg_cron, pgaudit, vector, timescaledb). An UpdateVersion ops request is rejected when the target PostgresVersion does not list every extension listed here, so a database never moves onto an image that lacks an extension it may depend on. Contrib modules that ship with PostgreSQL itself are not listed. An empty list means no bundled extensions are declared and no check is made.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"image"},
 			},

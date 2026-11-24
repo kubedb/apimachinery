@@ -145,6 +145,11 @@ spec:
                 properties:
                   baseOS:
                     type: string
+                  extensions:
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
                   image:
                     type: string
                 required:

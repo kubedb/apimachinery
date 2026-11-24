@@ -140,6 +140,15 @@ type PostgresVersionInitContainer struct {
 type PostgresVersionDatabase struct {
 	Image  string `json:"image"`
 	BaseOS string `json:"baseOS,omitempty"`
+	// Extensions lists the non-core extensions this image bundles, by the name PostgreSQL
+	// reports in pg_available_extensions (for example postgis, pg_cron, pgaudit, vector,
+	// timescaledb). An UpdateVersion ops request is rejected when the target PostgresVersion
+	// does not list every extension listed here, so a database never moves onto an image that
+	// lacks an extension it may depend on. Contrib modules that ship with PostgreSQL itself are
+	// not listed. An empty list means no bundled extensions are declared and no check is made.
+	// +optional
+	// +listType=set
+	Extensions []string `json:"extensions,omitempty"`
 }
 
 // PostgresVersionCoordinator is the Postgres leader elector image
