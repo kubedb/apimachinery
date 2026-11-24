@@ -117,6 +117,12 @@ func TestMilvusValidateDCDRImmutability(t *testing.T) {
 		{"data center added", func(db *olddbapi.Milvus) {
 			db.Spec.DisasterRecovery.DataCenters = append(db.Spec.DisasterRecovery.DataCenters, dcdrDataCenter("spoke-3", "http://etcd-c:2379", "s3-c"))
 		}, true},
+		{"meta storage defaulted", func(db *olddbapi.Milvus) {
+			db.Spec.DisasterRecovery.DataCenters[0].MetaStorage.StorageType = olddbapi.StorageTypeDurable
+		}, false},
+		{"meta storage changed", func(db *olddbapi.Milvus) {
+			db.Spec.DisasterRecovery.DataCenters[0].MetaStorage.Endpoints = []string{"http://etcd-x:2379"}
+		}, true},
 		{"object storage changed", func(db *olddbapi.Milvus) {
 			db.Spec.DisasterRecovery.DataCenters[0].ObjectStorage.ConfigSecret.Name = "other"
 		}, true},
