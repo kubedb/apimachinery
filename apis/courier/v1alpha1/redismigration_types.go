@@ -68,6 +68,10 @@ type RedisMigrationSpec struct {
 	// +optional
 	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`
 
+	// Storage configures the PVC that holds the migrator's working files
+	// +optional
+	Storage *MigrationStorage `json:"storage,omitempty"`
+
 	// JobTemplate specifies runtime configurations for the migration Job
 	// +optional
 	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`

@@ -620,6 +620,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationList":                                schema_apimachinery_apis_courier_v1alpha1_MigrationList(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec":                                schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus":                              schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage":                             schema_apimachinery_apis_courier_v1alpha1_MigrationStorage(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigration":                             schema_apimachinery_apis_courier_v1alpha1_MongoDBMigration(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationList":                         schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationList(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationSpec":                         schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationSpec(ref),
@@ -34803,6 +34804,12 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref comm
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -34814,7 +34821,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"},
 	}
 }
 
@@ -35186,6 +35193,12 @@ func schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -35197,7 +35210,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"},
 	}
 }
 
@@ -35359,6 +35372,12 @@ func schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref common.Referenc
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the backup/restore Job",
@@ -35370,7 +35389,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Source", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Source", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"},
 	}
 }
 
@@ -35421,6 +35440,34 @@ func schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref common.Refere
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MigrationStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MigrationStorage configures the PVC mounted at /data in the migration Job",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"size": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Size is the requested PVC size. When unset, the operator uses a per-engine default. The PVC can only grow.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageClassName is the StorageClass of the PVC. When unset, the cluster default is used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -35549,6 +35596,12 @@ func schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -35560,7 +35613,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBTarget"},
 	}
 }
 
@@ -35922,6 +35975,12 @@ func schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -35933,7 +35992,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"},
 	}
 }
 
@@ -36389,6 +36448,12 @@ func schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -36400,7 +36465,7 @@ func schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"},
 	}
 }
 
@@ -36662,6 +36727,12 @@ func schema_apimachinery_apis_courier_v1alpha1_RedisMigrationSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage configures the PVC that holds the migrator's working files",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage"),
+						},
+					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobTemplate specifies runtime configurations for the migration Job",
@@ -36673,7 +36744,7 @@ func schema_apimachinery_apis_courier_v1alpha1_RedisMigrationSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisTarget"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStorage", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.RedisTarget"},
 	}
 }
 

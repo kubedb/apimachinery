@@ -28104,6 +28104,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerSource"
         },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
+        },
         "target": {
           "description": "Target defines the target MSSQL Server database configuration",
           "default": {},
@@ -28348,6 +28352,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MariaDBSource"
         },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
+        },
         "target": {
           "description": "Target defines the target MariaDB database configuration",
           "default": {},
@@ -28411,6 +28419,20 @@
         "progress": {
           "description": "Progress contains the current progress of migration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.Progress"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage": {
+      "description": "MigrationStorage configures the PVC mounted at /data in the migration Job",
+      "type": "object",
+      "properties": {
+        "size": {
+          "description": "Size is the requested PVC size. When unset, the operator uses a per-engine default. The PVC can only grow.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "storageClassName": {
+          "description": "StorageClassName is the StorageClass of the PVC. When unset, the cluster default is used.",
+          "type": "string"
         }
       }
     },
@@ -28507,6 +28529,10 @@
           "description": "Source defines the source MongoDB database configuration",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MongoDBSource"
+        },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
         },
         "target": {
           "description": "Target defines the target MongoDB database configuration",
@@ -28705,6 +28731,10 @@
           "description": "Source defines the source MySQL database configuration",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MySQLSource"
+        },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
         },
         "target": {
           "description": "Target defines the target MySQL database configuration",
@@ -28992,6 +29022,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.PostgresSource"
         },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
+        },
         "target": {
           "description": "Target defines the target Postgres database configuration",
           "default": {},
@@ -29165,6 +29199,10 @@
           "description": "Source defines the source Redis database configuration",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.RedisSource"
+        },
+        "storage": {
+          "description": "Storage configures the PVC that holds the migrator's working files",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MigrationStorage"
         },
         "target": {
           "description": "Target defines the target Redis database configuration",
