@@ -25834,6 +25834,15 @@
         "baseOS": {
           "type": "string"
         },
+        "extensions": {
+          "description": "Extensions lists the non-core extensions this image bundles, by the name PostgreSQL reports in pg_available_extensions (for example postgis, pg_cron, pgaudit, vector, timescaledb). An UpdateVersion ops request is rejected when the target PostgresVersion does not list every extension listed here, so a database never moves onto an image that lacks an extension it may depend on. Contrib modules that ship with PostgreSQL itself are not listed. An empty list means no bundled extensions are declared and no check is made.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "image": {
           "type": "string",
           "default": ""

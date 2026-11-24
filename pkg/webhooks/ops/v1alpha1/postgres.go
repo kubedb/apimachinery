@@ -410,6 +410,40 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.Distribution,
 		)
 	}
+	return validatePostgresVersionCapabilitiesPreserved(sourceVersion, postgresTargetVersion)
+}
+
+// postgresVersionHasExtensionTag is the fallback signal for catalog entries that do not
+// declare spec.db.extensions yet: extension-bundled images carry an "-ext" tag suffix
+// (e.g. appscode-images/postgres-enterprise:16.10-alpine-ext) and the plain image of the
+// same version does not bundle those extensions.
+func postgresVersionHasExtensionTag(pv *catalog.PostgresVersion) bool {
+	image := strings.SplitN(pv.Spec.DB.Image, "@", 2)[0]
+	return strings.HasSuffix(image, "-ext")
+}
+
+// validatePostgresVersionCapabilitiesPreserved rejects upgrades that would drop a
+// capability the current image provides. The version-level checks (distribution,
+// baseOS, updateConstraints) do not see bundled extensions, so a database could be
+// moved onto an image that no longer ships an extension it depends on.
+//
+// When the source PostgresVersion declares spec.db.extensions, every one of them must be
+// declared by the target. Entries that declare nothing fall back to the "-ext" image tag.
+func validatePostgresVersionCapabilitiesPreserved(source, target *catalog.PostgresVersion) error {
+	if len(source.Spec.DB.Extensions) > 0 {
+		missing := sets.New[string](source.Spec.DB.Extensions...).Difference(sets.New[string](target.Spec.DB.Extensions...))
+		if missing.Len() > 0 {
+			return fmt.Errorf("upgrading from %q to %q is not allowed: %q bundles extensions [%s] that %q does not list in spec.db.extensions",
+				source.Name, target.Name, source.Name, strings.Join(sets.List(missing), ", "), target.Name)
+		}
+	} else if postgresVersionHasExtensionTag(source) && !postgresVersionHasExtensionTag(target) && len(target.Spec.DB.Extensions) == 0 {
+		return fmt.Errorf("upgrading from %q to %q is not allowed: %q bundles PostgreSQL extensions but %q does not",
+			source.Name, target.Name, source.Name, target.Name)
+	}
+	if source.Spec.TDE != nil && target.Spec.TDE == nil {
+		return fmt.Errorf("upgrading from %q to %q is not allowed: %q supports pg_tde but %q does not",
+			source.Name, target.Name, source.Name, target.Name)
+	}
 	return nil
 }
 
