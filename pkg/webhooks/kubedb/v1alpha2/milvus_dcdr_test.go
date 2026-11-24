@@ -77,6 +77,18 @@ func TestMilvusValidateDCDR(t *testing.T) {
 		{"archiver", func(db *olddbapi.Milvus) { db.Spec.Archiver = &olddbapi.Archiver{} }, "2.6.26", true},
 		{"security disabled", func(db *olddbapi.Milvus) { db.Spec.DisableSecurity = true }, "2.6.26", true},
 		{"disasterRecovery without distributed", func(db *olddbapi.Milvus) { db.Spec.Distributed = false }, "2.6.26", true},
+		{"top-level object storage", func(db *olddbapi.Milvus) {
+			db.Spec.ObjectStorage = &olddbapi.ObjectStorageSpec{ConfigSecret: &core.LocalObjectReference{Name: "s3"}}
+		}, "2.6.26", true},
+		{"not DC-DR without object storage", func(db *olddbapi.Milvus) {
+			db.Spec.Distributed = false
+			db.Spec.DisasterRecovery = nil
+		}, "2.6.26", true},
+		{"not DC-DR with object storage", func(db *olddbapi.Milvus) {
+			db.Spec.Distributed = false
+			db.Spec.DisasterRecovery = nil
+			db.Spec.ObjectStorage = &olddbapi.ObjectStorageSpec{ConfigSecret: &core.LocalObjectReference{Name: "s3"}}
+		}, "2.6.26", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

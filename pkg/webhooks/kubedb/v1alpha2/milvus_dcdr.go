@@ -35,13 +35,21 @@ func milvusValidateDCDR(db *olddbapi.Milvus, milvusVersion *catalog.MilvusVersio
 	spec := field.NewPath("spec")
 	drPath := spec.Child("disasterRecovery")
 	if !db.IsDCDR() {
+		var errs field.ErrorList
 		if db.Spec.DisasterRecovery != nil {
-			return field.ErrorList{field.Forbidden(drPath, "spec.disasterRecovery is only used with spec.distributed")}
+			errs = append(errs, field.Forbidden(drPath, "spec.disasterRecovery is only used with spec.distributed"))
 		}
-		return nil
+		if db.Spec.ObjectStorage == nil {
+			errs = append(errs, field.Required(spec.Child("objectStorage"), "spec.objectStorage is required"))
+		}
+		return errs
 	}
 
 	var errs field.ErrorList
+	if db.Spec.ObjectStorage != nil {
+		errs = append(errs, field.Forbidden(spec.Child("objectStorage"),
+			"a DC-DR Milvus sets the object storage per data center in spec.disasterRecovery.dataCenters"))
+	}
 	if milvusVersion != nil {
 		if v, err := utilversion.ParseGeneric(milvusVersion.Spec.Version); err != nil {
 			errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version, fmt.Sprintf("cannot parse Milvus version %q: %v", milvusVersion.Spec.Version, err)))

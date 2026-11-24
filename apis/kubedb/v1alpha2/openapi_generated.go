@@ -42123,7 +42123,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 					},
 					"objectStorage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ObjectStorage contains specification for druid to connect to the object storage",
+							Description: "ObjectStorage contains specification for druid to connect to the object storage. Required unless spec.distributed is set; a DC-DR Milvus sets it per data center.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec"),
 						},
 					},
@@ -42269,7 +42269,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"version", "objectStorage"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
