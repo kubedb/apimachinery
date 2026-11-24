@@ -138,8 +138,9 @@ message UpgradeEnv {
   string BinDir = 3 [ json_name = "binDir" ];
   string ShareDir = 4 [ json_name = "shareDir" ];
   string PkgLibDir = 5 [ json_name = "pkgLibDir" ];
-  // Whether the human-placed authorization file /var/pv/UPGRADE_PG_VERSION exists.
-  bool AuthorizationFile = 6 [ json_name = "authorizationFile" ];
+  // 6 was AuthorizationFile (the removed UpdateVersion authorization file).
+  reserved 6;
+  reserved "AuthorizationFile";
   // Free and used bytes of the data volume.
   int64 DataVolumeFreeBytes = 7 [ json_name = "dataVolumeFreeBytes" ];
   int64 DataVolumeUsedBytes = 8 [ json_name = "dataVolumeUsedBytes" ];

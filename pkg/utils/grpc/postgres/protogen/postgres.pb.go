@@ -1147,8 +1147,6 @@ type UpgradeEnv struct {
 	BinDir    string `protobuf:"bytes,3,opt,name=BinDir,json=binDir,proto3" json:"BinDir,omitempty"`
 	ShareDir  string `protobuf:"bytes,4,opt,name=ShareDir,json=shareDir,proto3" json:"ShareDir,omitempty"`
 	PkgLibDir string `protobuf:"bytes,5,opt,name=PkgLibDir,json=pkgLibDir,proto3" json:"PkgLibDir,omitempty"`
-	// Whether the human-placed authorization file /var/pv/UPGRADE_PG_VERSION exists.
-	AuthorizationFile bool `protobuf:"varint,6,opt,name=AuthorizationFile,json=authorizationFile,proto3" json:"AuthorizationFile,omitempty"`
 	// Free and used bytes of the data volume.
 	DataVolumeFreeBytes int64 `protobuf:"varint,7,opt,name=DataVolumeFreeBytes,json=dataVolumeFreeBytes,proto3" json:"DataVolumeFreeBytes,omitempty"`
 	DataVolumeUsedBytes int64 `protobuf:"varint,8,opt,name=DataVolumeUsedBytes,json=dataVolumeUsedBytes,proto3" json:"DataVolumeUsedBytes,omitempty"`
@@ -1219,13 +1217,6 @@ func (x *UpgradeEnv) GetPkgLibDir() string {
 		return x.PkgLibDir
 	}
 	return ""
-}
-
-func (x *UpgradeEnv) GetAuthorizationFile() bool {
-	if x != nil {
-		return x.AuthorizationFile
-	}
-	return false
 }
 
 func (x *UpgradeEnv) GetDataVolumeFreeBytes() int64 {
@@ -1428,17 +1419,16 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x14PrimaryAliveResponse\x12\x14\n" +
 	"\x05Alive\x18\x01 \x01(\bR\x05alive\"9\n" +
 	"\x13UpgradeCapabilities\x12\"\n" +
-	"\x05Steps\x18\x01 \x03(\x0e2\f.UpgradeStepR\x05steps\"\xae\x02\n" +
+	"\x05Steps\x18\x01 \x03(\x0e2\f.UpgradeStepR\x05steps\"\x99\x02\n" +
 	"\n" +
 	"UpgradeEnv\x12\x16\n" +
 	"\x06Distro\x18\x01 \x01(\tR\x06distro\x12$\n" +
 	"\rServerVersion\x18\x02 \x01(\tR\rserverVersion\x12\x16\n" +
 	"\x06BinDir\x18\x03 \x01(\tR\x06binDir\x12\x1a\n" +
 	"\bShareDir\x18\x04 \x01(\tR\bshareDir\x12\x1c\n" +
-	"\tPkgLibDir\x18\x05 \x01(\tR\tpkgLibDir\x12,\n" +
-	"\x11AuthorizationFile\x18\x06 \x01(\bR\x11authorizationFile\x120\n" +
+	"\tPkgLibDir\x18\x05 \x01(\tR\tpkgLibDir\x120\n" +
 	"\x13DataVolumeFreeBytes\x18\a \x01(\x03R\x13dataVolumeFreeBytes\x120\n" +
-	"\x13DataVolumeUsedBytes\x18\b \x01(\x03R\x13dataVolumeUsedBytes\"\\\n" +
+	"\x13DataVolumeUsedBytes\x18\b \x01(\x03R\x13dataVolumeUsedBytesJ\x04\b\x06\x10\aR\x11AuthorizationFile\"\\\n" +
 	"\x12UpgradeStepRequest\x12$\n" +
 	"\rOpsRequestUID\x18\x01 \x01(\tR\ropsRequestUID\x12 \n" +
 	"\x04Step\x18\x02 \x01(\x0e2\f.UpgradeStepR\x04step\"\x98\x01\n" +
