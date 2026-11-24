@@ -658,6 +658,8 @@ const (
 	YugabyteDBRollbackAutoFlags = "RollbackAutoFlags"
 	// YugabyteDBRollbackTServers is the step that returns the tservers to the previous image, one at a time.
 	YugabyteDBRollbackTServers = "RollbackTServers"
+	// YugabyteDBRollbackReadReplicas is the step that rolls the read replica pods back to the previous version.
+	YugabyteDBRollbackReadReplicas = "RollbackReadReplicas"
 	// YugabyteDBRollbackMasters is the step that returns the masters to the previous image, one at a time, after the tservers.
 	YugabyteDBRollbackMasters = "RollbackMasters"
 	// YugabyteDBRestoreVersion is the step that sets spec.version back to the previous version after a rollback.
