@@ -63,8 +63,10 @@ type MilvusSpec struct {
 	// Meta contains configuration for etcd meta storage
 	MetaStorage *MetaStorageSpec `json:"metaStorage,omitempty"`
 
-	// ObjectStorage contains specification for druid to connect to the object storage
-	ObjectStorage *ObjectStorageSpec `json:"objectStorage"`
+	// ObjectStorage contains specification for druid to connect to the object storage.
+	// Required unless spec.distributed is set; a DC-DR Milvus sets it per data center.
+	// +optional
+	ObjectStorage *ObjectStorageSpec `json:"objectStorage,omitempty"`
 
 	// Milvus cluster topology
 	// +optional

@@ -42591,7 +42591,6 @@ spec:
               version:
                 type: string
             required:
-            - objectStorage
             - version
             type: object
           status:
