@@ -133,6 +133,18 @@ func milvusValidateDCDR(db *olddbapi.Milvus, milvusVersion *catalog.MilvusVersio
 	return errs
 }
 
+// dcdrMetaStorageDefaulted fills the defaults, so an update that omits them is no change.
+func dcdrMetaStorageDefaulted(ms *olddbapi.MetaStorageSpec) *olddbapi.MetaStorageSpec {
+	if ms == nil {
+		return nil
+	}
+	out := ms.DeepCopy()
+	if out.StorageType == "" {
+		out.StorageType = olddbapi.StorageTypeDurable
+	}
+	return out
+}
+
 // milvusValidateDCDRImmutability keeps the data centers of a DC-DR Milvus fixed: each data
 // center's cluster id prefixes its channel names, and its storage holds its copy of the data.
 func milvusValidateDCDRImmutability(oldDB, db *olddbapi.Milvus) field.ErrorList {
@@ -150,7 +162,7 @@ func milvusValidateDCDRImmutability(oldDB, db *olddbapi.Milvus) field.ErrorList 
 	}
 	for i := range db.Spec.DisasterRecovery.DataCenters {
 		o, n := oldDB.Spec.DisasterRecovery.DataCenters[i], db.Spec.DisasterRecovery.DataCenters[i]
-		if !reflect.DeepEqual(o.MetaStorage, n.MetaStorage) {
+		if !reflect.DeepEqual(dcdrMetaStorageDefaulted(o.MetaStorage), dcdrMetaStorageDefaulted(n.MetaStorage)) {
 			errs = append(errs, field.Forbidden(dcsPath.Index(i).Child("metaStorage"), "the meta etcd of a data center cannot be changed"))
 		}
 		if !reflect.DeepEqual(o.ObjectStorage, n.ObjectStorage) {
