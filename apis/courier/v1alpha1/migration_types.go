@@ -64,8 +64,8 @@ type MigrationSpec struct {
 
 // MigrationStorage configures the PVC mounted at /data in the migration Job
 type MigrationStorage struct {
-	// Size is the requested PVC size. When unset, the operator uses a per-engine default.
-	// The PVC can only grow.
+	// Size is the requested PVC size. When unset, the operator uses a per-engine default
+	// (Redis 4Gi, others 1Gi). It is applied when the migration starts; an existing larger PVC is kept.
 	// +optional
 	Size *resource.Quantity `json:"size,omitempty"`
 

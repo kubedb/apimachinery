@@ -35452,7 +35452,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MigrationStorage(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Size is the requested PVC size. When unset, the operator uses a per-engine default. The PVC can only grow.",
+							Description: "Size is the requested PVC size. When unset, the operator uses a per-engine default (Redis 4Gi, others 1Gi). It is applied when the migration starts; an existing larger PVC is kept.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
