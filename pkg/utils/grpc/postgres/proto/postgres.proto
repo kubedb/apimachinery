@@ -138,8 +138,9 @@ message UpgradeEnv {
   string BinDir = 3 [ json_name = "binDir" ];
   string ShareDir = 4 [ json_name = "shareDir" ];
   string PkgLibDir = 5 [ json_name = "pkgLibDir" ];
-  // Whether the human-placed authorization file /var/pv/UPGRADE_PG_VERSION exists.
-  bool AuthorizationFile = 6 [ json_name = "authorizationFile" ];
+  // 6 was AuthorizationFile (the removed UpdateVersion authorization file).
+  reserved 6;
+  reserved "AuthorizationFile";
   // Free and used bytes of the data volume.
   int64 DataVolumeFreeBytes = 7 [ json_name = "dataVolumeFreeBytes" ];
   int64 DataVolumeUsedBytes = 8 [ json_name = "dataVolumeUsedBytes" ];
@@ -186,9 +187,18 @@ service CoordinatorManager {
   rpc GetUpgradeCapabilities(Empty) returns (UpgradeCapabilities) {}
   rpc GetUpgradeEnv(Empty) returns (UpgradeEnv) {}
   // StartUpgradeStep starts the step in the background, or reports it when it is
-  // already running or done for this ops request; it never runs a step twice.
+  // already running or done for this ops request; a step that succeeded or failed
+  // is not run again for the same ops request. A step interrupted by a coordinator
+  // restart is run again when that is safe (every step but PG_UPGRADE, which is
+  // reported FAILED instead), and GetUpgradeStepStatus reports such a step
+  // NOT_STARTED so the caller starts it again.
   rpc StartUpgradeStep(UpgradeStepRequest) returns (UpgradeStepStatus) {}
   rpc GetUpgradeStepStatus(UpgradeStepRequest) returns (UpgradeStepStatus) {}
+  // GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+  // storage (its contiguous watermark), answered only by the primary. Coordinators
+  // in a DC-DR standby data center use it to prune their local wal_archive, which
+  // the primary's same-DC LSN broadcast never reaches.
+  rpc GetArchivedWal(Empty) returns (WalFileResponse) {}
 }
 
 // Generated from the repo root so the descriptor registers under its full path
