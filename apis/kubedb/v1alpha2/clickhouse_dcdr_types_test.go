@@ -24,6 +24,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -73,7 +74,10 @@ func TestClickHouseValidateDCDR(t *testing.T) {
 		{"no cluster topology", func(c *ClickHouse) { c.Spec.ClusterTopology = nil }, two, true, false},
 		{"no placement policy", func(c *ClickHouse) { c.Spec.ClusterTopology.Cluster.PodTemplate = nil }, two, true, false},
 		{"security disabled", func(c *ClickHouse) { c.Spec.DisableSecurity = true }, two, true, false},
-		{"tls", func(c *ClickHouse) { c.Spec.TLS = &ClickHouseTLSConfig{} }, two, true, false},
+		{"tls without issuer", func(c *ClickHouse) { c.Spec.TLS = &ClickHouseTLSConfig{} }, two, true, false},
+		{"tls with issuer", func(c *ClickHouse) {
+			c.Spec.TLS = &ClickHouseTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: &core.TypedLocalObjectReference{Kind: "Issuer", Name: "ca"}}}
+		}, two, false, false},
 		{"ephemeral cluster", func(c *ClickHouse) { c.Spec.ClusterTopology.Cluster.StorageType = StorageTypeEphemeral }, two, true, false},
 		{"ephemeral keeper", func(c *ClickHouse) { c.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType = StorageTypeEphemeral }, two, true, false},
 		{"external keeper", func(c *ClickHouse) { c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged = true }, two, true, false},

@@ -320,8 +320,11 @@ func (c *ClickHouse) ValidateDCDR(dataCenters []string) ([]string, error) {
 	if c.Spec.DisableSecurity {
 		return nil, fmt.Errorf("DC-DR requires authentication: spec.disableSecurity must be false")
 	}
-	if c.Spec.TLS != nil {
-		return nil, fmt.Errorf("DC-DR does not support spec.tls yet")
+	// TLS: the hub issues the certificates (cert-manager on the hub), the operator copies their Secrets
+	// to every member data center. A spec.tls without an issuer (client CA refs only) has no server
+	// certificate for the cross-DC replication and Distributed links.
+	if c.Spec.TLS != nil && c.Spec.TLS.IssuerRef == nil {
+		return nil, fmt.Errorf("DC-DR with spec.tls requires spec.tls.issuerRef: the cross data center links need operator issued certificates")
 	}
 	if ct.Cluster.StorageType == StorageTypeEphemeral || (ct.ClickHouseKeeper != nil && ct.ClickHouseKeeper.Spec != nil && ct.ClickHouseKeeper.Spec.StorageType == StorageTypeEphemeral) {
 		return nil, fmt.Errorf("DC-DR needs durable storage: the coordinator state and the Keeper membership live on the data volumes")
