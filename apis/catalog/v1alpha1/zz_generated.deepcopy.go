@@ -4823,6 +4823,7 @@ func (in *RedisVersionSpec) DeepCopyInto(out *RedisVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	out.Courier = in.Courier
 	return
 }
 

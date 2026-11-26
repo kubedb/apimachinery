@@ -38,6 +38,8 @@ type Interface interface {
 	MySQLMigrations() MySQLMigrationInformer
 	// PostgresMigrations returns a PostgresMigrationInformer.
 	PostgresMigrations() PostgresMigrationInformer
+	// RedisMigrations returns a RedisMigrationInformer.
+	RedisMigrations() RedisMigrationInformer
 }
 
 type version struct {
@@ -84,4 +86,9 @@ func (v *version) MySQLMigrations() MySQLMigrationInformer {
 // PostgresMigrations returns a PostgresMigrationInformer.
 func (v *version) PostgresMigrations() PostgresMigrationInformer {
 	return &postgresMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RedisMigrations returns a RedisMigrationInformer.
+func (v *version) RedisMigrations() RedisMigrationInformer {
+	return &redisMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

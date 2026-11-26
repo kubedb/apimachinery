@@ -43,6 +43,8 @@ type Source struct {
 	*MongoDBSource `json:",inline,omitempty"`
 	// MSSQLServer refers to the source MSSQL Server database configuration
 	*MSSQLServerSource `json:",inline,omitempty"`
+	// Redis refers to the source Redis database configuration
+	*RedisSource `json:",inline,omitempty"`
 }
 
 // Target defines the target database configuration
@@ -62,6 +64,8 @@ type Target struct {
 	*MariaDBTarget `json:",inline,omitempty"`
 	// MSSQLServer refers to the target MSSQL Server database configuration
 	*MSSQLServerTarget `json:",inline,omitempty"`
+	// Redis refers to the target Redis database configuration
+	*RedisTarget `json:",inline,omitempty"`
 }
 
 type ConnectionInfo struct {

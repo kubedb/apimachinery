@@ -38,6 +38,7 @@ func TestPruneTypes(t *testing.T) {
 		(v1alpha1.MariaDBMigration{}).CustomResourceDefinition(),
 		(v1alpha1.MongoDBMigration{}).CustomResourceDefinition(),
 		(v1alpha1.MSSQLServerMigration{}).CustomResourceDefinition(),
+		(v1alpha1.RedisMigration{}).CustomResourceDefinition(),
 	}
 
 	// CRD v1

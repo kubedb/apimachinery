@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -52,9 +53,25 @@ type MigrationSpec struct {
 	// JobDefaults specifies default settings for migration jobs
 	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`
 
+	// Storage configures the PVC that holds the migrator's working files
+	// +optional
+	Storage *MigrationStorage `json:"storage,omitempty"`
+
 	// JobTemplate specifies runtime configurations for the backup/restore Job
 	// +optional
 	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+}
+
+// MigrationStorage configures the PVC mounted at /data in the migration Job
+type MigrationStorage struct {
+	// Size is the requested PVC size. When unset, the operator uses a per-engine default
+	// (Redis 4Gi, others 1Gi). It is applied when the migration starts; an existing larger PVC is kept.
+	// +optional
+	Size *resource.Quantity `json:"size,omitempty"`
+
+	// StorageClassName is the StorageClass of the PVC. When unset, the cluster default is used.
+	// +optional
+	StorageClassName *string `json:"storageClassName,omitempty"`
 }
 
 // JobDefaults defines default settings for migration jobs

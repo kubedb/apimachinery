@@ -36,6 +36,7 @@ type CourierV1alpha1Interface interface {
 	MongoDBMigrationsGetter
 	MySQLMigrationsGetter
 	PostgresMigrationsGetter
+	RedisMigrationsGetter
 }
 
 // CourierV1alpha1Client is used to interact with features provided by the courier.kubedb.com group.
@@ -69,6 +70,10 @@ func (c *CourierV1alpha1Client) MySQLMigrations(namespace string) MySQLMigration
 
 func (c *CourierV1alpha1Client) PostgresMigrations(namespace string) PostgresMigrationInterface {
 	return newPostgresMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) RedisMigrations(namespace string) RedisMigrationInterface {
+	return newRedisMigrations(c, namespace)
 }
 
 // NewForConfig creates a new CourierV1alpha1Client for the given config.

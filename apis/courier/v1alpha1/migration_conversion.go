@@ -47,6 +47,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			Source:      &Source{PostgresSource: &t.Spec.Source},
 			Target:      &Target{PostgresTarget: &t.Spec.Target},
 			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MySQLMigration:
@@ -57,6 +58,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			Source:      &Source{MySQLSource: &t.Spec.Source},
 			Target:      &Target{MySQLTarget: &t.Spec.Target},
 			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MariaDBMigration:
@@ -67,6 +69,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			Source:      &Source{MariaDBSource: &t.Spec.Source},
 			Target:      &Target{MariaDBTarget: &t.Spec.Target},
 			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MongoDBMigration:
@@ -77,6 +80,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			Source:      &Source{MongoDBSource: &t.Spec.Source},
 			Target:      &Target{MongoDBTarget: &t.Spec.Target},
 			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MSSQLServerMigration:
@@ -87,6 +91,18 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			Source:      &Source{MSSQLServerSource: &t.Spec.Source},
 			Target:      &Target{MSSQLServerTarget: &t.Spec.Target},
 			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
+			JobTemplate: t.Spec.JobTemplate,
+		}
+	case *RedisMigration:
+		m.Kind = ResourceKindRedisMigration
+		m.ObjectMeta = t.ObjectMeta
+		m.Status = t.Status
+		m.Spec = MigrationSpec{
+			Source:      &Source{RedisSource: &t.Spec.Source},
+			Target:      &Target{RedisTarget: &t.Spec.Target},
+			JobDefaults: t.Spec.JobDefaults,
+			Storage:     t.Spec.Storage,
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	default:

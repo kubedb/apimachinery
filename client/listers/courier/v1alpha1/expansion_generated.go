@@ -73,3 +73,11 @@ type PostgresMigrationListerExpansion interface{}
 // PostgresMigrationNamespaceListerExpansion allows custom methods to be added to
 // PostgresMigrationNamespaceLister.
 type PostgresMigrationNamespaceListerExpansion interface{}
+
+// RedisMigrationListerExpansion allows custom methods to be added to
+// RedisMigrationLister.
+type RedisMigrationListerExpansion interface{}
+
+// RedisMigrationNamespaceListerExpansion allows custom methods to be added to
+// RedisMigrationNamespaceLister.
+type RedisMigrationNamespaceListerExpansion interface{}
