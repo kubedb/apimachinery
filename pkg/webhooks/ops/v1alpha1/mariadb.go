@@ -121,6 +121,15 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
 
+	// A DC-DR MariaDB runs only the ops types with a DC-DR implementation; the ops-manager refuses
+	// the rest too, before pausing anything. Checked on create only, so requests admitted earlier
+	// can still have their status and finalizers updated.
+	if isCreate {
+		if why := opsapi.MariaDBDCDROpsRefusal(db, req); why != "" {
+			return field.Forbidden(field.NewPath("spec").Child("type"), why)
+		}
+	}
+
 	var allErr field.ErrorList
 	switch opsapi.MariaDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
@@ -395,13 +404,10 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBRotateAuthenticationOpsR
 // validateMariaDBDCDRHorizontalScaling checks a HorizontalScaling of a DC-DR MariaDB. member is the
 // new total; the database's PlacementPolicy decides which data center each new ordinal belongs to,
 // so the user first adds the ordinals to that data center's distribution rule and then scales.
-// Every data center must end with 1 or an odd 3 to 9 Galera nodes. Scaling down is not supported
-// yet.
+// Every data center must end with 1 or an odd 3 to 9 Galera nodes. A scale down is allowed: the
+// per data center sizes it leaves are validated like a scale up's.
 func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBDCDRHorizontalScaling(db *dbapi.MariaDB, member int32) error {
 	cur := ptr.Deref(db.Spec.Replicas, 0)
-	if member < cur {
-		return fmt.Errorf("scaling down a DC-DR MariaDB is not supported yet (spec.replicas=%d, member=%d)", cur, member)
-	}
 	if member == cur {
 		return fmt.Errorf("spec.horizontalScaling.member=%d equals the current spec.replicas", member)
 	}
