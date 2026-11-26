@@ -110,7 +110,7 @@ type MariaDBSpec struct {
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
-	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	ServiceTemplates []MariaDBNamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
 	// Indicates that the database server need to be encrypted connections(ssl)
 	// +optional

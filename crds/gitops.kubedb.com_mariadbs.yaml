@@ -4848,6 +4848,7 @@ spec:
                       - primary
                       - standby
                       - stats
+                      - maxscale
                       type: string
                     metadata:
                       properties:
