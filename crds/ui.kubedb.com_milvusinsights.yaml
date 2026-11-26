@@ -116,6 +116,94 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterID:
+                          type: string
+                        clusterName:
+                          type: string
+                        healthy:
+                          type: boolean
+                        lagObservedAt:
+                          format: date-time
+                          type: string
+                        lagSeconds:
+                          format: int64
+                          type: integer
+                        lastSeenAt:
+                          format: date-time
+                          type: string
+                        reachable:
+                          type: boolean
+                        replicationRole:
+                          type: string
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastProtectedAt:
+                    format: date-time
+                    type: string
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                  promotion:
+                    properties:
+                      dc:
+                        type: string
+                      forced:
+                        type: boolean
+                      from:
+                        type: string
+                      fromLastSeenAt:
+                        format: date-time
+                        type: string
+                      salvageCheckpoints:
+                        items:
+                          properties:
+                            pchannel:
+                              type: string
+                            timeTick:
+                              format: int64
+                              type: integer
+                          required:
+                          - pchannel
+                          - timeTick
+                          type: object
+                        type: array
+                      time:
+                        format: date-time
+                        type: string
+                    required:
+                    - dc
+                    type: object
+                  protected:
+                    type: boolean
+                  protectionMessage:
+                    type: string
+                  rebuild:
+                    properties:
+                      dc:
+                        type: string
+                      message:
+                        type: string
+                      startedAt:
+                        format: date-time
+                        type: string
+                      step:
+                        type: string
+                    required:
+                    - dc
+                    - step
+                    type: object
+                type: object
               observedGeneration:
                 format: int64
                 type: integer
