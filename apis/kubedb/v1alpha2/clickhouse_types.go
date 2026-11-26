@@ -132,6 +132,20 @@ type ClickHouseSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// Distributed if set true, the database is placed across OCM spoke clusters by the
+	// PlacementPolicy named in spec.clusterTopology.cluster.podTemplate.spec.podPlacementPolicy,
+	// and ManifestWork objects are created instead of raw resources. Together with the
+	// dr.kubedb.com/enabled=true annotation it makes a cross data center disaster recovery
+	// (DC-DR) deployment: per data center Keeper and shard PetSets, Keeper voters in the active
+	// data center and a Keeper learner in the standby data center.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// DisasterRecovery holds the cross data center DR options (used with spec.distributed and the
+	// dr.kubedb.com/enabled=true annotation).
+	// +optional
+	DisasterRecovery *ClickHouseDCDRSpec `json:"disasterRecovery,omitempty"`
 }
 
 type ClusterTopology struct {
@@ -212,6 +226,9 @@ type ClickHouseStatus struct {
 	// ClickHouse data PVC, keyed by PVC name.
 	// +optional
 	ObservedDataPVCUIDs map[string]types.UID `json:"observedDataPVCUIDs,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state of a distributed ClickHouse.
+	// +optional
+	DisasterRecovery *ClickHouseDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

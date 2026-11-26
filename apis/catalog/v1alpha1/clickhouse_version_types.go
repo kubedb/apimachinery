@@ -70,6 +70,11 @@ type ClickHouseVersionSpec struct {
 	// ClickHouse Keeper Image
 	ClickHouseKeeper ClickHouseKeeperContainer `json:"clickHouseKeeper"`
 
+	// Coordinator is the clickhouse-coordinator sidecar image used by a DC-DR (distributed)
+	// ClickHouse in every Keeper and server pod. Only versions used for DC-DR need it.
+	// +optional
+	Coordinator ClickHouseVersionCoordinator `json:"coordinator,omitempty"`
+
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
@@ -99,6 +104,11 @@ type ClickHouseInitContainer struct {
 
 // ClickHouseKeeperContainer is the ClickHouse keeper Container image
 type ClickHouseKeeperContainer struct {
+	Image string `json:"image"`
+}
+
+// ClickHouseVersionCoordinator is the clickhouse-coordinator sidecar image
+type ClickHouseVersionCoordinator struct {
 	Image string `json:"image"`
 }
 

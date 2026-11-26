@@ -114,6 +114,12 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	if err != nil {
 		return err
 	}
+	// The ClickHouse ops code addresses the non DC-DR PetSets; on a DC-DR (distributed) ClickHouse it
+	// would act on objects that do not exist and could restart both data centers at once. Refused until
+	// the ops are data center aware.
+	if db.IsDCDRDistributed() {
+		return fmt.Errorf("ClickHouseOpsRequest %s is not supported yet for the DC-DR ClickHouse %s/%s", req.Spec.Type, db.Namespace, db.Name)
+	}
 	var allErr field.ErrorList
 
 	switch opsapi.ClickHouseOpsRequestType(req.GetRequestType()) {

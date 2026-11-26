@@ -349,6 +349,8 @@ func (m *Milvus) MilvusNodeContainerPort(nodeRole MilvusNodeRoleType) int32 {
 		return kubedb.MilvusPortQueryNode
 	case MilvusNodeRoleStreamingNode:
 		return kubedb.MilvusPortStreamingNode
+	case MilvusNodeRoleCDC:
+		return kubedb.MilvusMetricsPort
 	default:
 		klog.Errorf("unknown Milvus node role %s\n", nodeRole)
 		return -1
@@ -707,6 +709,10 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 
 	m.setMetaStorageDefaults()
 
+	if m.IsDCDR() {
+		m.setDCDRDefaults(&mvVersion)
+	}
+
 	m.setArchiverDefaults()
 
 	m.SetHealthCheckerDefaults()
@@ -726,6 +732,26 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 		}
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil && !m.Spec.RestrictedSCC {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mvVersion.Spec.SecurityContext.RunAsUser
+		}
+	}
+}
+
+func (m *Milvus) setDCDRDefaults(mvVersion *catalog.MilvusVersion) {
+	if m.Spec.DisasterRecovery == nil {
+		return
+	}
+	if m.Spec.DisasterRecovery.CDC == nil {
+		m.Spec.DisasterRecovery.CDC = &MilvusCDCSpec{}
+	}
+	if m.Spec.DisasterRecovery.CDC.PodTemplate == nil {
+		m.Spec.DisasterRecovery.CDC.PodTemplate = &ofstv2.PodTemplateSpec{}
+	}
+	m.setDefaultContainerSecurityContext(mvVersion, m.Spec.DisasterRecovery.CDC.PodTemplate)
+	m.setDefaultContainerResourceLimits(m.Spec.DisasterRecovery.CDC.PodTemplate)
+	for i := range m.Spec.DisasterRecovery.DataCenters {
+		dc := &m.Spec.DisasterRecovery.DataCenters[i]
+		if dc.MetaStorage != nil && dc.MetaStorage.StorageType == "" {
+			dc.MetaStorage.StorageType = StorageTypeDurable
 		}
 	}
 }

@@ -190,6 +190,55 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        channelHolder:
+                          type: string
+                        channelState:
+                          type: string
+                        clusterName:
+                          type: string
+                        gtidLag:
+                          format: int64
+                          type: integer
+                        lagObservedAt:
+                          format: date-time
+                          type: string
+                        notReadyPods:
+                          items:
+                            type: string
+                          type: array
+                        role:
+                          type: string
+                        source:
+                          type: string
+                        syncedNodes:
+                          format: int32
+                          type: integer
+                        writable:
+                          type: boolean
+                        writableObservedAt:
+                          format: date-time
+                          type: string
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                  protected:
+                    type: boolean
+                  protectionMessage:
+                    type: string
+                type: object
               observedGeneration:
                 format: int64
                 type: integer

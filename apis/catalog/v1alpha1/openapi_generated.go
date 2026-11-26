@@ -598,6 +598,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_ClickHouseInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseKeeperContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersion":                            schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionCoordinator":                 schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref),
@@ -625,6 +626,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":        schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion":                         schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionCoordinator":              schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer":   schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDashboardInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionExporter(ref),
@@ -781,6 +783,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion":                              schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator":                   schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref),
@@ -34400,6 +34403,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseVersionCoordinator is the clickhouse-coordinator sidecar image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34514,6 +34538,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator is the clickhouse-coordinator sidecar image used by a DC-DR (distributed) ClickHouse in every Keeper and server pod. Only versions used for DC-DR need it.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionCoordinator"),
+						},
+					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the DB container",
@@ -34559,7 +34590,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -35442,6 +35473,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionCoordinator is the Elasticsearch DC-DR coordinator image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDashboardInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35730,12 +35782,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator is the DC-DR coordinator image (es-coordinator). It runs as a sidecar in the master-eligible pods of a distributed DC-DR Elasticsearch and fences the data center unless the dr-controlplane marker and the hub's write permit both name it.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionCoordinator"),
+						},
+					},
 				},
 				Required: []string{"version", "authPlugin", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -41588,6 +41647,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQVersionCoordinator is the rabbitmq-coordinator sidecar image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41729,12 +41809,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator is the rabbitmq-coordinator sidecar image used by a DC-DR (distributed) RabbitMQ in every node pod. Only versions used for DC-DR need it.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "initContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
