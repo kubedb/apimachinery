@@ -13461,6 +13461,24 @@ spec:
                 required:
                 - name
                 type: object
+              rman:
+                properties:
+                  channels:
+                    default: 1
+                    format: int32
+                    maximum: 16
+                    minimum: 1
+                    type: integer
+                  compression:
+                    default: NONE
+                    enum:
+                    - NONE
+                    - BASIC
+                    - LOW
+                    - MEDIUM
+                    - HIGH
+                    type: string
+                type: object
             required:
             - databases
             type: object

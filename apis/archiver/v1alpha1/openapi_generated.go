@@ -627,6 +627,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleArchiverStatus":                        schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions":                     schema_apimachinery_apis_archiver_v1alpha1_OracleFullBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions":              schema_apimachinery_apis_archiver_v1alpha1_OracleIncrementalBackupOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleRMANOptions":                           schema_apimachinery_apis_archiver_v1alpha1_OracleRMANOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver":                            schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverList":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
@@ -35771,6 +35772,12 @@ func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions"),
 						},
 					},
+					"rman": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RMAN tunes the RMAN sessions of the full backups, the incremental-backup loop and the point-in-time restores of this archiver, overriding rmanChannels and rmanCompression in spec.fullBackup.task.params. Left unset, the loop and restores use one channel and no compression, which need no separately licensed feature, and full backups the task params.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleRMANOptions"),
+						},
+					},
 					"manifestBackup": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
@@ -35800,7 +35807,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_OracleArchiverSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleFullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.OracleRMANOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
 	}
 }
 
@@ -35983,6 +35990,33 @@ func schema_apimachinery_apis_archiver_v1alpha1_OracleIncrementalBackupOptions(r
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_OracleRMANOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OracleRMANOptions opts in to RMAN features that cost an Oracle license beyond the database's own: more than one channel, and the LOW, MEDIUM and HIGH compression levels.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"channels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Channels is how many SBT channels each backup and restore opens, each one upload or download stream; datafiles are split into 256 MB sections across them. One stream to remote object storage is bound by the round trip, so more channels run faster, at one database session and about 25 MB of PGA each. The Oracle Secure Backup Cloud Module is licensed per channel in use at the same time, so more than one needs that many licenses.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"compression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compression is the RMAN compression of datafile and archived log backups. NONE stores them as they are. BASIC needs no extra license; its ratio is close to MEDIUM's at more CPU. LOW, MEDIUM and HIGH need the Oracle Advanced Compression option, or the restricted-use rights an Oracle Secure Backup Cloud Module license grants for backups through it. Restores read compressed and uncompressed backups alike, so it can be changed any time.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

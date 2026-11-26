@@ -150,9 +150,13 @@ const (
 	OracleBlockChangeTrackingFlag          = "block-change-tracking"
 	OracleRMANTimeoutFlag                  = "rman-timeout"
 	OracleTargetPodFlag                    = "target-pod"
+	OracleRMANChannelsFlag                 = "rman-channels"
+	OracleRMANCompressionFlag              = "rman-compression"
 
 	// oracle-addon task params.
 	OracleBackupStrategyParam       = "backupStrategy"
 	OracleBackupStrategyIncremental = "incremental"
 	OracleRecoveryTimestampParam    = "recoveryTimestamp"
+	OracleRMANChannelsParam         = "rmanChannels"
+	OracleRMANCompressionParam      = "rmanCompression"
 )

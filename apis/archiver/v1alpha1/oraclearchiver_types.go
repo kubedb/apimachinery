@@ -76,6 +76,13 @@ type OracleArchiverSpec struct {
 	// LEVEL 1 backups and ships the archived redo logs between full backups.
 	// +optional
 	IncrementalBackup *OracleIncrementalBackupOptions `json:"incrementalBackup"`
+	// RMAN tunes the RMAN sessions of the full backups, the incremental-backup
+	// loop and the point-in-time restores of this archiver, overriding
+	// rmanChannels and rmanCompression in spec.fullBackup.task.params. Left
+	// unset, the loop and restores use one channel and no compression, which
+	// need no separately licensed feature, and full backups the task params.
+	// +optional
+	RMAN *OracleRMANOptions `json:"rman,omitempty"`
 	// ManifestBackup defines the sessionConfig of the manifestBackup
 	// This options will eventually go to the manifest-backup job's yaml
 	// +optional
@@ -199,6 +206,45 @@ type OracleIncrementalBackupOptions struct {
 	// +optional
 	FailedLogHistoryLimit int32 `json:"failedLogHistoryLimit,omitempty"`
 }
+
+// OracleRMANOptions opts in to RMAN features that cost an Oracle license beyond
+// the database's own: more than one channel, and the LOW, MEDIUM and HIGH
+// compression levels.
+type OracleRMANOptions struct {
+	// Channels is how many SBT channels each backup and restore opens, each one
+	// upload or download stream; datafiles are split into 256 MB sections across
+	// them. One stream to remote object storage is bound by the round trip, so
+	// more channels run faster, at one database session and about 25 MB of PGA
+	// each. The Oracle Secure Backup Cloud Module is licensed per channel in use
+	// at the same time, so more than one needs that many licenses.
+	// +kubebuilder:default=1
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16
+	// +optional
+	Channels int32 `json:"channels,omitempty"`
+
+	// Compression is the RMAN compression of datafile and archived log backups.
+	// NONE stores them as they are. BASIC needs no extra license; its ratio is
+	// close to MEDIUM's at more CPU. LOW, MEDIUM and HIGH need the Oracle
+	// Advanced Compression option, or the restricted-use rights an Oracle Secure
+	// Backup Cloud Module license grants for backups through it. Restores read
+	// compressed and uncompressed backups alike, so it can be changed any time.
+	// +kubebuilder:default=NONE
+	// +optional
+	Compression OracleRMANCompression `json:"compression,omitempty"`
+}
+
+// OracleRMANCompression is an RMAN backup compression algorithm, or NONE.
+// +kubebuilder:validation:Enum=NONE;BASIC;LOW;MEDIUM;HIGH
+type OracleRMANCompression string
+
+const (
+	OracleRMANCompressionNone   OracleRMANCompression = "NONE"
+	OracleRMANCompressionBasic  OracleRMANCompression = "BASIC"
+	OracleRMANCompressionLow    OracleRMANCompression = "LOW"
+	OracleRMANCompressionMedium OracleRMANCompression = "MEDIUM"
+	OracleRMANCompressionHigh   OracleRMANCompression = "HIGH"
+)
 
 // OracleArchiverStatus defines the observed state of OracleArchiver
 type OracleArchiverStatus struct {
