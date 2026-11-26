@@ -524,10 +524,9 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLOpsRequest(obj, oldObj runti
 // data center must end with a group of 1 or 3 to 9 members. Scaling down is not supported yet: it
 // must remove members from their group before their pods go.
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLDCDRHorizontalScaling(db *dbapi.MySQL, member int32) error {
+	// A scale down is allowed: the per data center sizes it leaves are validated below like a
+	// scale up's (1 or 3 to 9 per data center, at least one with 3 or more).
 	cur := ptr.Deref(db.Spec.Replicas, 0)
-	if member < cur {
-		return fmt.Errorf("scaling down a DC-DR MySQL is not supported yet (spec.replicas=%d, member=%d)", cur, member)
-	}
 	if member == cur {
 		return fmt.Errorf("spec.horizontalScaling.member=%d equals the current spec.replicas", member)
 	}

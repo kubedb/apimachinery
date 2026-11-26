@@ -28,6 +28,12 @@ import (
 var MySQLDCDRSupportedOpsTypes = []MySQLOpsRequestType{
 	MySQLOpsRequestTypeHorizontalScaling,
 	MySQLOpsRequestTypeRestart,
+	MySQLOpsRequestTypeVerticalScaling,
+	MySQLOpsRequestTypeReconfigure,
+	MySQLOpsRequestTypeRotateAuth,
+	MySQLOpsRequestTypeReconfigureTLS,
+	MySQLOpsRequestTypeUpdateVersion,
+	MySQLOpsRequestTypeVolumeExpansion,
 }
 
 // mysqlDCDRNeverSupported are the types a DC-DR MySQL refuses by design, with the reason.

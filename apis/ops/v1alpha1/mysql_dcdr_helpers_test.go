@@ -58,8 +58,15 @@ func TestMySQLDCDROpsRefusal(t *testing.T) {
 		{"volume expansion offline", dcdr, req(MySQLOpsRequestTypeVolumeExpansion, func(s *MySQLOpsRequestSpec) {
 			s.VolumeExpansion = &MySQLVolumeExpansionSpec{Mode: VolumeExpansionModeOffline}
 		}), true, "mode Online"},
-		{"vertical scaling not yet", dcdr, req(MySQLOpsRequestTypeVerticalScaling), true, "not supported for a DC-DR MySQL yet"},
-		{"rotate auth not yet", dcdr, req(MySQLOpsRequestTypeRotateAuth), true, "supported: HorizontalScaling, Restart"},
+		{"vertical scaling, mode Restart", dcdr, req(MySQLOpsRequestTypeVerticalScaling), false, ""},
+		{"volume expansion online", dcdr, req(MySQLOpsRequestTypeVolumeExpansion, func(s *MySQLOpsRequestSpec) {
+			s.VolumeExpansion = &MySQLVolumeExpansionSpec{Mode: VolumeExpansionModeOnline}
+		}), false, ""},
+		{"rotate auth", dcdr, req(MySQLOpsRequestTypeRotateAuth), false, ""},
+		{"reconfigure", dcdr, req(MySQLOpsRequestTypeReconfigure), false, ""},
+		{"reconfigure tls", dcdr, req(MySQLOpsRequestTypeReconfigureTLS), false, ""},
+		{"update version", dcdr, req(MySQLOpsRequestTypeUpdateVersion), false, ""},
+		{"an unknown type", dcdr, req("Foo"), true, "not supported for a DC-DR MySQL yet (supported: HorizontalScaling, Restart, VerticalScaling"},
 		{"nil request", dcdr, nil, false, ""},
 	}
 	for _, tc := range tests {
