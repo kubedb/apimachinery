@@ -1026,7 +1026,7 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x0fWalFileResponse\x12 \n" +
 	"\vWalFileName\x18\x01 \x01(\tR\vwalFileName\",\n" +
 	"\x14PrimaryAliveResponse\x12\x14\n" +
-	"\x05Alive\x18\x01 \x01(\bR\x05alive2\x83\x05\n" +
+	"\x05Alive\x18\x01 \x01(\bR\x05alive2\xb1\x05\n" +
 	"\x12CoordinatorManager\x12\x1e\n" +
 	"\n" +
 	"GetPodInfo\x12\x04.Pod\x1a\b.PodInfo\"\x00\x12$\n" +
@@ -1043,7 +1043,8 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x13ListDatabaseHistory\x12\x06.Empty\x1a\x12.DBHistoryResponse\"\x00\x120\n" +
 	"\x12GetSmallestWalFile\x12\x06.Empty\x1a\x10.WalFileResponse\"\x00\x124\n" +
 	"\x11CheckPrimaryAlive\x12\x06.Empty\x1a\x15.PrimaryAliveResponse\"\x00\x12#\n" +
-	"\x12CreateFailOverFile\x12\x05.FFOF\x1a\x04.ACK\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
+	"\x12CreateFailOverFile\x12\x05.FFOF\x1a\x04.ACK\"\x00\x12,\n" +
+	"\x0eGetArchivedWal\x12\x06.Empty\x1a\x10.WalFileResponse\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
 
 var (
 	file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescOnce sync.Once
@@ -1102,23 +1103,25 @@ var file_pkg_utils_grpc_postgres_proto_postgres_proto_depIdxs = []int32{
 	5,  // 15: CoordinatorManager.GetSmallestWalFile:input_type -> Empty
 	5,  // 16: CoordinatorManager.CheckPrimaryAlive:input_type -> Empty
 	16, // 17: CoordinatorManager.CreateFailOverFile:input_type -> FFOF
-	1,  // 18: CoordinatorManager.GetPodInfo:output_type -> PodInfo
-	5,  // 19: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
-	5,  // 20: CoordinatorManager.TerminatePostgres:output_type -> Empty
-	3,  // 21: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
-	8,  // 22: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
-	5,  // 23: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
-	15, // 24: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
-	3,  // 25: CoordinatorManager.PromotePostgres:output_type -> ExecResult
-	10, // 26: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
-	11, // 27: CoordinatorManager.GetControlData:output_type -> CD
-	13, // 28: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
-	17, // 29: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
-	18, // 30: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
-	19, // 31: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
-	15, // 32: CoordinatorManager.CreateFailOverFile:output_type -> ACK
-	18, // [18:33] is the sub-list for method output_type
-	3,  // [3:18] is the sub-list for method input_type
+	5,  // 18: CoordinatorManager.GetArchivedWal:input_type -> Empty
+	1,  // 19: CoordinatorManager.GetPodInfo:output_type -> PodInfo
+	5,  // 20: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
+	5,  // 21: CoordinatorManager.TerminatePostgres:output_type -> Empty
+	3,  // 22: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
+	8,  // 23: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
+	5,  // 24: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
+	15, // 25: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
+	3,  // 26: CoordinatorManager.PromotePostgres:output_type -> ExecResult
+	10, // 27: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
+	11, // 28: CoordinatorManager.GetControlData:output_type -> CD
+	13, // 29: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
+	17, // 30: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
+	18, // 31: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
+	19, // 32: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
+	15, // 33: CoordinatorManager.CreateFailOverFile:output_type -> ACK
+	18, // 34: CoordinatorManager.GetArchivedWal:output_type -> WalFileResponse
+	19, // [19:35] is the sub-list for method output_type
+	3,  // [3:19] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
