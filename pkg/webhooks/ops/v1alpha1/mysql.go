@@ -120,6 +120,15 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
 
+	// A DC-DR MySQL runs only the ops types with a DC-DR implementation; the ops-manager refuses the
+	// rest too, before pausing anything. Checked on create only, so requests admitted earlier can
+	// still have their status and finalizers updated.
+	if isCreate {
+		if why := opsapi.MySQLDCDROpsRefusal(db, req); why != "" {
+			return field.Forbidden(field.NewPath("spec").Child("type"), why)
+		}
+	}
+
 	var allErr field.ErrorList
 
 	switch opsapi.MySQLOpsRequestType(req.GetRequestType()) {
