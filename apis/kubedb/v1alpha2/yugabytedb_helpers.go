@@ -82,7 +82,6 @@ func (r *YugabyteDB) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "auth")
 }
 
-// ConfigSecretName is the Secret that holds the flag templates rendered by the operator.
 // ConfigSecretName is the Secret with the rendered flag files. As in the other databases it is named after the
 // last six characters of the UID, so it can not collide with a configuration Secret of the user.
 func (r *YugabyteDB) ConfigSecretName() string {

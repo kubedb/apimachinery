@@ -671,3 +671,43 @@ func TestYugabyteDBInitInitializedMayBeSet(t *testing.T) {
 	_, err := w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-provisioner"), old, db)
 	checkErr(t, err, "")
 }
+
+func TestYugabyteDBInitInitializedCanNotBeUnset(t *testing.T) {
+	w := ybTestWebhook(t)
+	old := ybTestDB(t, w)
+	old.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true, Initialized: true}
+	for name, mutate := range map[string]func(*olddbapi.YugabyteDB){
+		"initialized back to false": func(db *olddbapi.YugabyteDB) { db.Spec.Init.Initialized = false },
+		"init removed":              func(db *olddbapi.YugabyteDB) { db.Spec.Init = nil },
+	} {
+		t.Run(name, func(t *testing.T) {
+			db := old.DeepCopy()
+			mutate(db)
+			_, err := w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-provisioner"), old, db)
+			checkErr(t, err, "spec.init.initialized can not be unset")
+			if err != nil && strings.Count(err.Error(), "Forbidden:") != 1 {
+				t.Errorf("want one spec.init error, got: %v", err)
+			}
+		})
+	}
+}
+
+func TestYugabyteDBOperatorRequest(t *testing.T) {
+	for user, want := range map[string]bool{
+		"system:serviceaccount:kubedb:kubedb-ops-manager": true,
+		"system:serviceaccount:kubedb-x:foo":              false, // a namespace that only starts with the name
+		"system:serviceaccount:default:default":           false,
+		"alice":                                           false,
+	} {
+		if got := isYugabyteDBOperatorRequest(ybCtx(user)); got != want {
+			t.Errorf("%s: got %v, want %v", user, got, want)
+		}
+	}
+	if isYugabyteDBOperatorRequest(context.TODO()) {
+		t.Error("a request without admission information must not be trusted")
+	}
+	t.Setenv("POD_NAMESPACE", "")
+	if isYugabyteDBOperatorRequest(ybCtx("system:serviceaccount:default:default")) {
+		t.Error("without POD_NAMESPACE no service account is trusted, also not in default")
+	}
+}

@@ -64,16 +64,6 @@ func (w *YugabyteDBAutoscalerCustomWebhook) Default(ctx context.Context, obj run
 }
 
 func (w *YugabyteDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.YugabyteDBAutoscaler) {
-	var db olddbapi.YugabyteDB
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      scaler.Spec.DatabaseRef.Name,
-		Namespace: scaler.Namespace,
-	}, &db)
-	if err != nil {
-		klog.Errorf("can't get YugabyteDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
-		return
-	}
-
 	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
@@ -128,15 +118,48 @@ func (w *YugabyteDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Yuga
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.YugabyteDB
+	var db olddbapi.YugabyteDB
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
-	}, &kf)
+	}, &db)
 	if err != nil {
 		klog.Errorf("can't get YugabyteDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
+	return validateYugabyteDBAutoscalerTopology(scaler, &db)
+}
 
+// validateYugabyteDBAutoscalerTopology rejects a role section the database can not act on, as the MongoDB
+// webhook does for its topology: a read replica section without read replicas, and a storage section for a
+// role on ephemeral storage. Such a section would be accepted and silently do nothing.
+func validateYugabyteDBAutoscalerTopology(scaler *autoscalingapi.YugabyteDBAutoscaler, db *olddbapi.YugabyteDB) error {
+	rr := db.IsReadReplicaEnabled()
+	if c := scaler.Spec.Compute; c != nil && c.ReadReplica != nil && !rr {
+		return errors.New("spec.compute.readReplica: the database has no read replicas")
+	}
+	s := scaler.Spec.Storage
+	if s == nil {
+		return nil
+	}
+	if s.ReadReplica != nil && !rr {
+		return errors.New("spec.storage.readReplica: the database has no read replicas")
+	}
+	for _, r := range []struct {
+		name string
+		spec *autoscalingapi.StorageAutoscalerSpec
+		role olddbapi.YugabyteDBRole
+	}{
+		{"master", s.Master, olddbapi.YugabyteDBRoleMaster},
+		{"tserver", s.TServer, olddbapi.YugabyteDBRoleTServer},
+		{"readReplica", s.ReadReplica, olddbapi.YugabyteDBRoleReadReplica},
+	} {
+		if r.spec == nil {
+			continue
+		}
+		if n := db.Node(r.role); n != nil && n.StorageType == olddbapi.StorageTypeEphemeral {
+			return fmt.Errorf("spec.storage.%s: the %s pods use ephemeral storage, there is no volume to expand", r.name, r.name)
+		}
+	}
 	return nil
 }

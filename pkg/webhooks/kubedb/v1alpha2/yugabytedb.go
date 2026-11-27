@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -37,7 +38,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmc "kmodules.xyz/client-go/conditions"
-	meta_util "kmodules.xyz/client-go/meta"
 	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -167,7 +167,9 @@ func isYugabyteDBOperatorRequest(ctx context.Context) bool {
 	if err != nil {
 		return false
 	}
-	ns := meta_util.PodNamespace()
+	// POD_NAMESPACE is set by the chart. meta_util.PodNamespace falls back to "default" outside a
+	// cluster, which would trust every service account there.
+	ns := os.Getenv("POD_NAMESPACE")
 	if ns == "" {
 		return false
 	}
@@ -193,9 +195,6 @@ func validateYugabyteDBImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	}
 	if old.IsYCQLEnabled() != db.IsYCQLEnabled() {
 		allErr = append(allErr, field.Forbidden(spec.Child("ycql", "enabled"), "ycql.enabled is immutable"))
-	}
-	if old.Spec.Init != nil && old.Spec.Init.Initialized && !apiequality.Semantic.DeepEqual(old.Spec.Init, db.Spec.Init) {
-		allErr = append(allErr, field.Forbidden(spec.Child("init"), "init is immutable once the database is initialized"))
 	}
 	if old.Spec.DisableSecurity != db.Spec.DisableSecurity {
 		allErr = append(allErr, field.Forbidden(spec.Child("disableSecurity"), "disableSecurity is immutable"))
@@ -458,8 +457,14 @@ func validateYugabyteDBInit(db *olddbapi.YugabyteDB) field.ErrorList {
 }
 
 // validateYugabyteDBInitImmutable keeps spec.init as it was at creation; only the operator sets
-// spec.init.initialized.
+// spec.init.initialized, and once it is true it stays true (a false would run the script again).
+// This is stricter than Postgres, which accepts changes until the database is initialized: the
+// script of a YugabyteDB runs in a Job right after the universe forms, so a later change could
+// race with it.
 func validateYugabyteDBInitImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
+	if old.Spec.Init != nil && old.Spec.Init.Initialized && (db.Spec.Init == nil || !db.Spec.Init.Initialized) {
+		return field.ErrorList{field.Forbidden(field.NewPath("spec", "init", "initialized"), "spec.init.initialized can not be unset once the database is initialized")}
+	}
 	o, n := old.Spec.Init, db.Spec.Init
 	if o != nil {
 		o = o.DeepCopy()

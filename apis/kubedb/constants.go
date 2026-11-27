@@ -2917,6 +2917,24 @@ const (
 	// YugabyteDBUpgradePendingFinalizeCondition is true on the database while an UpdateVersion with finalize: Manual
 	// waits for a FinalizeUpgrade or RollbackUpgrade request.
 	YugabyteDBUpgradePendingFinalizeCondition = "UpgradePendingFinalize"
+
+	// Upgrade state, kept on the database from the start of an UpdateVersion until the upgrade is finalized or
+	// rolled back. The state is the annotation YugabyteDBUpgradeStateAnnotation and the reason of the
+	// UpgradePendingFinalize condition.
+	YugabyteDBUpgradeStateAnnotation       = "kubedb.com/yb-upgrade-state"
+	YugabyteDBUpgradeFromAnnotation        = "kubedb.com/yb-upgrade-from-version"
+	YugabyteDBUpgradeFlagsConfigAnnotation = "kubedb.com/yb-upgrade-autoflags-config-version"
+	// YugabyteDBUpgradeStateInProgress: the pods are being moved to the new version. A RollbackUpgrade can bring
+	// them back, also after the UpdateVersion failed.
+	YugabyteDBUpgradeStateInProgress = "InProgress"
+	// YugabyteDBUpgradeStatePendingFinalize: the pods run the new version and wait for a FinalizeUpgrade or a
+	// RollbackUpgrade (finalize: Manual).
+	YugabyteDBUpgradeStatePendingFinalize = "PendingFinalize"
+	// YugabyteDBUpgradeStateFinalizing: finalize_upgrade was started. From here on the upgrade can not be rolled
+	// back; a request that fails here is finished by a FinalizeUpgrade.
+	YugabyteDBUpgradeStateFinalizing = "Finalizing"
+	// YugabyteDBUpgradeStateFinalized: finalize_upgrade succeeded; the steps after it (snapshot schedules) remain.
+	YugabyteDBUpgradeStateFinalized = "Finalized"
 	// YugabyteDBPITRReadyCondition is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
 	YugabyteDBPITRReadyCondition = "PITRReady"
 	// YugabyteDBRewindInProgressCondition is true on the database while a Rewind restores a snapshot schedule.
