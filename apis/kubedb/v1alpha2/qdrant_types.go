@@ -102,7 +102,7 @@ type QdrantSpec struct {
 
 	// Init is used to initialize database
 	// +optional
-	Init *InitSpec `json:"init,omitempty"`
+	Init *QdrantInitSpec `json:"init,omitempty"`
 
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
@@ -142,6 +142,36 @@ type QdrantTLSConfig struct {
 	P2P *bool `json:"p2p,omitempty"`
 	// +optional
 	Client *bool `json:"client,omitempty"`
+}
+
+type QdrantInitSpec struct {
+	// Initialized indicates that this database has been initialized.
+	// This will be set by the operator when status.conditions["Provisioned"] is set to ensure
+	// that database is not mistakenly reset when recovered using disaster recovery tools.
+	Initialized bool `json:"initialized,omitempty"`
+	// Wait for initial DataRestore condition
+	WaitForInitialRestore bool              `json:"waitForInitialRestore,omitempty"`
+	Script                *ScriptSourceSpec `json:"script,omitempty"`
+
+	Restore *QdrantRestoreSpec `json:"restore,omitempty"`
+}
+
+type QdrantRestoreSpec struct {
+	// SnapshotName specifies the name of the snapshot to restore from.
+	// +optional
+	SnapshotName string `json:"snapshotName,omitempty"`
+
+	// RecoveryTimestamp selects which snapshot in the repository to restore.
+	// +optional
+	RecoveryTimestamp meta.Time `json:"recoveryTimestamp,omitempty"`
+
+	// FullDBRepository is the KubeStash Repository to restore the database from.
+	// +optional
+	FullDBRepository *kmapi.ObjectReference `json:"fullDBRepository,omitempty"`
+
+	// EncryptionSecret refers to the Secret holding the encryption key the snapshot was backed up with, if any.
+	// +optional
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.

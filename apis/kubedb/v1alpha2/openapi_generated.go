@@ -797,7 +797,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Qdrant":                                        schema_apimachinery_apis_kubedb_v1alpha2_Qdrant(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_QdrantApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantInitSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_QdrantInitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantList":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantRestoreSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_QdrantRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_QdrantStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_QdrantTLSConfig(ref),
@@ -45647,6 +45649,44 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantBind(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_QdrantInitSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"initialized": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Initialized indicates that this database has been initialized. This will be set by the operator when status.conditions[\"Provisioned\"] is set to ensure that database is not mistakenly reset when recovered using disaster recovery tools.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"waitForInitialRestore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Wait for initial DataRestore condition",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"script": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec"),
+						},
+					},
+					"restore": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantRestoreSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantRestoreSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_QdrantList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -45693,6 +45733,45 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantList(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Qdrant"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_QdrantRestoreSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"snapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SnapshotName specifies the name of the snapshot to restore from.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"recoveryTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecoveryTimestamp selects which snapshot in the repository to restore.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"fullDBRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullDBRepository is the KubeStash Repository to restore the database from.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EncryptionSecret refers to the Secret holding the encryption key the snapshot was backed up with, if any.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 
@@ -45761,7 +45840,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref common.ReferenceCal
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantInitSpec"),
 						},
 					},
 					"configuration": {
@@ -45827,7 +45906,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantInitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
