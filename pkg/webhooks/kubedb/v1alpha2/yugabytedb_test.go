@@ -610,7 +610,7 @@ func TestYugabyteDBExamples(t *testing.T) {
 	if err != nil || len(versions) != 2 {
 		t.Fatalf("expected 2 catalog examples, got %v (%v)", versions, err)
 	}
-	var objs []client.Object
+	objs := make([]client.Object, 0, len(versions)+1)
 	for _, f := range versions {
 		data, err := os.ReadFile(f)
 		if err != nil {

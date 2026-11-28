@@ -123,7 +123,7 @@ func ybOpsWebhook(t *testing.T, objs ...client.Object) *YugabyteDBOpsRequestCust
 			Data:       map[string][]byte{"other.conf": []byte("a=b")},
 		},
 	}
-	kc := fake.NewClientBuilder().WithScheme(ybOpsScheme(t)).WithStatusSubresource(&dbapi.YugabyteDB{}).WithObjects(append(base, objs...)...).Build()
+	kc := fake.NewClientBuilder().WithScheme(ybOpsScheme(t)).WithStatusSubresource(&dbapi.YugabyteDB{}).WithObjects(base...).WithObjects(objs...).Build()
 	return &YugabyteDBOpsRequestCustomWebhook{DefaultClient: kc}
 }
 

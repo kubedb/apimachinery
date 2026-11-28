@@ -478,7 +478,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateRewind(db *dbapi.YugabyteDB,
 		return nil, fmt.Errorf("spec.rewind.minus (%s) is longer than the retention of the schedule (%s)", rw.Minus.Duration, retention)
 	}
 	if rw.RestoreTime != nil {
-		if rw.RestoreTime.Time.After(now) {
+		if rw.RestoreTime.After(now) {
 			return nil, errors.New("spec.rewind.restoreTime is in the future")
 		}
 		if rw.RestoreTime.Time.Before(now.Add(-retention)) {
@@ -522,7 +522,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateClone(ctx context.Context, d
 		return fmt.Errorf("spec.clone.asOf needs a schedule for %q in spec.pitr, the database keeps no history without it", c.SourceDatabase)
 	}
 	now, retention := time.Now(), time.Duration(sched.RetentionMinutes)*time.Minute
-	if c.AsOf.Time.After(now) {
+	if c.AsOf.After(now) {
 		return errors.New("spec.clone.asOf is in the future")
 	}
 	if c.AsOf.Time.Before(now.Add(-retention)) {
