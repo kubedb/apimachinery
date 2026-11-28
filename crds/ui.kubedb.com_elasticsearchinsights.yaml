@@ -109,6 +109,69 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        clusterUUID:
+                          type: string
+                        followLagOps:
+                          format: int64
+                          type: integer
+                        healthy:
+                          type: boolean
+                        message:
+                          type: string
+                        nodesReady:
+                          format: int32
+                          type: integer
+                        observedAt:
+                          format: date-time
+                          type: string
+                        role:
+                          type: string
+                        writable:
+                          type: boolean
+                        writableObservedAt:
+                          format: date-time
+                          type: string
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                  promotion:
+                    properties:
+                      message:
+                        type: string
+                      phase:
+                        type: string
+                      promotedIndices:
+                        items:
+                          type: string
+                        type: array
+                      startedAt:
+                        format: date-time
+                        type: string
+                      targetDC:
+                        type: string
+                    required:
+                    - targetDC
+                    type: object
+                  protected:
+                    type: boolean
+                  protectionMessage:
+                    type: string
+                type: object
               observedGeneration:
                 format: int64
                 type: integer
