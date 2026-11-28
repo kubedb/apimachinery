@@ -325,11 +325,11 @@ const (
 )
 
 // +kubebuilder:validation:Enum=server;client
-type YugabyteDBCertificateType string
+type YugabyteDBCertificateAlias string
 
 const (
-	YugabyteDBCertificateTypeServer YugabyteDBCertificateType = "server"
-	YugabyteDBCertificateTypeClient YugabyteDBCertificateType = "client"
+	YugabyteDBServerCert YugabyteDBCertificateAlias = "server"
+	YugabyteDBClientCert YugabyteDBCertificateAlias = "client"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

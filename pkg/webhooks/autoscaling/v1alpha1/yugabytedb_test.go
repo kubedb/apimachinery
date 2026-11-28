@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
@@ -88,5 +89,49 @@ func TestYugabyteDBAutoscalerDefaultsAndValidation(t *testing.T) {
 	unknownDB.Spec.DatabaseRef.Name = "nope"
 	if _, err := w.ValidateUpdate(context.TODO(), scaler, unknownDB); err == nil {
 		t.Fatal("unknown database must be rejected")
+	}
+}
+
+func TestYugabyteDBAutoscalerTopology(t *testing.T) {
+	plain := &olddbapi.YugabyteDB{}
+	withRR := &olddbapi.YugabyteDB{Spec: olddbapi.YugabyteDBSpec{Topology: &olddbapi.YugabyteDBTopology{
+		ReadReplica: &olddbapi.YugabyteDBReadReplica{YugabyteDBNode: olddbapi.YugabyteDBNode{}},
+	}}}
+	ephemeralMaster := &olddbapi.YugabyteDB{Spec: olddbapi.YugabyteDBSpec{Topology: &olddbapi.YugabyteDBTopology{
+		Master: &olddbapi.YugabyteDBNode{StorageType: olddbapi.StorageTypeEphemeral},
+	}}}
+	storage := &autoscalingapi.StorageAutoscalerSpec{}
+	compute := &autoscalingapi.ComputeAutoscalerSpec{}
+	cases := []struct {
+		name string
+		db   *olddbapi.YugabyteDB
+		spec autoscalingapi.YugabyteDBAutoscalerSpec
+		want string
+	}{
+		{"tserver compute and storage", plain, autoscalingapi.YugabyteDBAutoscalerSpec{
+			Compute: &autoscalingapi.YugabyteDBComputeAutoscalerSpec{TServer: compute},
+			Storage: &autoscalingapi.YugabyteDBStorageAutoscalerSpec{TServer: storage},
+		}, ""},
+		{"read replica compute without read replicas", plain, autoscalingapi.YugabyteDBAutoscalerSpec{
+			Compute: &autoscalingapi.YugabyteDBComputeAutoscalerSpec{ReadReplica: compute},
+		}, "spec.compute.readReplica"},
+		{"read replica storage without read replicas", plain, autoscalingapi.YugabyteDBAutoscalerSpec{
+			Storage: &autoscalingapi.YugabyteDBStorageAutoscalerSpec{ReadReplica: storage},
+		}, "spec.storage.readReplica"},
+		{"read replica with read replicas", withRR, autoscalingapi.YugabyteDBAutoscalerSpec{
+			Compute: &autoscalingapi.YugabyteDBComputeAutoscalerSpec{ReadReplica: compute},
+			Storage: &autoscalingapi.YugabyteDBStorageAutoscalerSpec{ReadReplica: storage},
+		}, ""},
+		{"storage on ephemeral master", ephemeralMaster, autoscalingapi.YugabyteDBAutoscalerSpec{
+			Storage: &autoscalingapi.YugabyteDBStorageAutoscalerSpec{Master: storage},
+		}, "ephemeral storage"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			err := validateYugabyteDBAutoscalerTopology(&autoscalingapi.YugabyteDBAutoscaler{Spec: c.spec}, c.db)
+			if c.want == "" && err != nil || c.want != "" && (err == nil || !strings.Contains(err.Error(), c.want)) {
+				t.Fatalf("got %v, want %q", err, c.want)
+			}
+		})
 	}
 }

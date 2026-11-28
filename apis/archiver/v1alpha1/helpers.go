@@ -66,6 +66,10 @@ func (Neo4jArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDef
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralNeo4jArchiver))
 }
 
+func (DocumentDBArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDocumentDBArchiver))
+}
+
 func SetDefaultLogBackupOptions(log *LogBackupOptions) *LogBackupOptions {
 	if log == nil {
 		log = &LogBackupOptions{

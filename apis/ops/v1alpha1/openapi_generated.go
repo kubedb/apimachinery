@@ -702,6 +702,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLServerUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec":                       schema_apimachinery_apis_ops_v1alpha1_MariaDBArchiverRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfiguration":                       schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec":                             schema_apimachinery_apis_ops_v1alpha1_MariaDBMigrationSpec(ref),
@@ -747,6 +748,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVerticalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_MongoDBVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVolumeExpansionSpec":                       schema_apimachinery_apis_ops_v1alpha1_MongoDBVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongosNode":                                       schema_apimachinery_apis_ops_v1alpha1_MongosNode(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLArchiverRestoreSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLArchiverRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_MySQLHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequest":                                  schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestList":                              schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestList(ref),
@@ -913,6 +915,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec":                    schema_apimachinery_apis_ops_v1alpha1_YugabyteDBReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRewindSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec":                            schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRollingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec":                                schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref),
@@ -39197,6 +39200,62 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref co
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MariaDBArchiverRestoreSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBArchiverRestoreSpec carries the archiver recovery information for an ArchiverRestore ops request. The ops request wipes the referenced database's data volumes and feeds this payload to the same restore path a freshly created restore target uses, so the fields are dbapi.ArchiverRecovery embedded inline.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"recoveryTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"manifestRepository": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullDBRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullDBRepository means db restore + manifest restore",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"replicationStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"manifestOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestOptions provide options to select particular manifest object to restore",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"),
+						},
+					},
+					"retainPV": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetainPV decides whether the pre-restore data PersistentVolumes survive a *successful* restore. Either way they are forced to Retain for the duration, so a failure after the wipe can be undone.\n\nWhen true (the default), released volumes keep Retain and are named in an ArchiverRestoreManualCleanupRequired condition; deleting them stays an operator action. When false, they are deleted once the request succeeds.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"recoveryTimestamp"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39477,6 +39536,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restoring the database in place from its archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -39501,7 +39566,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -40413,6 +40478,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
+					"existingSecrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExistingSecrets names certificates that already exist, for example when a running Milvus is adopted. KubeDB uses them as they are: it does not issue, renew or take ownership of them. Any other certificate that is needed is issued from issuerRef.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets"),
+						},
+					},
 					"rotateCertificates": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RotateCertificates tells operator to initiate certificate rotation",
@@ -40431,7 +40502,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExistingTLSSecrets", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
 	}
 }
 
@@ -41158,6 +41229,62 @@ func schema_apimachinery_apis_ops_v1alpha1_MongosNode(ref common.ReferenceCallba
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MySQLArchiverRestoreSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLArchiverRestoreSpec carries the archiver recovery information for an ArchiverRestore ops request. The ops request wipes the referenced database's data volumes and feeds this payload to the same restore path a freshly created restore target uses, so the fields are dbapi.ArchiverRecovery embedded inline.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"recoveryTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"manifestRepository": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullDBRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullDBRepository means db restore + manifest restore",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"replicationStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"manifestOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestOptions provide options to select particular manifest object to restore",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"),
+						},
+					},
+					"retainPV": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetainPV decides whether the pre-restore data PersistentVolumes survive a *successful* restore. Either way they are forced to Retain for the duration, so a failure after the wipe can be undone.\n\nWhen true (the default), released volumes keep Retain and are named in an ArchiverRestoreManualCleanupRequired condition; deleting them stays an operator action. When false, they are deleted once the request succeeds.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"recoveryTimestamp"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MySQLHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41354,6 +41481,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restoring the database in place from its archiver backup",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLArchiverRestoreSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -41378,7 +41511,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicationModeTransformSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLArchiverRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicationModeTransformSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
 	}
 }
 
@@ -48199,12 +48332,6 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec"),
 						},
 					},
-					"connectionManager": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ConnectionManager changes the YSQL Connection Manager of the database. It is only valid in a Reconfigure request, next to or instead of spec.configuration. The pods restart one at a time.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"),
-						},
-					},
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring authSecret of the database",
@@ -48214,7 +48341,7 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of YugabyteDB",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec"),
 						},
 					},
 					"horizontalScaling": {
@@ -48301,7 +48428,64 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBReconfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBReconfigurationSpec is the YugabyteDB-specific reconfiguration spec.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"connectionManager": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionManager changes the YSQL Connection Manager of the database, next to or instead of the configuration fields. The tserver pods restart one at a time when the change needs it.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"},
 	}
 }
 

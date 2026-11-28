@@ -114,6 +114,12 @@ func ybTestDB(t *testing.T, w *YugabyteDBCustomWebhook) *olddbapi.YugabyteDB {
 	return db
 }
 
+// The edit lock trusts only service accounts of the operator namespace, which PodNamespace reads from
+// POD_NAMESPACE. The tests run as if the webhook server were in "kubedb".
+func init() {
+	_ = os.Setenv("POD_NAMESPACE", "kubedb")
+}
+
 func ybCtx(user string) context.Context {
 	return admission.NewContextWithRequest(context.TODO(), admission.Request{
 		AdmissionRequest: admissionv1.AdmissionRequest{UserInfo: authenticationv1.UserInfo{Username: user}},
@@ -173,11 +179,15 @@ func TestYugabyteDBDefault(t *testing.T) {
 			},
 		},
 		{
-			name: "master replicas different from RF are rejected",
+			name: "master replicas different from RF are kept for the validator",
 			mutate: func(db *olddbapi.YugabyteDB) {
 				db.Spec.Topology = &olddbapi.YugabyteDBTopology{Master: &olddbapi.YugabyteDBNode{Replicas: ptr.To(int32(1))}}
 			},
-			want: "must equal spec.replicationFactor",
+			check: func(t *testing.T, db *olddbapi.YugabyteDB) {
+				if got := *db.Spec.Topology.Master.Replicas; got != 1 {
+					t.Fatalf("defaulting must not overwrite the master replicas, got %d", got)
+				}
+			},
 		},
 		{
 			name: "master replicas equal to RF are accepted",
@@ -255,6 +265,19 @@ func TestYugabyteDBValidateCreate(t *testing.T) {
 			db.Spec.Topology.Master.Replicas = ptr.To(int32(7))
 			db.Spec.Topology.TServer.Replicas = ptr.To(int32(7))
 		}},
+		{name: "init script from a ConfigMap", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{VolumeSource: core.VolumeSource{ConfigMap: &core.ConfigMapVolumeSource{LocalObjectReference: core.LocalObjectReference{Name: "s"}}}}}
+		}},
+		{name: "waitForInitialRestore", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true} }},
+		{name: "init script from git", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{Git: &olddbapi.GitRepo{Args: []string{"--repo=x"}}}}
+		}, want: "git script source is not supported"},
+		{name: "init script without a source", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{ScriptPath: "a.sql"}}
+		}, want: "a volume source"},
+		{name: "init archiver", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Archiver: &olddbapi.ArchiverRecovery{}}
+		}, want: "archiver recovery is not supported"},
 		{name: "RF 2", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(2)) }, want: "replicationFactor"},
 		{name: "RF 0", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(0)) }, want: "replicationFactor"},
 		{name: "RF 9", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(9)) }, want: "replicationFactor"},
@@ -385,7 +408,7 @@ func TestYugabyteDBOperatorOwnedFlags(t *testing.T) {
 	}
 	for _, role := range []string{"master.flags", "tserver.flags"} {
 		for _, f := range owned {
-			for _, line := range []string{"--" + f + "=x", f + "=x"} {
+			for _, line := range []string{"--" + f + "=x", f + "=x", "--no" + f + "=true"} {
 				t.Run(role+"/"+line, func(t *testing.T) {
 					db := ybTestDB(t, w)
 					db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{role: "--ok_flag=1\n" + line}}
@@ -397,7 +420,7 @@ func TestYugabyteDBOperatorOwnedFlags(t *testing.T) {
 	}
 	// a flag that only starts like an owned one is fine
 	db := ybTestDB(t, w)
-	db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{"tserver.flags": "--fs_data_dirs_extra=1\n--my_placement_flag=1"}}
+	db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{"tserver.flags": "--fs_data_dirs_extra=1\n--my_placement_flag=1\n--notify_x=1\n--no=1"}}
 	if _, err := w.ValidateCreate(context.TODO(), db); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -426,6 +449,7 @@ func TestYugabyteDBValidateUpdateImmutable(t *testing.T) {
 			db.Spec.Topology.TServer.PodTemplate.Spec.PodPlacementPolicy = &core.LocalObjectReference{Name: "zones"}
 		}},
 		{name: "deletionPolicy may change", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.DeletionPolicy = olddbapi.DeletionPolicyWipeOut }},
+		{name: "init added later", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true} }, want: "spec.init is immutable"},
 	}
 	// immutability applies before and after provisioning, for users and for the operator
 	for _, provisioned := range []bool{false, true} {
@@ -512,6 +536,11 @@ func TestYugabyteDBValidateUpdateOpsOwned(t *testing.T) {
 			_, err = w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-ops-manager"), old, db)
 			checkErr(t, err, "")
 
+			// a service account of another namespace (Argo CD, Flux, CI) is treated as a user
+			old, db = build(true)
+			_, err = w.ValidateUpdate(ybCtx("system:serviceaccount:argocd:argocd-application-controller"), old, db)
+			checkErr(t, err, tc.want)
+
 			// before provisioning the user is still writing the spec
 			old, db = build(false)
 			_, err = w.ValidateUpdate(ybCtx("alice"), old, db)
@@ -581,7 +610,7 @@ func TestYugabyteDBExamples(t *testing.T) {
 	if err != nil || len(versions) != 2 {
 		t.Fatalf("expected 2 catalog examples, got %v (%v)", versions, err)
 	}
-	var objs []client.Object
+	objs := make([]client.Object, 0, len(versions)+1)
 	for _, f := range versions {
 		data, err := os.ReadFile(f)
 		if err != nil {
@@ -630,5 +659,55 @@ func TestYugabyteDBExamples(t *testing.T) {
 				t.Fatal(err)
 			}
 		})
+	}
+}
+
+func TestYugabyteDBInitInitializedMayBeSet(t *testing.T) {
+	w := ybTestWebhook(t)
+	old := ybTestDB(t, w)
+	old.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true}
+	db := old.DeepCopy()
+	db.Spec.Init.Initialized = true
+	_, err := w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-provisioner"), old, db)
+	checkErr(t, err, "")
+}
+
+func TestYugabyteDBInitInitializedCanNotBeUnset(t *testing.T) {
+	w := ybTestWebhook(t)
+	old := ybTestDB(t, w)
+	old.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true, Initialized: true}
+	for name, mutate := range map[string]func(*olddbapi.YugabyteDB){
+		"initialized back to false": func(db *olddbapi.YugabyteDB) { db.Spec.Init.Initialized = false },
+		"init removed":              func(db *olddbapi.YugabyteDB) { db.Spec.Init = nil },
+	} {
+		t.Run(name, func(t *testing.T) {
+			db := old.DeepCopy()
+			mutate(db)
+			_, err := w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-provisioner"), old, db)
+			checkErr(t, err, "spec.init.initialized can not be unset")
+			if err != nil && strings.Count(err.Error(), "Forbidden:") != 1 {
+				t.Errorf("want one spec.init error, got: %v", err)
+			}
+		})
+	}
+}
+
+func TestYugabyteDBOperatorRequest(t *testing.T) {
+	for user, want := range map[string]bool{
+		"system:serviceaccount:kubedb:kubedb-ops-manager": true,
+		"system:serviceaccount:kubedb-x:foo":              false, // a namespace that only starts with the name
+		"system:serviceaccount:default:default":           false,
+		"alice":                                           false,
+	} {
+		if got := isYugabyteDBOperatorRequest(ybCtx(user)); got != want {
+			t.Errorf("%s: got %v, want %v", user, got, want)
+		}
+	}
+	if isYugabyteDBOperatorRequest(context.TODO()) {
+		t.Error("a request without admission information must not be trusted")
+	}
+	t.Setenv("POD_NAMESPACE", "")
+	if isYugabyteDBOperatorRequest(ybCtx("system:serviceaccount:default:default")) {
+		t.Error("without POD_NAMESPACE no service account is trusted, also not in default")
 	}
 }

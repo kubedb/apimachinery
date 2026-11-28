@@ -90,13 +90,14 @@ func ybOpsDB(tls *dbapi.YugabyteDBTLSConfig, disableSecurity bool) *dbapi.Yugaby
 func ybOpsWebhook(t *testing.T, objs ...client.Object) *YugabyteDBOpsRequestCustomWebhook {
 	t.Helper()
 	base := []client.Object{
-		ybOpsVersion("2025.1.0", 15, false, nil, nil),
+		ybOpsVersion("2025.1.0", 15, false, []string{"> 2025.1.0, <= 2025.1.4"}, nil),
 		ybOpsVersion("2024.1.0", 15, false, nil, nil),
-		ybOpsVersion("2025.1.4", 15, false, []string{">= 2025.1.0, < 2025.1.4"}, nil),
-		ybOpsVersion("2025.2.8", 15, false, []string{">= 2025.1.4, < 2025.2.8"}, nil),
-		ybOpsVersion("2025.2.9", 15, true, []string{">= 2025.1.4, < 2025.2.9"}, nil),
-		ybOpsVersion("2026.1.0", 17, false, []string{">= 2025.1.4"}, nil),
-		ybOpsVersion("2025.2.7", 15, false, []string{">= 2025.1.0"}, []string{"2025.1.4"}),
+		// As in every KubeDB catalog, the updateConstraints of a version list the versions it can be updated to.
+		ybOpsVersion("2025.1.4", 15, false, []string{"> 2025.1.4"}, []string{"2025.2.7"}),
+		ybOpsVersion("2025.2.8", 15, false, []string{"> 2025.2.8"}, nil),
+		ybOpsVersion("2025.2.9", 15, true, []string{"> 2025.2.9"}, nil),
+		ybOpsVersion("2026.1.0", 17, false, []string{"> 2026.1.0"}, nil),
+		ybOpsVersion("2025.2.7", 15, false, []string{"> 2025.2.7"}, nil),
 		&core.Secret{
 			ObjectMeta: metav1.ObjectMeta{Name: "new-auth", Namespace: "demo"},
 			Data:       map[string][]byte{"username": []byte("yugabyte"), "password": []byte("s3cret")},
@@ -122,7 +123,7 @@ func ybOpsWebhook(t *testing.T, objs ...client.Object) *YugabyteDBOpsRequestCust
 			Data:       map[string][]byte{"other.conf": []byte("a=b")},
 		},
 	}
-	kc := fake.NewClientBuilder().WithScheme(ybOpsScheme(t)).WithStatusSubresource(&dbapi.YugabyteDB{}).WithObjects(append(base, objs...)...).Build()
+	kc := fake.NewClientBuilder().WithScheme(ybOpsScheme(t)).WithStatusSubresource(&dbapi.YugabyteDB{}).WithObjects(base...).WithObjects(objs...).Build()
 	return &YugabyteDBOpsRequestCustomWebhook{DefaultClient: kc}
 }
 
@@ -219,12 +220,12 @@ func TestYugabyteDBOpsUpdateVersion(t *testing.T) {
 		{name: "1.4 to 2.8 is in the allowlist", req: update("2025.2.8")},
 		{name: "2.8 reached from 2025.1.0 is not", db: dbAt("2025.1.0"), req: update("2025.2.8"), want: "not allowed"},
 		{name: "1.0 to 1.4", db: dbAt("2025.1.0"), req: update("2025.1.4")},
-		{name: "downgrade is not allowed", db: dbAt("2025.2.8"), req: update("2025.1.4"), want: "not allowed"},
+		{name: "downgrade is not allowed", db: dbAt("2025.2.8"), req: update("2025.1.4"), want: "downgrades are not supported"},
 		{name: "same version", req: update("2025.1.4"), want: "is the current version"},
 		{name: "unknown target", req: update("1.2.3"), want: "does not exist"},
 		{name: "deprecated target", req: update("2025.2.9"), want: "deprecated"},
 		{name: "different ysql major", req: update("2026.1.0"), want: "YSQL major"},
-		{name: "denylist", db: dbAt("2025.1.4"), req: update("2025.2.7"), want: "not allowed"},
+		{name: "denylist", db: dbAt("2025.1.4"), req: update("2025.2.7"), want: "denied by the updateConstraints"},
 		{name: "no updateVersion", req: func() *opsapi.YugabyteDBOpsRequest { return ybOpsReq(opsapi.YugabyteDBOpsRequestTypeUpdateVersion) }, want: "spec.updateVersion nil"},
 		{name: "empty target", req: update(""), want: "targetVersion is required"},
 		{name: "negative soak", req: func() *opsapi.YugabyteDBOpsRequest {
@@ -326,7 +327,9 @@ func TestYugabyteDBOpsReconfigure(t *testing.T) {
 	rc := func(c *opsapi.ReconfigurationSpec) func() *opsapi.YugabyteDBOpsRequest {
 		return func() *opsapi.YugabyteDBOpsRequest {
 			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeReconfigure)
-			r.Spec.Configuration = c
+			if c != nil {
+				r.Spec.Configuration = &opsapi.YugabyteDBReconfigurationSpec{ReconfigurationSpec: *c}
+			}
 			return r
 		}
 	}
@@ -495,7 +498,7 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			}
 			// finalize and rollback need an upgrade that is pending finalization
 			if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade || req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade {
-				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
+				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBUpgradePendingFinalizeCondition, Status: metav1.ConditionTrue}}
 			}
 			if req.Spec.VerticalScaling != nil && req.Spec.VerticalScaling.Mode == opsapi.VerticalScalingModeInPlace {
 				db.Spec.Topology.TServer.PodTemplate.Spec.Containers = []core.Container{{Name: "yb-tserver", Resources: core.ResourceRequirements{

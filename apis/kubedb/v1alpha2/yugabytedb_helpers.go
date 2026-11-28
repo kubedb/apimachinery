@@ -82,9 +82,14 @@ func (r *YugabyteDB) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "auth")
 }
 
-// ConfigSecretName is the Secret that holds the flag templates rendered by the operator.
+// ConfigSecretName is the Secret with the rendered flag files. As in the other databases it is named after the
+// last six characters of the UID, so it can not collide with a configuration Secret of the user.
 func (r *YugabyteDB) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(r.OffshootName(), "config")
+	uid := string(r.UID)
+	if len(uid) < 6 { // not created yet
+		return meta_util.NameWithSuffix(r.OffshootName(), "config")
+	}
+	return meta_util.NameWithSuffix(r.OffshootName(), uid[len(uid)-6:])
 }
 
 func (r *YugabyteDB) GetPersistentSecrets() []string {
@@ -388,12 +393,12 @@ func (r *YugabyteDB) DefaultPodRoleBindingName() string {
 }
 
 // CertificateName is the name of the Secret of a certificate alias, unless the user named it.
-func (r *YugabyteDB) CertificateName(alias YugabyteDBCertificateType) string {
+func (r *YugabyteDB) CertificateName(alias YugabyteDBCertificateAlias) string {
 	return meta_util.NameWithSuffix(r.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
 // GetCertSecretName returns the Secret of a certificate alias if any, otherwise the default name.
-func (r *YugabyteDB) GetCertSecretName(alias YugabyteDBCertificateType) string {
+func (r *YugabyteDB) GetCertSecretName(alias YugabyteDBCertificateAlias) string {
 	if r.Spec.TLS != nil {
 		if name, ok := kmapi.GetCertificateSecretName(r.Spec.TLS.Certificates, string(alias)); ok {
 			return name
@@ -439,7 +444,11 @@ func (r *YugabyteDB) SetDefaults(kc client.Client) {
 			rr.Replicas = ptr.To(r.ReadReplicaReplicationFactor())
 		}
 	}
-	r.Spec.Topology.Master.Replicas = ptr.To(r.ReplicationFactor())
+	// The masters always equal the replication factor. A different value set by the user is rejected by the
+	// validating webhook instead of being overwritten here.
+	if r.Spec.Topology.Master.Replicas == nil {
+		r.Spec.Topology.Master.Replicas = ptr.To(r.ReplicationFactor())
+	}
 	if r.Spec.Topology.TServer.Replicas == nil {
 		r.Spec.Topology.TServer.Replicas = ptr.To(r.ReplicationFactor())
 	}
@@ -529,8 +538,8 @@ func (r *YugabyteDB) SetTLSDefaults() {
 	if r.Spec.TLS.ClientToNode == nil {
 		r.Spec.TLS.ClientToNode = ptr.To(true)
 	}
-	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(YugabyteDBCertificateTypeServer), r.CertificateName(YugabyteDBCertificateTypeServer))
-	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(YugabyteDBCertificateTypeClient), r.CertificateName(YugabyteDBCertificateTypeClient))
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(YugabyteDBServerCert), r.CertificateName(YugabyteDBServerCert))
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(YugabyteDBClientCert), r.CertificateName(YugabyteDBClientCert))
 }
 
 func (r *YugabyteDB) SetHealthCheckerDefaults() {
@@ -630,8 +639,27 @@ func (r yugabyteDBStatsService) Scheme() string {
 	return r.GetWebserverScheme()
 }
 
+// TLSConfig verifies the metrics endpoints when they serve HTTPS: the CA of the client certificate
+// Secret, and a serverName that every server certificate lists as a SAN, because the targets are
+// scraped by pod IP. Nil when webserver TLS is off.
 func (r yugabyteDBStatsService) TLSConfig() *promapi.TLSConfig {
-	return nil
+	if !r.IsWebserverTLS() {
+		return nil
+	}
+	serverName := r.GoverningServiceName() + "." + r.GetNamespace() + ".svc"
+	return &promapi.TLSConfig{
+		SafeTLSConfig: promapi.SafeTLSConfig{
+			CA: promapi.SecretOrConfigMap{
+				Secret: &core.SecretKeySelector{
+					LocalObjectReference: core.LocalObjectReference{
+						Name: r.GetCertSecretName(YugabyteDBClientCert),
+					},
+					Key: kubedb.CACert,
+				},
+			},
+			ServerName: &serverName,
+		},
+	}
 }
 
 func (r *YugabyteDB) StatsService() mona.StatsAccessor {
@@ -674,7 +702,7 @@ func (r *YugabyteDBBind) SecretName() string {
 }
 
 func (r *YugabyteDBBind) CertSecretName() string {
-	return r.GetCertSecretName(YugabyteDBCertificateTypeClient)
+	return r.GetCertSecretName(YugabyteDBClientCert)
 }
 
 var _ Accessor = &YugabyteDB{}

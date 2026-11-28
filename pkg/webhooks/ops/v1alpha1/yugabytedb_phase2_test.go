@@ -36,7 +36,7 @@ import (
 
 func ybPendingFinalizeDB() *dbapi.YugabyteDB {
 	db := ybOpsDB(nil, false)
-	db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
+	db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBUpgradePendingFinalizeCondition, Status: metav1.ConditionTrue}}
 	return db
 }
 
@@ -188,7 +188,7 @@ func TestYugabyteDBOpsConnectionManager(t *testing.T) {
 	cm := func(enabled bool, max *int32) func() *opsapi.YugabyteDBOpsRequest {
 		return func() *opsapi.YugabyteDBOpsRequest {
 			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeReconfigure)
-			r.Spec.ConnectionManager = &dbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}
+			r.Spec.Configuration = &opsapi.YugabyteDBReconfigurationSpec{ConnectionManager: &dbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}}
 			return r
 		}
 	}
@@ -205,14 +205,9 @@ func TestYugabyteDBOpsConnectionManager(t *testing.T) {
 		{name: "disable", db: withCM, req: cm(false, nil)},
 		{name: "zero max", req: cm(true, ptr.To(int32(0))), want: "at least 1"},
 		{name: "ysql disabled", db: noYSQL, req: cm(true, nil), want: "YSQL is not enabled"},
-		{name: "wrong type", req: func() *opsapi.YugabyteDBOpsRequest {
-			r := cm(true, nil)()
-			r.Spec.Type = opsapi.YugabyteDBOpsRequestTypeRestart
-			return r
-		}, want: "only valid in a Reconfigure request"},
 		{name: "with configuration", req: func() *opsapi.YugabyteDBOpsRequest {
 			r := cm(true, nil)()
-			r.Spec.Configuration = &opsapi.ReconfigurationSpec{RemoveCustomConfig: true}
+			r.Spec.Configuration.RemoveCustomConfig = true
 			return r
 		}},
 	})
@@ -296,14 +291,21 @@ func TestYugabyteDBOpsStorageMigration(t *testing.T) {
 		})
 	}
 
-	t.Run("warns with too few tservers", func(t *testing.T) {
+	t.Run("rejects too few tservers", func(t *testing.T) {
 		db := withClass("old")
 		db.Spec.Topology.TServer.Replicas = ptr.To(int32(3))
 		w := ybOpsWebhook(t, db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer))
-		warns, err := w.ValidateCreate(context.TODO(), mig("new", true)())
-		if err != nil || len(warns) != 1 {
-			t.Fatalf("want one warning, got %v, %v", warns, err)
-		}
+		_, err := w.ValidateCreate(context.TODO(), mig("new", true)())
+		expectErr(t, err, "needs at least 4")
+	})
+	t.Run("rejects replication factor 1", func(t *testing.T) {
+		db := withClass("old")
+		db.Spec.ReplicationFactor = ptr.To(int32(1))
+		db.Spec.Topology.Master.Replicas = ptr.To(int32(1))
+		db.Spec.Topology.TServer.Replicas = ptr.To(int32(2))
+		w := ybOpsWebhook(t, db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer))
+		_, err := w.ValidateCreate(context.TODO(), mig("new", true)())
+		expectErr(t, err, "replication factor 3 or more")
 	})
 }
 

@@ -301,6 +301,8 @@ const (
 	MySQLComponentRouter  = "router"
 	MySQLCustomConfigFile = "my-inline.cnf"
 
+	MySQLArchiverRestoreAnnotation = "ops.kubedb.com/archiver-restore"
+
 	// mysql volume and volume Mounts
 
 	MySQLVolumeNameTemp      = "tmp"
@@ -359,18 +361,23 @@ const (
 	PerconaXtraDBMySQLUserGroupID              = 1001
 
 	// =========================== MariaDB Constants ============================
-	MariaDBMaxClusterNameLength          = 32
-	MariaDBStandaloneReplicas            = 1
-	MariaDBDefaultClusterSize            = 3
-	MariaDBDataMountPath                 = "/var/lib/mysql"
-	MariaDBDataLostFoundPath             = MariaDBDataMountPath + "/lost+found"
-	MariaDBInitDBVolumeName              = "initial-script"
-	MariaDBInitDBMountPath               = "/docker-entrypoint-initdb.d"
-	MariaDBCustomConfigMountPath         = "/etc/mysql/conf.d/"
-	MariaDBClusterCustomConfigMountPath  = "/etc/mysql/custom.conf.d/"
-	MariaDBCustomConfigVolumeName        = "custom-config"
-	MariaDBTLSConfigCustom               = "custom"
-	MariaDBInitContainerName             = "mariadb-init"
+	MariaDBMaxClusterNameLength         = 32
+	MariaDBStandaloneReplicas           = 1
+	MariaDBDefaultClusterSize           = 3
+	MariaDBDataMountPath                = "/var/lib/mysql"
+	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "/lost+found"
+	MariaDBInitDBVolumeName             = "initial-script"
+	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
+	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"
+	MariaDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
+	MariaDBCustomConfigVolumeName       = "custom-config"
+	MariaDBTLSConfigCustom              = "custom"
+	MariaDBInitContainerName            = "mariadb-init"
+
+	MariaDBComponentKey = MariaDBKey + "/component"
+	MariaDBComponentDB  = "database"
+
+	MariaDBArchiverRestoreAnnotation     = "ops.kubedb.com/archiver-restore"
 	MariaDBCoordinatorContainerName      = "md-coordinator"
 	MariaDBRunScriptVolumeName           = "run-script"
 	MariaDBRunScriptVolumeMountPath      = "/run-script"
@@ -581,6 +588,12 @@ const (
 	// when we need to resume pg-coordinator as non transferable we are going to set this state.
 	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
+
+	// PostgresRaftKeyMajorUpgradeInProgress is set in the pg-coordinator raft KV, to the
+	// ops request's UID, for the length of a major-version UpdateVersion. While it is set,
+	// a standby whose data directory is from the old major version re-seeds without
+	// keeping a copy of that data, which its new binaries cannot start.
+	PostgresRaftKeyMajorUpgradeInProgress = "MajorUpgradeInProgress"
 
 	SharedBuffersGbAsByte = 1024 * 1024 * 1024
 	SharedBuffersMbAsByte = 1024 * 1024
@@ -955,6 +968,11 @@ const (
 	MilvusMetaEtcdTLSVolName   = "meta-etcd-tls"
 	MilvusMetaEtcdTLSMountPath = "/milvus/etcd-tls"
 
+	// MilvusObjectStorageCAVolName / MilvusObjectStorageCAMountPath mount the CA
+	// bundle of spec.objectStorage.tls; the file is always named MilvusTLSCACert.
+	MilvusObjectStorageCAVolName   = "object-storage-ca"
+	MilvusObjectStorageCAMountPath = "/milvus/object-storage-ca"
+
 	// VirtualSecretsMetaEtcdVolume / VirtualSecretsMetaEtcdVolumeMountPath surface
 	// the internally managed meta etcd's virtual auth secret (when
 	// spec.metaStorage.authSecret is a virtual secret) as files, mirroring
@@ -1002,6 +1020,7 @@ const (
 	KafkaBrokerClientPortName          = "broker"
 	KafkaControllerClientPortName      = "controller"
 	KafkaPortNameLocal                 = "local"
+	KafkaPortNameExternal              = "external"
 	KafkaTopicNameHealth               = "kafka-health"
 	KafkaTopicDeletionThresholdOffset  = 1000
 	KafkaBrokerMaxID                   = 1000
@@ -1010,6 +1029,7 @@ const (
 	KafkaLocalRESTPort                 = 29092
 	KafkaCruiseControlRESTPort         = 9090
 	KafkaCruiseControlListenerPort     = 9094
+	KafkaExternalPort                  = 9095
 	KafkaCCDefaultInNetwork            = 500000
 	KafkaCCDefaultOutNetwork           = 500000
 
@@ -2420,6 +2440,9 @@ const (
 
 	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
 	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
+
+	OracleOSBWSVirtualHostAnnotation = "oracle.kubedb.com/osbws-virtual-host"
+	OracleOSBWSVirtualHostKey        = "OSB_WS_VIRTUAL_HOST"
 )
 
 // =========================== DB2 Constants ============================
@@ -2671,6 +2694,10 @@ const (
 	// ops-manager from pausing the BackupConfiguration before executing the operation.
 	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
 
+	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
+
+	StripPVCDataSourceAnnotation = "kubedb.com/strip-pvc-datasource"
+
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
@@ -2843,7 +2870,7 @@ const (
 
 	// YugabyteDBAuthBootstrappedLabel is set on a pod after the default passwords were replaced.
 	// The client Service selects only the pods that have it.
-	YugabyteDBAuthBootstrappedLabel = GroupName + "/auth-bootstrapped"
+	YugabyteDBAuthBootstrappedLabel = "yugabytedb." + GroupName + "/auth-bootstrapped"
 
 	// Users. YSQL and YCQL are created with these passwords and the operator replaces them at bootstrap.
 	YugabyteDBAdminUser           = "yugabyte"
@@ -2883,19 +2910,37 @@ const (
 	YugabyteDBPlacementUUIDFlag = "placement_uuid"
 
 	// Conditions
-	YugabyteDBConditionMastersReady         = "MastersReady"
-	YugabyteDBConditionTServersReady        = "TServersReady"
-	YugabyteDBConditionPlacementSet         = "PlacementSet"
-	YugabyteDBConditionLeaderBlacklistDirty = "LeaderBlacklistDirty"
-	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
+	YugabyteDBMastersReadyCondition         = "MastersReady"
+	YugabyteDBTServersReadyCondition        = "TServersReady"
+	YugabyteDBPlacementSetCondition         = "PlacementSet"
+	YugabyteDBLeaderBlacklistDirtyCondition = "LeaderBlacklistDirty"
+	// YugabyteDBUpgradePendingFinalizeCondition is true on the database while an UpdateVersion with finalize: Manual
 	// waits for a FinalizeUpgrade or RollbackUpgrade request.
-	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
-	// YugabyteDBConditionPITRReady is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
-	YugabyteDBConditionPITRReady = "PITRReady"
-	// YugabyteDBConditionRewindInProgress is true on the database while a Rewind restores a snapshot schedule.
-	YugabyteDBConditionRewindInProgress = "RewindInProgress"
-	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
-	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
+	YugabyteDBUpgradePendingFinalizeCondition = "UpgradePendingFinalize"
+
+	// Upgrade state, kept on the database from the start of an UpdateVersion until the upgrade is finalized or
+	// rolled back. The state is the annotation YugabyteDBUpgradeStateAnnotation and the reason of the
+	// UpgradePendingFinalize condition.
+	YugabyteDBUpgradeStateAnnotation       = "kubedb.com/yb-upgrade-state"
+	YugabyteDBUpgradeFromAnnotation        = "kubedb.com/yb-upgrade-from-version"
+	YugabyteDBUpgradeFlagsConfigAnnotation = "kubedb.com/yb-upgrade-autoflags-config-version"
+	// YugabyteDBUpgradeStateInProgress: the pods are being moved to the new version. A RollbackUpgrade can bring
+	// them back, also after the UpdateVersion failed.
+	YugabyteDBUpgradeStateInProgress = "InProgress"
+	// YugabyteDBUpgradeStatePendingFinalize: the pods run the new version and wait for a FinalizeUpgrade or a
+	// RollbackUpgrade (finalize: Manual).
+	YugabyteDBUpgradeStatePendingFinalize = "PendingFinalize"
+	// YugabyteDBUpgradeStateFinalizing: finalize_upgrade was started. From here on the upgrade can not be rolled
+	// back; a request that fails here is finished by a FinalizeUpgrade.
+	YugabyteDBUpgradeStateFinalizing = "Finalizing"
+	// YugabyteDBUpgradeStateFinalized: finalize_upgrade succeeded; the steps after it (snapshot schedules) remain.
+	YugabyteDBUpgradeStateFinalized = "Finalized"
+	// YugabyteDBPITRReadyCondition is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
+	YugabyteDBPITRReadyCondition = "PITRReady"
+	// YugabyteDBRewindInProgressCondition is true on the database while a Rewind restores a snapshot schedule.
+	YugabyteDBRewindInProgressCondition = "RewindInProgress"
+	// YugabyteDBStorageMigrationInProgressCondition is true on the database while a StorageMigration moves the pods to a new StorageClass.
+	YugabyteDBStorageMigrationInProgressCondition = "StorageMigrationInProgress"
 )
 
 var (
