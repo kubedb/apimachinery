@@ -82,4 +82,6 @@ type SolrOpsRequestExpansion interface{}
 
 type WeaviateOpsRequestExpansion interface{}
 
+type YugabyteDBOpsRequestExpansion interface{}
+
 type ZooKeeperOpsRequestExpansion interface{}

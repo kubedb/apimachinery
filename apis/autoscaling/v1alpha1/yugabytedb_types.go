@@ -1,0 +1,95 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+const (
+	ResourceCodeYugabyteDBAutoscaler     = "ybscaler"
+	ResourceKindYugabyteDBAutoscaler     = "YugabyteDBAutoscaler"
+	ResourceSingularYugabyteDBAutoscaler = "yugabytedbautoscaler"
+	ResourcePluralYugabyteDBAutoscaler   = "yugabytedbautoscalers"
+)
+
+// YugabyteDBAutoscaler is the configuration for a yugabytedb database
+// autoscaler, which automatically manages pod resources based on historical and
+// real time resource utilization.
+
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=yugabytedbautoscalers,singular=yugabytedbautoscaler,shortName=ybscaler,categories={autoscaler,kubedb,appscode}
+// +kubebuilder:subresource:status
+type YugabyteDBAutoscaler struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// Specification of the behavior of the autoscaler.
+	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
+	Spec YugabyteDBAutoscalerSpec `json:"spec"`
+
+	// Current information about the autoscaler.
+	// +optional
+	Status AutoscalerStatus `json:"status,omitempty"`
+}
+
+// YugabyteDBAutoscalerSpec is the specification of the behavior of the autoscaler.
+type YugabyteDBAutoscalerSpec struct {
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
+
+	// This field will be used to control the behaviour of ops-manager
+	OpsRequestOptions *OpsRequestOptions `json:"opsRequestOptions,omitempty"`
+
+	Compute *YugabyteDBComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *YugabyteDBStorageAutoscalerSpec `json:"storage,omitempty"`
+}
+
+type YugabyteDBComputeAutoscalerSpec struct {
+	// +optional
+	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
+
+	Master  *ComputeAutoscalerSpec `json:"master,omitempty"`
+	TServer *ComputeAutoscalerSpec `json:"tserver,omitempty"`
+	// TODO: use YugabyteDBRoleReadReplica once the database API defines it.
+	ReadReplica *ComputeAutoscalerSpec `json:"readReplica,omitempty"`
+}
+
+type YugabyteDBStorageAutoscalerSpec struct {
+	Master  *StorageAutoscalerSpec `json:"master,omitempty"`
+	TServer *StorageAutoscalerSpec `json:"tserver,omitempty"`
+	// TODO: use YugabyteDBRoleReadReplica once the database API defines it.
+	ReadReplica *StorageAutoscalerSpec `json:"readReplica,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// YugabyteDBAutoscalerList is a list of YugabyteDBAutoscaler objects.
+type YugabyteDBAutoscalerList struct {
+	metav1.TypeMeta `json:",inline"`
+	// metadata is the standard list metadata.
+	// +optional
+	metav1.ListMeta `json:"metadata"`
+
+	// items is the list of yugabytedb database autoscaler objects.
+	Items []YugabyteDBAutoscaler `json:"items"`
+}

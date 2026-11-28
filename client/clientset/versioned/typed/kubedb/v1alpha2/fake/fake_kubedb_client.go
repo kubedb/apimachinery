@@ -157,6 +157,10 @@ func (c *FakeKubedbV1alpha2) Weaviates(namespace string) v1alpha2.WeaviateInterf
 	return newFakeWeaviates(c, namespace)
 }
 
+func (c *FakeKubedbV1alpha2) YugabyteDBs(namespace string) v1alpha2.YugabyteDBInterface {
+	return newFakeYugabyteDBs(c, namespace)
+}
+
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
 	return newFakeZooKeepers(c, namespace)
 }

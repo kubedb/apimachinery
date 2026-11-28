@@ -90,6 +90,8 @@ type Interface interface {
 	SolrVersions() SolrVersionInformer
 	// WeaviateVersions returns a WeaviateVersionInformer.
 	WeaviateVersions() WeaviateVersionInformer
+	// YugabyteDBVersions returns a YugabyteDBVersionInformer.
+	YugabyteDBVersions() YugabyteDBVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
 }
@@ -268,6 +270,11 @@ func (v *version) SolrVersions() SolrVersionInformer {
 // WeaviateVersions returns a WeaviateVersionInformer.
 func (v *version) WeaviateVersions() WeaviateVersionInformer {
 	return &weaviateVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// YugabyteDBVersions returns a YugabyteDBVersionInformer.
+func (v *version) YugabyteDBVersions() YugabyteDBVersionInformer {
+	return &yugabyteDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.

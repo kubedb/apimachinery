@@ -1,0 +1,26 @@
+apiVersion: ops.kubedb.com/v1alpha1
+kind: YugabyteDBOpsRequest
+metadata:
+  name: yb-vscale
+  namespace: demo
+spec:
+  type: VerticalScaling
+  databaseRef:
+    name: yb-demo
+  verticalScaling:
+    master:
+      resources:
+        requests:
+          cpu: "1"
+          memory: 4Gi
+        limits:
+          cpu: "1"
+          memory: 4Gi
+    tserver:
+      resources:
+        requests:
+          cpu: "4"
+          memory: 8Gi
+        limits:
+          cpu: "4"
+          memory: 8Gi
