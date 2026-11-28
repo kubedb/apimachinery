@@ -291,14 +291,21 @@ func TestYugabyteDBOpsStorageMigration(t *testing.T) {
 		})
 	}
 
-	t.Run("warns with too few tservers", func(t *testing.T) {
+	t.Run("rejects too few tservers", func(t *testing.T) {
 		db := withClass("old")
 		db.Spec.Topology.TServer.Replicas = ptr.To(int32(3))
 		w := ybOpsWebhook(t, db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer))
-		warns, err := w.ValidateCreate(context.TODO(), mig("new", true)())
-		if err != nil || len(warns) != 1 {
-			t.Fatalf("want one warning, got %v, %v", warns, err)
-		}
+		_, err := w.ValidateCreate(context.TODO(), mig("new", true)())
+		expectErr(t, err, "needs at least 4")
+	})
+	t.Run("rejects replication factor 1", func(t *testing.T) {
+		db := withClass("old")
+		db.Spec.ReplicationFactor = ptr.To(int32(1))
+		db.Spec.Topology.Master.Replicas = ptr.To(int32(1))
+		db.Spec.Topology.TServer.Replicas = ptr.To(int32(2))
+		w := ybOpsWebhook(t, db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer))
+		_, err := w.ValidateCreate(context.TODO(), mig("new", true)())
+		expectErr(t, err, "replication factor 3 or more")
 	})
 }
 

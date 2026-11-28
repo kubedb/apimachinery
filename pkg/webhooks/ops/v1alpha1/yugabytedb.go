@@ -207,9 +207,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 	case opsapi.YugabyteDBOpsRequestTypeClone:
 		add("clone", w.validateClone(ctx, db, req))
 	case opsapi.YugabyteDBOpsRequestTypeStorageMigration:
-		warns, err := w.validateStorageMigration(ctx, db, req)
-		warnings = append(warnings, warns...)
-		add("migration", err)
+		add("migration", w.validateStorageMigration(ctx, db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVolumeExpansion:
 		add("volumeExpansion", w.validateVolumeExpansion(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeReconfigure:
@@ -533,36 +531,36 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateClone(ctx context.Context, d
 
 // validateStorageMigration checks a StorageMigration request. It warns when the tservers cannot absorb the data of
 // the pod that is being migrated.
-func (w *YugabyteDBOpsRequestCustomWebhook) validateStorageMigration(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) (admission.Warnings, error) {
+func (w *YugabyteDBOpsRequestCustomWebhook) validateStorageMigration(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	m := req.Spec.Migration
 	if m == nil {
-		return nil, errors.New("spec.migration nil not supported in StorageMigration type")
+		return errors.New("spec.migration nil not supported in StorageMigration type")
 	}
 	if m.StorageClassName == nil || *m.StorageClassName == "" {
-		return nil, errors.New("spec.migration.storageClassName is required")
+		return errors.New("spec.migration.storageClassName is required")
 	}
 	switch m.OldPVReclaimPolicy {
 	case "", core.PersistentVolumeReclaimRetain, core.PersistentVolumeReclaimDelete:
 	default:
-		return nil, fmt.Errorf("spec.migration.oldPVReclaimPolicy %q is not valid, use Retain or Delete", m.OldPVReclaimPolicy)
+		return fmt.Errorf("spec.migration.oldPVReclaimPolicy %q is not valid, use Retain or Delete", m.OldPVReclaimPolicy)
 	}
 	if req.Spec.Timeout == nil {
-		return nil, errors.New("spec.timeout is required for a StorageMigration, the operation moves the data of every pod, set it according to the size of the database")
+		return errors.New("spec.timeout is required for a StorageMigration, the operation moves the data of every pod, set it according to the size of the database")
 	}
 	for _, role := range db.Roles() {
 		if db.Node(role).StorageType == dbapi.StorageTypeEphemeral {
-			return nil, fmt.Errorf("the %s uses Ephemeral storage and has no volume to migrate", role)
+			return fmt.Errorf("the %s uses Ephemeral storage and has no volume to migrate", role)
 		}
 	}
 	var newSC storagev1.StorageClass
 	if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: *m.StorageClassName}, &newSC); err != nil {
 		if apierrors.IsNotFound(err) {
-			return nil, fmt.Errorf("storage class %q not found", *m.StorageClassName)
+			return fmt.Errorf("storage class %q not found", *m.StorageClassName)
 		}
-		return nil, err
+		return err
 	}
 	if !yugabyteDBOpsPending(req) {
-		return nil, nil
+		return nil
 	}
 	same := true
 	for _, role := range db.Roles() {
@@ -571,21 +569,30 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateStorageMigration(ctx context
 		}
 	}
 	if same {
-		return nil, fmt.Errorf("every volume of the database already uses the storage class %q", *m.StorageClassName)
+		return fmt.Errorf("every volume of the database already uses the storage class %q", *m.StorageClassName)
 	}
 	if cur := db.GetStorageClassName(dbapi.YugabyteDBRoleTServer); cur != "" {
 		var oldSC storagev1.StorageClass
 		if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: cur}, &oldSC); err == nil &&
 			oldSC.VolumeBindingMode != nil && *oldSC.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer &&
 			(newSC.VolumeBindingMode == nil || *newSC.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer) {
-			return nil, fmt.Errorf("the volume binding mode of storage class %q must be WaitForFirstConsumer, as it is for %q", newSC.Name, cur)
+			return fmt.Errorf("the volume binding mode of storage class %q must be WaitForFirstConsumer, as it is for %q", newSC.Name, cur)
 		}
 	}
-	var warnings admission.Warnings
+	// The same capacity rules as the operator (checkMigrationCapacity), which fails such a request at runtime.
+	// Rejecting it here also keeps an automated client (GitOps) from creating it again after every failure.
 	if n, rf := db.Replicas(dbapi.YugabyteDBRoleTServer), db.ReplicationFactor(); n < rf+1 {
-		warnings = append(warnings, fmt.Sprintf("the database has %d tservers, fewer than the replication factor plus one (%d): the data of a tserver cannot be moved off it before its volume is replaced, so the migration may not complete", n, rf+1))
+		return fmt.Errorf("the database has %d tservers but a StorageMigration needs at least %d (replication factor %d plus one) to move one tserver at a time; scale out first", n, rf+1, rf)
 	}
-	return warnings, nil
+	if db.IsReadReplicaEnabled() {
+		if n, rf := db.Replicas(dbapi.YugabyteDBRoleReadReplica), db.ReadReplicaReplicationFactor(); n < rf+1 {
+			return fmt.Errorf("the read replica has %d tservers but a StorageMigration needs at least %d (its replication factor %d plus one); scale it out first", n, rf+1, rf)
+		}
+	}
+	if rf := db.ReplicationFactor(); rf < 3 {
+		return fmt.Errorf("the masters of a database with replication factor %d can not be replaced one at a time (no quorum is left): a StorageMigration needs replication factor 3 or more", rf)
+	}
+	return nil
 }
 
 func (w *YugabyteDBOpsRequestCustomWebhook) validateVolumeExpansion(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
