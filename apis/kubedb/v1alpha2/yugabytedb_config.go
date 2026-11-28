@@ -62,8 +62,17 @@ var (
 	yugabyteDBPGKeyRE    = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_.]*$`)
 )
 
-// IsYugabyteDBOperatorOwnedFlag reports whether the operator owns the flag.
+// IsYugabyteDBOperatorOwnedFlag reports whether the operator owns the flag. gflags reads --noX as X=false for a
+// boolean flag X, so noX is owned when X is (--nouse_node_to_node_encryption would turn off the TLS the operator set).
 func IsYugabyteDBOperatorOwnedFlag(name string) bool {
+	if isYugabyteDBOperatorOwnedFlag(name) {
+		return true
+	}
+	rest, ok := strings.CutPrefix(name, "no")
+	return ok && rest != "" && isYugabyteDBOperatorOwnedFlag(rest)
+}
+
+func isYugabyteDBOperatorOwnedFlag(name string) bool {
 	if _, ok := yugabyteDBOperatorOwnedFlags[name]; ok {
 		return true
 	}

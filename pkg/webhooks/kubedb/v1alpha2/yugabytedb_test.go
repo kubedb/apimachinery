@@ -408,7 +408,7 @@ func TestYugabyteDBOperatorOwnedFlags(t *testing.T) {
 	}
 	for _, role := range []string{"master.flags", "tserver.flags"} {
 		for _, f := range owned {
-			for _, line := range []string{"--" + f + "=x", f + "=x"} {
+			for _, line := range []string{"--" + f + "=x", f + "=x", "--no" + f + "=true"} {
 				t.Run(role+"/"+line, func(t *testing.T) {
 					db := ybTestDB(t, w)
 					db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{role: "--ok_flag=1\n" + line}}
@@ -420,7 +420,7 @@ func TestYugabyteDBOperatorOwnedFlags(t *testing.T) {
 	}
 	// a flag that only starts like an owned one is fine
 	db := ybTestDB(t, w)
-	db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{"tserver.flags": "--fs_data_dirs_extra=1\n--my_placement_flag=1"}}
+	db.Spec.Configuration = &olddbapi.ConfigurationSpec{Inline: map[string]string{"tserver.flags": "--fs_data_dirs_extra=1\n--my_placement_flag=1\n--notify_x=1\n--no=1"}}
 	if _, err := w.ValidateCreate(context.TODO(), db); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
