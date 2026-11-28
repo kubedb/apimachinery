@@ -66,6 +66,14 @@ type DruidAutoscalerListerExpansion interface{}
 // DruidAutoscalerNamespaceLister.
 type DruidAutoscalerNamespaceListerExpansion interface{}
 
+// DurableWorkflowAutoscalerListerExpansion allows custom methods to be added to
+// DurableWorkflowAutoscalerLister.
+type DurableWorkflowAutoscalerListerExpansion interface{}
+
+// DurableWorkflowAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// DurableWorkflowAutoscalerNamespaceLister.
+type DurableWorkflowAutoscalerNamespaceListerExpansion interface{}
+
 // ElasticsearchAutoscalerListerExpansion allows custom methods to be added to
 // ElasticsearchAutoscalerLister.
 type ElasticsearchAutoscalerListerExpansion interface{}
